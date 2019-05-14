@@ -1,0 +1,6 @@
+.gradle
+build
+*.iws
+*.ipr
+.idea
+nukkit-*.jar
