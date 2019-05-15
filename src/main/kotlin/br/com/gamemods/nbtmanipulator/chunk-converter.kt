@@ -131,13 +131,22 @@ val bedrock2nukkit = Properties().apply {
 
 fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
     val blockData = this.type.toNukkit()
+
+    if (type.blockName == "minecraft:chest") {
+        println("Chest!")
+    }
+
+    fun commonBlockEntityData(id: String) = arrayOf(
+        "id" to NbtString(id),
+        "x" to NbtInt(blockPos.xPos),
+        "y" to NbtInt(blockPos.yPos),
+        "z" to NbtInt(blockPos.zPos)
+    )
+
     val nukkitTileEntity = when (blockData.blockId.toInt()) {
         // bed
         26 -> NbtCompound(
-            "id" to NbtString("Bed"),
-            "x" to NbtInt(blockPos.xPos),
-            "y" to NbtInt(blockPos.yPos),
-            "z" to NbtInt(blockPos.zPos),
+            *commonBlockEntityData("Bed"),
             "color" to NbtByte(when (type.blockName) {
                 "minecraft:white_bed" -> 0
                 "minecraft:orange_bed" -> 1
@@ -158,6 +167,11 @@ fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
                 else -> 14
             })
         )
+        // chest
+        54 -> NbtCompound(*commonBlockEntityData("Chest")).also { nukkitEntity ->
+            //TODO Convert items from the chest
+            tileEntity?.copy(nukkitEntity, "CustomName")
+        }
         else -> tileEntity?.let { toNukkitTileEntity(it) }
     }
 
