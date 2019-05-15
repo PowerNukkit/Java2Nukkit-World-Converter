@@ -8,7 +8,7 @@ data class JavaPalette(
 ) {
     constructor(compound: NbtCompound): this (
         compound.getString("Name"),
-        compound["Properties"] as? NbtCompound
+        compound.getNullableCompound("Properties")
     )
 }
 
@@ -22,9 +22,9 @@ data class JavaChunkSection(
     constructor(compound: NbtCompound, chunkPos: ChunkPos): this (
         chunkPos,
         compound.getByte("Y").toInt(),
-        (compound["BlockStates"] as? NbtLongArray)?.value,
-        (compound["Palette"] as? NbtList<NbtCompound>)?.value?.map { JavaPalette(it) },
-        (compound["SkyLight"] as? NbtByteArray)?.value
+        compound.getNullableLongArray("BlockStates"),
+        compound.getNullableCompoundList("Palette")?.value?.map { JavaPalette(it) },
+        compound.getNullableByteArray("SkyLight")
     )
 
     override fun equals(other: Any?): Boolean {
@@ -80,7 +80,7 @@ data class JavaChunk(
         chunk.level.getCompound("Heightmaps"),
         chunk.level.getCompound("Structures"),
         chunk.level.getCompoundList("Entities"),
-        chunk.level["LiquidsToBeTicked"] as? NbtList<NbtList<*>>,
+        chunk.level.getNullableListOfList("LiquidsToBeTicked"),
         chunk.level.getList("LiquidTicks"),
         chunk.level.getListOfList("PostProcessing"),
         chunk.level.getCompoundList("Sections").value.associate {
@@ -91,9 +91,9 @@ data class JavaChunk(
         },
         chunk.level.getCompoundList("TileEntities"),
         chunk.level.getList("TileTicks"),
-        chunk.level["ToBeTicked"] as? NbtList<NbtList<*>>,
+        chunk.level.getNullableListOfList("ToBeTicked"),
         chunk.level.getLong("InhabitedTime"),
-        (chunk.level["isLightOn"] as? NbtByte)?.value == 1.toByte(),
+        chunk.level.getNullableBooleanByte("isLightOn"),
         Date(chunk.level.getLong("LastUpdate") * 1000L),
         chunk.level.getString("Status"),
         ChunkPos(chunk.level.getInt("xPos"), chunk.level.getInt("zPos")),

@@ -73,7 +73,8 @@ data class NbtCompound(var value: MutableMap<String, NbtTag>) : NbtTag() {
     }
 
 
-    fun getBooleanByte(name: String) = getByte(name) ==  BYTE_TRUE
+    fun getBooleanByte(name: String) = getByte(name) == BYTE_TRUE
+    fun getNullableBooleanByte(name: String) = getNullableByte(name) == BYTE_TRUE
 
     fun getByte(name: String) = (value[name] as NbtByte).value
     fun getShort(name: String) = (value[name] as NbtShort).value
@@ -100,6 +101,32 @@ data class NbtCompound(var value: MutableMap<String, NbtTag>) : NbtTag() {
     fun getLongArrayList(name: String) = getList(name).cast<NbtLongArray>()
     fun getCompoundList(name: String) = getList(name).cast<NbtCompound>()
     fun getListOfList(name: String) = getList(name).cast<NbtList<*>>()
+
+    fun getNullableByte(name: String) = (value[name] as? NbtByte)?.value
+    fun getNullableShort(name: String) = (value[name] as? NbtShort)?.value
+    fun getNullableInt(name: String) = (value[name] as? NbtInt)?.value
+    fun getNullableLong(name: String) = (value[name] as? NbtLong)?.value
+    fun getNullableFloat(name: String) = (value[name] as? NbtFloat)?.value
+    fun getNullableDouble(name: String) = (value[name] as? NbtDouble)?.value
+    fun getNullableByteArray(name: String) = (value[name] as? NbtByteArray)?.value
+    fun getNullableString(name: String) = (value[name] as? NbtString)?.value
+    fun getNullableIntArray(name: String) = (value[name] as? NbtIntArray)?.value
+    fun getNullableLongArray(name: String) = (value[name] as? NbtLongArray)?.value
+    fun getNullableCompound(name: String) = value[name] as? NbtCompound
+    fun getNullableList(name: String) = value[name] as? NbtList<*>
+
+    fun getNullableByteList(name: String) = getNullableList(name)?.cast<NbtByte>()
+    fun getNullableShortList(name: String) = getNullableList(name)?.cast<NbtShort>()
+    fun getNullableIntList(name: String) = getNullableList(name)?.cast<NbtInt>()
+    fun getNullableLongList(name: String) = getNullableList(name)?.cast<NbtLong>()
+    fun getNullableFloatList(name: String) = getNullableList(name)?.cast<NbtFloat>()
+    fun getNullableDoubleList(name: String) = getNullableList(name)?.cast<NbtDouble>()
+    fun getNullableByteArrayList(name: String) = getNullableList(name)?.cast<NbtByteArray>()
+    fun getNullableStringList(name: String) = getNullableList(name)?.cast<NbtString>()
+    fun getNullableIntArrayList(name: String) = getNullableList(name)?.cast<NbtIntArray>()
+    fun getNullableLongArrayList(name: String) = getNullableList(name)?.cast<NbtLongArray>()
+    fun getNullableCompoundList(name: String) = getNullableList(name)?.cast<NbtCompound>()
+    fun getNullableListOfList(name: String) = getNullableList(name)?.cast<NbtList<*>>()
 }
 
 data class NbtIntArray(var value: IntArray): NbtTag() {
