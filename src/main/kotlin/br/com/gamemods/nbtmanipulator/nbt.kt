@@ -72,6 +72,18 @@ data class NbtCompound(var value: MutableMap<String, NbtTag>) : NbtTag() {
         this.value[name] = value
     }
 
+    operator fun set(name: String, value: Boolean) = set(name, if (value) BYTE_TRUE else 0)
+    operator fun set(name: String, value: Byte) = set(name, NbtByte(value))
+    operator fun set(name: String, value: Short) = set(name, NbtShort(value))
+    operator fun set(name: String, value: Int) = set(name, NbtInt(value))
+    operator fun set(name: String, value: Long) = set(name, NbtLong(value))
+    operator fun set(name: String, value: Float) = set(name, NbtFloat(value))
+    operator fun set(name: String, value: Double) = set(name, NbtDouble(value))
+    operator fun set(name: String, value: ByteArray) = set(name, NbtByteArray(value))
+    operator fun set(name: String, value: String) = set(name, NbtString(value))
+    operator fun set(name: String, value: IntArray) = set(name, NbtIntArray(value))
+    operator fun set(name: String, value: LongArray) = set(name, NbtLongArray(value))
+
 
     fun getBooleanByte(name: String) = getByte(name) == BYTE_TRUE
     fun getNullableBooleanByte(name: String) = getNullableByte(name) == BYTE_TRUE

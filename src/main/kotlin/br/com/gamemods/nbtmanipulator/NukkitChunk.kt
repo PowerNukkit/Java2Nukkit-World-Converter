@@ -61,15 +61,15 @@ data class NukkitChunk(
         level["Entities"] = entities
         level["Sections"] = NbtList(sections.values.map { it.toNbt() })
         level["TileEntities"] = tileEntities
-        level["InhabitedTime"] = NbtLong(inhabitedTime)
-        level["LightPopulated"] = NbtByte(lightPopulated)
-        level["TerrainPopulated"] = NbtByte(terrainPopulated)
-        level["V"] = NbtByte(v)
-        level["xPos"] = NbtInt(position.xPos)
-        level["zPos"] = NbtInt(position.zPos)
-        level["Biomes"] = NbtByteArray(biomes)
-        level["ExtraData"] = NbtByteArray(extraData)
-        level["HeightMap"] = NbtIntArray(heightMap)
+        level["InhabitedTime"] = inhabitedTime
+        level["LightPopulated"] = lightPopulated
+        level["TerrainPopulated"] = terrainPopulated
+        level["V"] = v
+        level["xPos"] = position.xPos
+        level["zPos"] = position.zPos
+        level["Biomes"] = biomes
+        level["ExtraData"] = extraData
+        level["HeightMap"] = heightMap
 
         return NbtFile("", NbtCompound("Level" to level))
     }

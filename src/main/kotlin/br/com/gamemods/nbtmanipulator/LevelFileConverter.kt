@@ -21,8 +21,8 @@ internal fun convertLevelFile(from: File, to: File) {
     outputData.copy(inputData, "generatorVersion")
     outputData.copy(inputData, "generatorVersion")
     outputData.copy(inputData, "generatorOptions", NbtString(""))
-    outputData["hardcore"] = NbtByte(0)
-    outputData["initialized"] = NbtByte(0)
+    outputData["hardcore"] = false
+    outputData["initialized"] = false
     outputData.copy(inputData, "LastPlayed")
     outputData.copy(inputData, "LevelName")
     outputData.copy(inputData, "raining")
