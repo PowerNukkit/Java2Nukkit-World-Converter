@@ -171,6 +171,25 @@ fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
         54 -> NbtCompound(*commonBlockEntityData("Chest")).also { nukkitEntity ->
             //TODO Convert items from the chest
             tileEntity?.copy(nukkitEntity, "CustomName")
+            val pair = when (type.properties?.getString("type")) {
+                "left" -> when (type.properties?.getString("facing")) {
+                    "east" -> blockPos.xPos to blockPos.zPos +1
+                    "south" -> blockPos.xPos -1 to blockPos.zPos
+                    "west" -> blockPos.xPos to blockPos.zPos -1
+                    else -> blockPos.xPos +1 to blockPos.zPos
+                }
+                "right" -> when (type.properties?.getString("facing")) {
+                    "east" -> blockPos.xPos to blockPos.zPos -1
+                    "south" -> blockPos.xPos +1 to blockPos.zPos
+                    "west" -> blockPos.xPos to blockPos.zPos +1
+                    else -> blockPos.xPos -1 to blockPos.zPos
+                }
+                else -> null
+            }
+            pair?.let { (x, z) ->
+                nukkitEntity["pairx"] = x
+                nukkitEntity["pairz"] = z
+            }
         }
         else -> tileEntity?.let { toNukkitTileEntity(it) }
     }
