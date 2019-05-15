@@ -132,10 +132,6 @@ val bedrock2nukkit = Properties().apply {
 fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
     val blockData = this.type.toNukkit()
 
-    if (type.blockName == "minecraft:chest") {
-        println("Chest!")
-    }
-
     fun commonBlockEntityData(id: String) = arrayOf(
         "id" to NbtString(id),
         "x" to NbtInt(blockPos.xPos),
