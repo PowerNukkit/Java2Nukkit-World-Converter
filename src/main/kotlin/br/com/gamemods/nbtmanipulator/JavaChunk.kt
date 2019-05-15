@@ -13,12 +13,14 @@ data class JavaPalette(
 }
 
 data class JavaChunkSection(
+    var chunkPos: ChunkPos,
     var yPos: Int,
     var blockStates: LongArray?,
     var palette: List<JavaPalette>?,
     var skyLight: ByteArray?
 ) {
-    constructor(compound: NbtCompound): this (
+    constructor(compound: NbtCompound, chunkPos: ChunkPos): this (
+        chunkPos,
         compound.getByte("Y").toInt(),
         (compound["BlockStates"] as? NbtLongArray)?.value,
         (compound["Palette"] as? NbtList<NbtCompound>)?.value?.map { JavaPalette(it) },
@@ -82,7 +84,10 @@ data class JavaChunk(
         chunk.level.getList("LiquidTicks"),
         chunk.level.getListOfList("PostProcessing"),
         chunk.level.getCompoundList("Sections").value.associate {
-            it.getByte("Y").toInt() to JavaChunkSection(it)
+            it.getByte("Y").toInt() to JavaChunkSection(
+                it,
+                ChunkPos(chunk.level.getInt("xPos"), chunk.level.getInt("zPos"))
+            )
         },
         chunk.level.getCompoundList("TileEntities"),
         chunk.level.getList("TileTicks"),

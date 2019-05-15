@@ -14,6 +14,7 @@ sealed class NbtTag
 object NbtEnd : NbtTag()
 data class NbtByte(var value: Byte) : NbtTag() {
     constructor(value: Boolean): this(if (value) BYTE_TRUE else 0)
+    constructor(unsigned: Int): this((unsigned and 0xFF).toByte())
 }
 data class NbtShort(var value: Short) : NbtTag()
 data class NbtInt(var value: Int) : NbtTag()

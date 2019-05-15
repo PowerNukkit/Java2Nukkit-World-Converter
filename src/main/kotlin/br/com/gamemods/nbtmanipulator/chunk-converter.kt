@@ -1,8 +1,6 @@
 package br.com.gamemods.nbtmanipulator
 
 import java.util.*
-import kotlin.experimental.and
-import kotlin.experimental.or
 
 fun Region.toNukkit(): Region {
     return Region(position, values.map { Chunk(it.lastModified, it.toNukkit().toNbt()) })
@@ -10,14 +8,18 @@ fun Region.toNukkit(): Region {
 
 fun Chunk.toNukkit(): NukkitChunk {
     val javaChunk = JavaChunk(this)
+    val javaTileEntities = javaChunk.tileEntities.value.associate {
+        BlockPos(it.getInt("x"), it.getInt("y"), it.getInt("z")) to it
+    }
+    val nukkitTileEntities = mutableMapOf<BlockPos, NbtCompound>()
     val nukkitSections = javaChunk.sections.entries.asSequence()
         .filter { it.value.yPos >= 0 }
-        .mapNotNull { it.key to (it.value.toNukkit() ?: return@mapNotNull null) }
+        .mapNotNull { it.key to (it.value.toNukkit(javaTileEntities, nukkitTileEntities) ?: return@mapNotNull null) }
         .toMap()
     val nukkitChunk = NukkitChunk(
         NbtList(javaChunk.entities.value.map { toNukkitEntity(it) }),
         nukkitSections,
-        NbtList(javaChunk.tileEntities.value.map { toNukkitTileEntity(it) }),
+        NbtList(nukkitTileEntities.values.toMutableList()),
         javaChunk.inhabitedTime,
         false,
         javaChunk.sections.isNotEmpty(),
@@ -33,7 +35,10 @@ fun Chunk.toNukkit(): NukkitChunk {
     return nukkitChunk
 }
 
-fun JavaChunkSection.toNukkit(): NukkitChunkSection? {
+data class BlockPos(val xPos: Int, val yPos: Int, val zPos: Int)
+data class JavaBlock(val blockPos: BlockPos, val type: JavaPalette, var tileEntity: NbtCompound?)
+data class NukkitBlock(val blockPos: BlockPos, var blockData: BlockData, var tileEntity: NbtCompound?)
+fun JavaChunkSection.toNukkit(javaTileEntities: Map<BlockPos, NbtCompound>, nukkitTileEntities: MutableMap<BlockPos, NbtCompound>): NukkitChunkSection? {
     val blockStates = blockStates ?: return NukkitChunkSection(
         yPos = yPos,
         blockLight = ByteArray(2048),
@@ -69,32 +74,39 @@ fun JavaChunkSection.toNukkit(): NukkitChunkSection? {
     }
 
     val blockPalettes = Array(4096) {
-        palette[paletteIndexes[it]]
+        val y = (it shr 8) and 0xF
+        val z = (it shr 4) and 0xF
+        val x = it and 0xF
+        val blockPos = BlockPos(x + chunkPos.xPos * 16, y + yPos * 16, z + chunkPos.zPos * 16)
+        JavaBlock(blockPos, palette[paletteIndexes[it]], javaTileEntities[blockPos])
     }
 
-    val nukkitBlocks = blockPalettes.map { it.toNukkit() }
+    val javaBlocks = blockPalettes.associate { it.blockPos to it }
+
+    val nukkitBlocks = blockPalettes.map { it.toNukkit(javaBlocks).also {block ->
+        block.tileEntity?.let { nukkitTileEntity ->
+            nukkitTileEntities[block.blockPos] = nukkitTileEntity
+        }
+    } }
 
     return NukkitChunkSection(
         yPos = yPos,
         blockLight = ByteArray(2048),
-        blocks = ByteArray(4096) { nukkitBlocks[it].blockId },
+        blocks = ByteArray(4096) { nukkitBlocks[it].blockData.blockId },
         blockData = ByteArray(2048) {
             val double = it * 2
-            val stored = nukkitBlocks[double].data to nukkitBlocks[double + 1].data
+            val stored = nukkitBlocks[double].blockData.data to nukkitBlocks[double + 1].blockData.data
             val first = stored.first.toInt() and 0x0F
             val second = (stored.second.toInt() and 0x0F) shl 4
             val merged = first or second
             (merged and 0xFF).toByte()
-            /*(((nukkitBlocks[double].data.toInt() shl 4) and 0xF0) or
-                    (nukkitBlocks[double + 1].data.toInt() and 0x0F)
-            ).toByte()*/
         },
         skyLight = skyLight ?: ByteArray(2048)
     )
 }
 
-fun toNukkitTileEntity(javaEntity: NbtCompound): NbtCompound {
-    return javaEntity
+fun toNukkitTileEntity(javaEntity: NbtCompound): NbtCompound? {
+    return null
 }
 
 fun toNukkitEntity(javaEntity: NbtCompound): NbtCompound {
@@ -115,6 +127,41 @@ val bedrock2nukkit = Properties().apply {
     JavaPalette::class.java.getResourceAsStream("/bedrock-2-nukkit.properties").bufferedReader().use {
         load(it)
     }
+}
+
+fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
+    val blockData = this.type.toNukkit()
+    val nukkitTileEntity = when (blockData.blockId.toInt()) {
+        // bed
+        26 -> NbtCompound(
+            "id" to NbtString("Bed"),
+            "x" to NbtInt(blockPos.xPos),
+            "y" to NbtInt(blockPos.yPos),
+            "z" to NbtInt(blockPos.zPos),
+            "color" to NbtByte(when (type.blockName) {
+                "minecraft:white_bed" -> 0
+                "minecraft:orange_bed" -> 1
+                "minecraft:magenta_bed" -> 2
+                "minecraft:light_blue_bed" -> 3
+                "minecraft:yellow_bed" -> 4
+                "minecraft:lime_bed" -> 5
+                "minecraft:pink_bed" -> 6
+                "minecraft:gray_bed" -> 7
+                "minecraft:light_gray_bed" -> 8
+                "minecraft:cyan_bed" -> 9
+                "minecraft:purple_bed" -> 10
+                "minecraft:blue_bed" -> 11
+                "minecraft:brown_bed" -> 12
+                "minecraft:green_bed" -> 13
+                "minecraft:red_bed" -> 14
+                "minecraft:black_bed" -> 15
+                else -> 14
+            })
+        )
+        else -> tileEntity?.let { toNukkitTileEntity(it) }
+    }
+
+    return NukkitBlock(blockPos, blockData, nukkitTileEntity)
 }
 
 data class BlockData(val blockId: Byte, val data: Byte)
