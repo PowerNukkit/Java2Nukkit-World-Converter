@@ -129,6 +129,12 @@ val bedrock2nukkit = Properties().apply {
     }
 }
 
+val java2bedrockItems = Properties().apply {
+    JavaPalette::class.java.getResourceAsStream("/items.properties").bufferedReader().use {
+        load(it)
+    }
+}.mapKeys { it.key.toString().toLowerCase() }.mapValues { it.value.toString() }
+
 fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
     val blockData = this.type.toNukkit()
 
@@ -186,11 +192,53 @@ fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
                 nukkitEntity["pairx"] = x
                 nukkitEntity["pairz"] = z
             }
+            tileEntity?.toNukkitInventory(nukkitEntity)
         }
         else -> tileEntity?.let { toNukkitTileEntity(it) }
     }
 
     return NukkitBlock(blockPos, blockData, nukkitTileEntity)
+}
+
+fun NbtCompound.toNukkitInventory(nukkitInventory: NbtCompound) {
+    val javaItems = getNullableCompoundList("Items") ?: return
+    val nukkitItems = javaItems.value.map { javaItem ->
+        javaItem.toNukkitItem().also { nukkitItem ->
+            nukkitItem.copy(javaItem, "Slot")
+        }
+    }
+    nukkitInventory["Items"] = NbtList(nukkitItems)
+}
+
+fun NbtCompound.toNukkitItem(): NbtCompound {
+    val nukkitItem = NbtCompound()
+    nukkitItem.copy(this, "Count")
+    val javaId = getString("id")
+    val nbt = getNullableCompound("tag")
+    val damage = nbt?.getNullableInt("Damage") ?: 0
+    val internalId = javaId.removePrefix("minecraft:").toLowerCase()
+    val bedrockMapping = java2bedrockItems[internalId] ?: "B,0,0"
+    val (type, bedrockId, rawBedrockData) = bedrockMapping.split(',', limit = 3)
+    val bedrockData = rawBedrockData.takeUnless { it == "~" }?.toInt() ?: damage
+    val nukkitMapping = bedrock2nukkit.getProperty("$type,$bedrockId,$bedrockData")
+        ?: bedrock2nukkit.getProperty("$type,$bedrockId,$rawBedrockData")
+        ?: "$bedrockId,$bedrockData"
+    val (nukkitId, rawNukkitData) = nukkitMapping.split(',', limit = 2)
+    val nukkitData = rawNukkitData.takeUnless { it == "~" }?.toInt() ?: damage
+    nukkitItem["id"] = nukkitId.toShort()
+
+    if (type == "B" && nukkitId.toInt() > 255) {
+        System.err.println("Cannot convert an item to nukkit because block ids > 255 aren't supported!\n" +
+                "Replacing this item with air: $javaId:$damage ($nukkitId:$nukkitData)")
+    }
+
+    if (nukkitData != 0) {
+        nukkitItem["Damage"] = nukkitData.toShort()
+    }
+    if (nbt != null) {
+        nukkitItem["tag"] = nbt
+    }
+    return nukkitItem
 }
 
 data class BlockData(val blockId: Byte, val data: Byte)
@@ -204,7 +252,7 @@ fun JavaPalette.toNukkit(): BlockData {
     val stateId = "$blockName$propertiesId".removePrefix("minecraft:").replace(':', '-').toLowerCase()
 
     val prop = java2bedrockStates[stateId] ?: java2bedrockStates[blockName] ?: "1,15"
-    val nukkit = bedrock2nukkit.getProperty(prop) ?: prop
+    val nukkit = bedrock2nukkit.getProperty("B,$prop") ?: prop
     val ids = nukkit.split(',', limit = 2)
     val blockId = ids[0].toInt()
     check(blockId in 0..255) {
