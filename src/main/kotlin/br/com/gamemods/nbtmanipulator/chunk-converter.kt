@@ -223,14 +223,16 @@ fun NbtCompound.toNukkitItem(): NbtCompound {
     val nukkitMapping = bedrock2nukkit.getProperty("$type,$bedrockId,$bedrockData")
         ?: bedrock2nukkit.getProperty("$type,$bedrockId,$rawBedrockData")
         ?: "$bedrockId,$bedrockData"
-    val (nukkitId, rawNukkitData) = nukkitMapping.split(',', limit = 2)
+    val (rawNukkitId, rawNukkitData) = nukkitMapping.split(',', limit = 2)
     val nukkitData = rawNukkitData.takeUnless { it == "~" }?.toInt() ?: damage
-    nukkitItem["id"] = nukkitId.toShort()
 
-    if (type == "B" && nukkitId.toInt() > 255) {
-        System.err.println("Cannot convert an item to nukkit because block ids > 255 aren't supported!\n" +
-                "Replacing this item with air: $javaId:$damage ($nukkitId:$nukkitData)")
+    val nukkitId = if (type == "B" && rawNukkitId.toInt() > 255) {
+        255 - rawNukkitId.toInt()
+    } else {
+        rawNukkitId.toInt()
     }
+
+    nukkitItem["id"] = nukkitId.toShort()
 
     if (nukkitData != 0) {
         nukkitItem["Damage"] = nukkitData.toShort()
