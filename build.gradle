@@ -13,11 +13,13 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    maven { url 'https://hub.spigotmc.org/nexus/content/groups/public/' }
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    compile group: 'org.jetbrains.kotlin', name: 'kotlin-reflect'
+    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-reflect'
+    implementation group: 'net.md-5', name: 'bungeecord-chat', version: '1.14-SNAPSHOT'
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
