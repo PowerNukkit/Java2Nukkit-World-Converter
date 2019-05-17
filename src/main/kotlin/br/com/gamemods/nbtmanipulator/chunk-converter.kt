@@ -172,7 +172,7 @@ fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
         // chest
         54 -> NbtCompound(*commonBlockEntityData("Chest")).also { nukkitEntity ->
             //TODO Convert items from the chest
-            tileEntity?.copy(nukkitEntity, "CustomName")
+            tileEntity?.copyTo(nukkitEntity, "CustomName")
             val pair = when (type.properties?.getString("type")) {
                 "left" -> when (type.properties?.getString("facing")) {
                     "east" -> blockPos.xPos to blockPos.zPos +1
@@ -194,6 +194,16 @@ fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
             }
             tileEntity?.toNukkitInventory(nukkitEntity)
         }
+        // Furnance
+        61, 62 -> NbtCompound(*commonBlockEntityData("Furnace")).also { nukkitEntity ->
+            tileEntity?.apply {
+                copyTo(nukkitEntity, "CustomName")
+                copyTo(nukkitEntity, "BurnTime")
+                copyTo(nukkitEntity, "CookTime")
+                nukkitEntity["BurnDuration"] = getShort("CookTimeTotal")
+                toNukkitInventory(nukkitEntity)
+            }
+        }
         else -> tileEntity?.let { toNukkitTileEntity(it) }
     }
 
@@ -204,7 +214,7 @@ fun NbtCompound.toNukkitInventory(nukkitInventory: NbtCompound) {
     val javaItems = getNullableCompoundList("Items") ?: return
     val nukkitItems = javaItems.value.map { javaItem ->
         javaItem.toNukkitItem().also { nukkitItem ->
-            nukkitItem.copy(javaItem, "Slot")
+            nukkitItem.copyFrom(javaItem, "Slot")
         }
     }
     nukkitInventory["Items"] = NbtList(nukkitItems)
@@ -212,7 +222,7 @@ fun NbtCompound.toNukkitInventory(nukkitInventory: NbtCompound) {
 
 fun NbtCompound.toNukkitItem(): NbtCompound {
     val nukkitItem = NbtCompound()
-    nukkitItem.copy(this, "Count")
+    nukkitItem.copyFrom(this, "Count")
     val javaId = getString("id")
     val nbt = getNullableCompound("tag")
     val damage = nbt?.getNullableInt("Damage") ?: 0
