@@ -147,10 +147,13 @@ fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
         "z" to NbtInt(blockPos.zPos)
     )
 
+    fun createTileEntity(id: String, vararg tags: Pair<String, NbtTag>, action: (NbtCompound)->Unit = {}): NbtCompound {
+        return NbtCompound(*commonBlockEntityData(id), *tags).also(action)
+    }
+
     val nukkitTileEntity = when (blockData.blockId.toInt()) {
         // bed
-        26 -> NbtCompound(
-            *commonBlockEntityData("Bed"),
+        26 -> createTileEntity("Bed",
             "color" to NbtByte(when (type.blockName) {
                 "minecraft:white_bed" -> 0
                 "minecraft:orange_bed" -> 1
@@ -172,7 +175,7 @@ fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
             })
         )
         // chest
-        54 -> NbtCompound(*commonBlockEntityData("Chest")).also { nukkitEntity ->
+        54 -> createTileEntity("Chest") { nukkitEntity ->
             //TODO Convert items from the chest
             tileEntity?.copyJsonToLegacyTo(nukkitEntity, "CustomName")
             val pair = when (type.properties?.getString("type")) {
@@ -197,7 +200,7 @@ fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
             tileEntity?.toNukkitInventory(nukkitEntity)
         }
         // Furnance
-        61, 62 -> NbtCompound(*commonBlockEntityData("Furnace")).also { nukkitEntity ->
+        61, 62 -> createTileEntity("Furnace") { nukkitEntity ->
             tileEntity?.apply {
                 copyJsonToLegacyTo(nukkitEntity, "CustomName")
                 copyTo(nukkitEntity, "BurnTime")
@@ -206,6 +209,14 @@ fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
                 toNukkitInventory(nukkitEntity)
             }
         }
+        // Signs
+        63,436,441,443,445,447,68,437,442,444,446,448,323,472,473,474,475,476 ->
+            createTileEntity("Sign") { nukkitEntity ->
+                for (i in 1..4) {
+                    val text = tileEntity?.getString("Text$i")?.fromJsonToLegacy() ?: ""
+                    nukkitEntity["Text$i"] = text
+                }
+            }
         else -> tileEntity?.let { toNukkitTileEntity(it) }
     }
 
