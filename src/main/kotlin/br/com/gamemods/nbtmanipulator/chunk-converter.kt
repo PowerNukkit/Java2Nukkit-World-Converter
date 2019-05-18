@@ -157,6 +157,9 @@ val nukkitBlockNames = nukkitBlockIds.entries.asSequence()
 val nukkitItemNames = nukkitItemIds.entries.asSequence()
     .map { (k,v) -> k to v }.groupBy { (_,v) -> v }
     .mapValues { it.value.map { p-> p.first } }
+    .let {
+        mapOf(0 to "air") + it
+    }
 
 object IdComparator: Comparator<Map.Entry<String, String>> {
     override fun compare(entry1: Map.Entry<String, String>, entry2: Map.Entry<String, String>): Int {
