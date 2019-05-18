@@ -298,9 +298,10 @@ fun JavaPalette.toNukkit(): BlockData {
     val nukkit = bedrock2nukkit.getProperty("B,$prop") ?: prop
     val ids = nukkit.split(',', limit = 2)
     val blockId = ids[0].toInt()
+    val blockData = ids.getOrElse(1) { "0" }.toByte()
     check(blockId in 0..255) {
-        "Block id unsupported by Nukkit: $blockId"
+        "Block id unsupported by Nukkit: $blockId:$blockData"
     }
 
-    return BlockData((blockId and 0xFF).toByte(), ids.getOrElse(1) { "0" }.toByte())
+    return BlockData((blockId and 0xFF).toByte(), blockData)
 }
