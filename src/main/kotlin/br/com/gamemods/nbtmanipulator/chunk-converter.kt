@@ -347,6 +347,11 @@ fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
                 }
             }
         }
+        151, 178 -> createTileEntity("DaylightDetector")
+        25 -> createTileEntity("Music") { nukkitEntity ->
+            nukkitEntity["note"] = type.properties?.getString("note")?.toByte() ?: 0
+            nukkitEntity["powered"] = type.properties?.getString("powered")?.toBoolean() ?: false
+        }
         63,436,441,443,445,447,68,437,442,444,446,448,323,472,473,474,475,476 ->
             createTileEntity("Sign") { nukkitEntity ->
                 for (i in 1..4) {
