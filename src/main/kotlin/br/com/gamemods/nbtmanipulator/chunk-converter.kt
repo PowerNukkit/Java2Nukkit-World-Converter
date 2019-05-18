@@ -120,6 +120,12 @@ fun toNukkitBiomes(biomes: IntArray): ByteArray {
     return biomes.map { it.toByte() }.toByteArray()
 }
 
+val java2bedrockEntities = Properties().apply {
+    JavaPalette::class.java.getResourceAsStream("/entity-ids.properties").bufferedReader().use {
+        load(it)
+    }
+}.mapKeys { it.key.toString().toLowerCase() }.mapValues { it.value.toString().toInt() }
+
 val java2bedrockStates = Properties().apply {
     JavaPalette::class.java.getResourceAsStream("/block-states.properties").bufferedReader().use {
         load(it)
@@ -270,7 +276,6 @@ fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
     }
 
     val nukkitTileEntity = when (blockData.blockId.toInt()) {
-        // Bed
         26 -> createTileEntity("Bed",
             "color" to NbtByte(when (type.blockName) {
                 "minecraft:white_bed" -> 0
@@ -292,7 +297,6 @@ fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
                 else -> 14
             })
         )
-        // Chest
         54 -> createTileEntity("Chest") { nukkitEntity ->
             //TODO Convert items from the chest
             tileEntity?.copyJsonToLegacyTo(nukkitEntity, "CustomName")
@@ -317,7 +321,7 @@ fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
             }
             tileEntity?.toNukkitInventory(nukkitEntity)
         }
-        // Furnance
+        130 -> createTileEntity("EnderChest")
         61, 62 -> createTileEntity("Furnace") { nukkitEntity ->
             tileEntity?.apply {
                 copyJsonToLegacyTo(nukkitEntity, "CustomName")
@@ -327,7 +331,6 @@ fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
                 toNukkitInventory(nukkitEntity)
             }
         }
-        // Signs
         63,436,441,443,445,447,68,437,442,444,446,448,323,472,473,474,475,476 ->
             createTileEntity("Sign") { nukkitEntity ->
                 for (i in 1..4) {
@@ -335,10 +338,27 @@ fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
                     nukkitEntity["Text$i"] = text
                 }
             }
+        52 -> createTileEntity("MobSpawner") { nukkitEntity ->
+            // Tile entity based on
+            // https://github.com/Nukkit-coders/MobPlugin/blob/master/src/main/java/nukkitcoders/mobplugin/entities/block/BlockEntitySpawner.java
+            tileEntity?.apply {
+                copyTo(nukkitEntity, "SpawnRange")
+                copyTo(nukkitEntity, "MinSpawnDelay")
+                copyTo(nukkitEntity, "MaxSpawnDelay")
+                copyTo(nukkitEntity, "MaxNearbyEntities")
+                copyTo(nukkitEntity, "RequiredPlayerRange")
+                nukkitEntity["EntityId"] = getNullableCompound("SpawnData")?.entityToId() ?: 12
+            }
+        }
         else -> tileEntity?.let { toNukkitTileEntity(it) }
     }
 
     return NukkitBlock(blockPos, blockData, nukkitTileEntity)
+}
+
+fun NbtCompound.entityToId(): Int? {
+    val javaId = getNullableString("id")?.toLowerCase()?.removePrefix("minecraft:") ?: return null
+    return java2bedrockEntities[javaId].takeUnless { it == 0 }
 }
 
 fun NbtCompound.copyJsonToLegacyTo(other: NbtCompound, tagName: String, defaultLegacy: String? = null) {
