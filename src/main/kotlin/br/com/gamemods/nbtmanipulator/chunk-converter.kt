@@ -3,6 +3,7 @@ package br.com.gamemods.nbtmanipulator
 import net.md_5.bungee.api.ChatColor
 import net.md_5.bungee.chat.ComponentSerializer
 import java.util.*
+import kotlin.Comparator
 
 fun Region.toNukkit(): Region {
     return Region(position, values.map { Chunk(it.lastModified, it.toNukkit().toNbt()) })
@@ -187,7 +188,13 @@ fun checkIds() {
         }
     }
 
-    java2bedrockStates.forEach { (state, stateMapping) ->
+    java2bedrockStates.asSequence().sortedWith(Comparator { entry1, entry2 ->
+        val (blockId1, blockData1) = entry1.value.split(',', limit = 2).map { it.toInt() }
+        val (blockId2, blockData2) = entry2.value.split(',', limit = 2).map { it.toInt() }
+        blockId1.compareTo(blockId2).takeIf { it != 0 }
+            ?: blockData1.compareTo(blockData2).takeIf { it != 0 }
+            ?: entry1.key.compareTo(entry2.key)
+    }).forEach { (state, stateMapping) ->
         val (mappedBlockId, mappedBlockData) = stateMapping.split(',', limit = 2).map { it.toInt() }
         val (nukkitBlockId, nukkitBlockData) =
             (bedrock2nukkit["$mappedBlockId,$mappedBlockData"]?.toString() ?: stateMapping)
