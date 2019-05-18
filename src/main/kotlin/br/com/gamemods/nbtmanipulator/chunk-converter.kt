@@ -514,6 +514,55 @@ fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
             }
             nukkitEntity["Sticky"] = sticky
         }
+        149, 150 -> createTileEntity("Comparator")
+        154 -> createTileEntity("Hopper") { nukkitEntity ->
+            tileEntity?.apply {
+                copyTo(nukkitEntity, "TransferCooldown")
+                toNukkitInventory(nukkitEntity)
+            }
+        }
+        84 -> createTileEntity("Jukebox") { nukkitEntity ->
+            tileEntity?.getNullableCompound("RecordItem")?.let {
+                nukkitEntity["RecordItem"] = it.toNukkitItem()
+            }
+        }
+        205, 218 -> createTileEntity("ShulkerBox") { nukkitEntity ->
+            val facing = when (type.properties?.getNullableString("facing")) {
+                "down" -> 0
+                "up" -> 1
+                "north" -> 3
+                "west" -> 4
+                "east" -> 5
+                else -> 0
+            }
+            nukkitEntity["facing"] = facing.toByte()
+            tileEntity?.apply {
+                copyJsonToLegacyTo(nukkitEntity, "CustomName")
+                toNukkitInventory(nukkitEntity)
+            }
+        }
+        176, 177 -> createTileEntity("Banner") { nukkitEntity ->
+            val baseColor = when (type.blockName.removePrefix("minecraft:").removeSuffix("_banner").removeSuffix("_wall")) {
+                "white" -> 0
+                "orange" -> 1
+                "magenta" -> 2
+                "light_blue" -> 3
+                "yellow" -> 4
+                "lime" -> 5
+                "pink" -> 6
+                "gray" -> 7
+                "light_gray" -> 8
+                "cyan" -> 9
+                "purple" -> 10
+                "blue" -> 11
+                "brown" -> 12
+                "green" -> 13
+                "red" -> 14
+                "black" -> 15
+                else -> 0
+            }
+            nukkitEntity["Base"] = baseColor
+        }
         else -> tileEntity?.let { toNukkitTileEntity(it) }
     }
 
