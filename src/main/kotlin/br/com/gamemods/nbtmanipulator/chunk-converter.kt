@@ -626,8 +626,16 @@ fun NbtCompound.toNukkitItem(): NbtCompound {
 
     nukkitItem["id"] = nukkitId.toShort()
 
-    if (nukkitData != 0) {
-        nukkitItem["Damage"] = nukkitData.toShort()
+    val customNukkitData = when (nukkitId) {
+        383 -> {
+            val entity = javaId.removeSuffix("_spawn_egg").removePrefix("minecraft:")
+            java2bedrockEntities[entity] ?: 0
+        }
+        else -> nukkitData
+    }
+
+    if (customNukkitData != 0) {
+        nukkitItem["Damage"] = customNukkitData.toShort()
     }
     if (nbt != null) {
         nukkitItem["tag"] = nbt
