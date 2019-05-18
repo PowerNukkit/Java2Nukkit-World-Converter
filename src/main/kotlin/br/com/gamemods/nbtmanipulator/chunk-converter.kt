@@ -506,6 +506,14 @@ fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
                 secondary?.let { nukkitEntity["Secondary"] = it }
             }
         }
+        33, 29 -> createTileEntity("PistonArm") { nukkitEntity ->
+            val sticky = when (type.blockName) {
+                "minecraft:piston" -> false
+                "minecraft:sticky_piston" -> true
+                else -> type.properties?.getString("type") == "sticky"
+            }
+            nukkitEntity["Sticky"] = sticky
+        }
         else -> tileEntity?.let { toNukkitTileEntity(it) }
     }
 
