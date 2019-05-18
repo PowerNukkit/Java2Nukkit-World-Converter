@@ -158,6 +158,28 @@ val nukkitItemNames = nukkitItemIds.entries.asSequence()
     .map { (k,v) -> k to v }.groupBy { (_,v) -> v }
     .mapValues { it.value.map { p-> p.first } }
 
+object IdComparator: Comparator<Map.Entry<String, String>> {
+    override fun compare(entry1: Map.Entry<String, String>, entry2: Map.Entry<String, String>): Int {
+        val (blockId1, blockData1) = entry1.value.split(',', limit = 2).map { it.toInt() }
+        val (blockId2, blockData2) = entry2.value.split(',', limit = 2).map { it.toInt() }
+        return blockId1.compareTo(blockId2).takeIf { it != 0 }
+            ?: blockData1.compareTo(blockData2).takeIf { it != 0 }
+            ?: entry1.key.compareTo(entry2.key)
+    }
+}
+
+object TypeIdComparator: Comparator<Map.Entry<String, String>> {
+    override fun compare(entry1: Map.Entry<String, String>, entry2: Map.Entry<String, String>): Int {
+        val (type1, blockId1, blockData1) = entry1.value.split(',', limit = 3)
+        val (type2, blockId2, blockData2) = entry2.value.split(',', limit = 3)
+        return type1.compareTo(type2).takeIf { it != 0 }
+            ?: blockId1.toInt().compareTo(blockId2.toInt()).takeIf { it != 0 }
+            ?: (blockData1.takeIf { it != "~" }?.toInt() ?: -1)
+                .compareTo(blockData2.takeIf { it != "~" }?.toInt() ?: -1).takeIf { it != 0 }
+            ?: entry1.key.compareTo(entry2.key)
+    }
+}
+
 fun checkIds() {
     val validBlockPattern = Regex("^\\d+,\\d+$")
     java2bedrockStates.values.find { !validBlockPattern.matches(it) }?.let {
@@ -188,24 +210,43 @@ fun checkIds() {
         }
     }
 
-    java2bedrockStates.asSequence().sortedWith(Comparator { entry1, entry2 ->
-        val (blockId1, blockData1) = entry1.value.split(',', limit = 2).map { it.toInt() }
-        val (blockId2, blockData2) = entry2.value.split(',', limit = 2).map { it.toInt() }
-        blockId1.compareTo(blockId2).takeIf { it != 0 }
-            ?: blockData1.compareTo(blockData2).takeIf { it != 0 }
-            ?: entry1.key.compareTo(entry2.key)
-    }).forEach { (state, stateMapping) ->
+    java2bedrockStates.asSequence().sortedWith(IdComparator).forEach { (state, stateMapping) ->
         val (mappedBlockId, mappedBlockData) = stateMapping.split(',', limit = 2).map { it.toInt() }
         val (nukkitBlockId, nukkitBlockData) =
             (bedrock2nukkit["B,$mappedBlockId,$mappedBlockData"]?.toString() ?: stateMapping)
                 .split(',', limit = 2).map { it.toInt() }
 
         if (nukkitBlockId !in nukkitBlockNames) {
-            error("The block $nukkitBlockId:$nukkitBlockData is unsupported by Nukkit!\nState: $state")
+            error("The block $nukkitBlockId,$nukkitBlockData is unsupported by Nukkit!\nState: $state")
         }
 
         if (nukkitBlockData !in 0..15) {
-            error("The block $nukkitBlockId:$nukkitBlockData has data out of range 0..15!\nState: $state")
+            error("The block $nukkitBlockId,$nukkitBlockData has data out of range 0..15!\nState: $state")
+        }
+    }
+
+    java2bedrockItems.asSequence().sortedWith(TypeIdComparator).forEach { (item, stateMapping) ->
+        val (type, mappedItemId, mappedItemData) = stateMapping.split(',', limit = 3)
+        val (nukkitItemId, nukkitItemData) =
+            (bedrock2nukkit["$type,$mappedItemId,$mappedItemData"]?.toString()
+                ?: bedrock2nukkit["$type,$mappedItemId,~"]?.toString()
+                ?: "$mappedItemId,$mappedItemData")
+                .split(',', limit = 2).mapIndexed { i, str->
+                    when {
+                        i == 0 -> str
+                        str == "~" -> mappedItemData
+                        else -> str
+                    }
+                }
+
+        if (type == "I") {
+            if (nukkitItemId.toInt() !in nukkitItemNames) {
+                error("The item $type,$nukkitItemId,$nukkitItemData is unsupported by Nukkit!\nItem: $item")
+            }
+        } else {
+            if (nukkitItemId.toInt() !in nukkitBlockNames) {
+                error("The item-block $type,$nukkitItemId,$nukkitItemData is unsupported by Nukkit!\nItem: $item")
+            }
         }
     }
 }
