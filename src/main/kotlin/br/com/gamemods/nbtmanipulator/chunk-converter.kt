@@ -137,6 +137,72 @@ val java2bedrockItems = Properties().apply {
     }
 }.mapKeys { it.key.toString().toLowerCase() }.mapValues { it.value.toString() }
 
+val nukkitBlockIds = Properties().apply {
+    JavaPalette::class.java.getResourceAsStream("/nukkit-block-ids.properties").bufferedReader().use {
+        load(it)
+    }
+}.mapKeys { it.key.toString().toLowerCase() }.mapValues { it.value.toString().toInt() }
+
+val nukkitItemIds = Properties().apply {
+    JavaPalette::class.java.getResourceAsStream("/nukkit-item-ids.properties").bufferedReader().use {
+        load(it)
+    }
+}.mapKeys { it.key.toString().toLowerCase() }.mapValues { it.value.toString().toInt() }
+
+val nukkitBlockNames = nukkitBlockIds.entries.asSequence()
+    .map { (k,v) -> k to v }.groupBy { (_,v) -> v }
+    .mapValues { it.value.map { p-> p.first } }
+
+val nukkitItemNames = nukkitItemIds.entries.asSequence()
+    .map { (k,v) -> k to v }.groupBy { (_,v) -> v }
+    .mapValues { it.value.map { p-> p.first } }
+
+fun checkIds() {
+    val validBlockPattern = Regex("^\\d+,\\d+$")
+    java2bedrockStates.values.find { !validBlockPattern.matches(it) }?.let {
+        error("Found an invalid mapping at block-states.properties: $it")
+    }
+
+
+    val validKeyPattern = Regex("^(B,\\d+,\\d+)|(I,\\d+,(\\d+|~))$")
+    java2bedrockItems.values.find { !validKeyPattern.matches(it) }?.let {
+        error("Found an invalid mapping at items.properties: $it")
+    }
+
+    val validItemValuePattern = Regex("^\\d+,(\\d+|~)$")
+    bedrock2nukkit.forEach { k, v ->
+        val key = k.toString()
+        if (!validKeyPattern.matches(key)) {
+            error("Found an invalid key at bedrock-2-nukkit.properties: $key")
+        }
+
+        if (key[0] == 'B') {
+            if (!validBlockPattern.matches(v.toString())) {
+                error("Found an invalid value at bedrock-2-nukkit.properties: Key:$key Value:$v")
+            }
+        } else {
+            if (!validItemValuePattern.matches(v.toString())) {
+                error("Found an invalid value at bedrock-2-nukkit.properties: Key:$key Value:$v")
+            }
+        }
+    }
+
+    java2bedrockStates.forEach { (state, stateMapping) ->
+        val (mappedBlockId, mappedBlockData) = stateMapping.split(',', limit = 2).map { it.toInt() }
+        val (nukkitBlockId, nukkitBlockData) =
+            (bedrock2nukkit["$mappedBlockId,$mappedBlockData"]?.toString() ?: stateMapping)
+                .split(',', limit = 2).map { it.toInt() }
+
+        if (nukkitBlockId !in nukkitBlockNames) {
+            error("The block $nukkitBlockId:$nukkitBlockData is unsupported by Nukkit!\nState: $state")
+        }
+
+        if (nukkitBlockData !in 0..15) {
+            error("The block $nukkitBlockId:$nukkitBlockData has data out of range 0..15!\nState: $state")
+        }
+    }
+}
+
 fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
     val blockData = this.type.toNukkit()
 

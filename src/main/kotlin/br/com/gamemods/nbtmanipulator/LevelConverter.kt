@@ -5,6 +5,8 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 fun main(args: Array<String>) {
+    checkIds()
+
     if (args.size != 2) {
         error("Especificar apenas 2 argumentos de-para")
     }
