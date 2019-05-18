@@ -95,12 +95,12 @@ fun JavaChunkSection.toNukkit(javaTileEntities: Map<BlockPos, NbtCompound>, nukk
     return NukkitChunkSection(
         yPos = yPos,
         blockLight = ByteArray(2048),
-        blocks = ByteArray(4096) { nukkitBlocks[it].blockData.blockId },
+        blocks = ByteArray(4096) { nukkitBlocks[it].blockData.byteBlockId },
         blockData = ByteArray(2048) {
             val double = it * 2
             val stored = nukkitBlocks[double].blockData.data to nukkitBlocks[double + 1].blockData.data
-            val first = stored.first.toInt() and 0x0F
-            val second = (stored.second.toInt() and 0x0F) shl 4
+            val first = stored.first and 0x0F
+            val second = (stored.second and 0x0F) shl 4
             val merged = first or second
             (merged and 0xFF).toByte()
         },
@@ -275,7 +275,7 @@ fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
         return NbtCompound(*commonBlockEntityData(id), *tags).also(action)
     }
 
-    val nukkitTileEntity = when (blockData.blockId.toInt()) {
+    val nukkitTileEntity = when (blockData.blockId) {
         26 -> createTileEntity("Bed",
             "color" to NbtByte(when (type.blockName) {
                 "minecraft:white_bed" -> 0
@@ -298,7 +298,6 @@ fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
             })
         )
         54 -> createTileEntity("Chest") { nukkitEntity ->
-            //TODO Convert items from the chest
             tileEntity?.copyJsonToLegacyTo(nukkitEntity, "CustomName")
             val pair = when (type.properties?.getString("type")) {
                 "left" -> when (type.properties?.getString("facing")) {
@@ -348,6 +347,25 @@ fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
                 copyTo(nukkitEntity, "MaxNearbyEntities")
                 copyTo(nukkitEntity, "RequiredPlayerRange")
                 nukkitEntity["EntityId"] = getNullableCompound("SpawnData")?.entityToId() ?: 12
+            }
+        }
+        116 -> createTileEntity("EnchantTable") { nukkitEntity ->
+            tileEntity?.copyJsonToLegacyTo(nukkitEntity, "CustomName")
+        }
+        144 -> createTileEntity("Skull") { nukkitEntity ->
+            val rotation = type.properties?.getNullableString("rotation") ?: "0"
+            val type = when (type.blockName.removePrefix("minecraft:")) {
+                "skeleton_skull", "skeleton_wall_skull" -> 0
+                "wither_skeleton_skull", "wither_skeleton_wall_skull" -> 1
+                "zombie_head", "zombie_wall_head" -> 2
+                "player_head", "player_wall_head" -> 3
+                "creeper_head", "creeper_wall_head" -> 4
+                else -> 0
+            }
+            nukkitEntity["Rot"] = rotation.toByte()
+            nukkitEntity["SkullType"] = type.toByte()
+            if ("_wall_" !in this.type.blockName) {
+                blockData.data = 1
             }
         }
         else -> tileEntity?.let { toNukkitTileEntity(it) }
@@ -422,7 +440,9 @@ fun NbtCompound.toNukkitItem(): NbtCompound {
     return nukkitItem
 }
 
-data class BlockData(val blockId: Byte, val data: Byte)
+data class BlockData(var blockId: Int, var data: Int) {
+    val byteBlockId: Byte get() = (blockId and 0xFF).toByte()
+}
 fun JavaPalette.toNukkit(): BlockData {
     val propertiesId = properties?.value
         ?.mapValuesTo(TreeMap()) { (it.value as NbtString).value }
@@ -441,5 +461,5 @@ fun JavaPalette.toNukkit(): BlockData {
         "Block id unsupported by Nukkit: $blockId:$blockData"
     }
 
-    return BlockData((blockId and 0xFF).toByte(), blockData)
+    return BlockData(blockId, blockData.toInt())
 }
