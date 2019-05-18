@@ -330,6 +330,23 @@ fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
                 toNukkitInventory(nukkitEntity)
             }
         }
+        117 -> createTileEntity("BrewingStand") { nukkitEntity ->
+            tileEntity?.apply {
+                copyJsonToLegacyTo(nukkitEntity, "CustomName")
+                nukkitEntity["CookTime"] = getShort("BrewTime")
+                val fuel = getByte("Fuel")
+                val fuelTotal = if (fuel > 0) 20 else 0
+                nukkitEntity["FuelTotal"] = fuelTotal.toShort()
+                nukkitEntity["FuelAmount"] = fuel.toShort()
+                toNukkitInventory(nukkitEntity) {
+                    when {
+                        it == 3 -> 0
+                        it < 3 -> it + 1
+                        else -> it
+                    }
+                }
+            }
+        }
         63,436,441,443,445,447,68,437,442,444,446,448,323,472,473,474,475,476 ->
             createTileEntity("Sign") { nukkitEntity ->
                 for (i in 1..4) {
@@ -434,11 +451,11 @@ fun String.fromJsonToLegacy(): String {
     return string
 }
 
-fun NbtCompound.toNukkitInventory(nukkitInventory: NbtCompound) {
+fun NbtCompound.toNukkitInventory(nukkitInventory: NbtCompound, slotRemapper: (Int)->Int = { it }) {
     val javaItems = getNullableCompoundList("Items") ?: return
     val nukkitItems = javaItems.value.map { javaItem ->
         javaItem.toNukkitItem().also { nukkitItem ->
-            nukkitItem.copyFrom(javaItem, "Slot")
+            nukkitItem["Slot"] = slotRemapper(javaItem.getByte("Slot").toInt()).toByte()
         }
     }
     nukkitInventory["Items"] = NbtList(nukkitItems)
