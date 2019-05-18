@@ -631,6 +631,45 @@ fun NbtCompound.toNukkitItem(): NbtCompound {
             val entity = javaId.removeSuffix("_spawn_egg").removePrefix("minecraft:")
             java2bedrockEntities[entity] ?: 0
         }
+        262 -> {
+            val potionInfo = nbt?.getNullableString("Potion")?.removePrefix("minecraft:")
+            if (potionInfo == null) {
+                nukkitData
+            } else {
+                val potion = potionInfo.removePrefix("long_").removePrefix("strong_")
+                val extended = potionInfo.startsWith("long_")
+                val enhanced = potionInfo.startsWith("strong_")
+                data class PotionType(val base: Int, val extensionInc: Int, val enhancementInc: Int)
+                val potionType = when (potion) {
+                    "night_vision" -> PotionType(6, 1, 0)
+                    "invisibility" -> PotionType(8, 1, 0)
+                    "leaping" -> PotionType(10, 1, 2)
+                    "fire_resistance" -> PotionType(13, 1, 0)
+                    "swiftness" -> PotionType(15, 1, 2)
+                    "slowness" -> PotionType(18, 1, 0)
+                    "water_breathing" -> PotionType(20, 1, 0)
+                    "healing" -> PotionType(22, 0, 1)
+                    "harming" -> PotionType(24, 0, 1)
+                    "poison" -> PotionType(26, 1, 2)
+                    "regeneration" -> PotionType(29, 1, 2)
+                    "strength" -> PotionType(32, 1, 2)
+                    "weakness" -> PotionType(35, 1, 0)
+                    "decay" -> PotionType(37, 0, 0)
+                    "turtle_master" -> PotionType(38, 1, 2)
+                    "slow_falling" -> PotionType(41, 1, 0)
+                    else -> null
+                }
+                if (potionType == null) {
+                    0
+                } else {
+                    when {
+                        extended -> potionType.base + potionType.extensionInc
+                        enhanced -> potionType.base + potionType.enhancementInc
+                        else -> potionType.base
+                    }
+                }
+            }
+        }
         else -> nukkitData
     }
 
