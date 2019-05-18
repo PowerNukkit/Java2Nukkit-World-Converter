@@ -224,6 +224,19 @@ val nukkitItemNames = nukkitItemIds.entries.asSequence()
         mapOf(0 to "air") + it
     }
 
+val javaStatusEffectNames = Properties().apply {
+    JavaPalette::class.java.getResourceAsStream("/status-effect-java-ids.properties").bufferedReader().use {
+        load(it)
+    }
+}.mapKeys { it.key.toString().toInt() }.mapValues { it.value.toString().toLowerCase() }
+
+val javaStatusEffectIds = javaStatusEffectNames.entries.associate { it.value to it.key }
+val java2bedrockEffectIds = Properties().apply {
+    JavaPalette::class.java.getResourceAsStream("/status-effect-ids.properties").bufferedReader().use {
+        load(it)
+    }
+}.mapKeys { it.key.toString().toLowerCase() }.mapValues { it.value.toString().toInt() }
+
 object IdComparator: Comparator<Map.Entry<String, String>> {
     override fun compare(entry1: Map.Entry<String, String>, entry2: Map.Entry<String, String>): Int {
         val (blockId1, blockData1) = entry1.value.split(',', limit = 2).map { it.toInt() }
@@ -482,6 +495,15 @@ fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
 
             potted.data.takeIf { it != 0 }?.let {
                 nukkitEntity["data"] = it
+            }
+        }
+        118 -> createTileEntity("Cauldron")
+        138 -> createTileEntity("Beacon") { nukkitEntity ->
+            tileEntity?.apply {
+                val primary = javaStatusEffectNames[getNullableInt("Primary") ?: 0]?.let { java2bedrockEffectIds[it] }
+                val secondary = javaStatusEffectNames[getNullableInt("Secondary") ?: 0]?.let { java2bedrockEffectIds[it] }
+                primary?.let { nukkitEntity["Primary"] = it }
+                secondary?.let { nukkitEntity["Secondary"] = it }
             }
         }
         else -> tileEntity?.let { toNukkitTileEntity(it) }
