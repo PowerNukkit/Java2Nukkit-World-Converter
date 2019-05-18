@@ -261,7 +261,8 @@ fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
         "id" to NbtString(id),
         "x" to NbtInt(blockPos.xPos),
         "y" to NbtInt(blockPos.yPos),
-        "z" to NbtInt(blockPos.zPos)
+        "z" to NbtInt(blockPos.zPos),
+        "isMoveable" to NbtByte(false)
     )
 
     fun createTileEntity(id: String, vararg tags: Pair<String, NbtTag>, action: (NbtCompound)->Unit = {}): NbtCompound {
@@ -269,7 +270,7 @@ fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
     }
 
     val nukkitTileEntity = when (blockData.blockId.toInt()) {
-        // bed
+        // Bed
         26 -> createTileEntity("Bed",
             "color" to NbtByte(when (type.blockName) {
                 "minecraft:white_bed" -> 0
@@ -291,7 +292,7 @@ fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
                 else -> 14
             })
         )
-        // chest
+        // Chest
         54 -> createTileEntity("Chest") { nukkitEntity ->
             //TODO Convert items from the chest
             tileEntity?.copyJsonToLegacyTo(nukkitEntity, "CustomName")
