@@ -197,7 +197,7 @@ fun checkIds() {
     }).forEach { (state, stateMapping) ->
         val (mappedBlockId, mappedBlockData) = stateMapping.split(',', limit = 2).map { it.toInt() }
         val (nukkitBlockId, nukkitBlockData) =
-            (bedrock2nukkit["$mappedBlockId,$mappedBlockData"]?.toString() ?: stateMapping)
+            (bedrock2nukkit["B,$mappedBlockId,$mappedBlockData"]?.toString() ?: stateMapping)
                 .split(',', limit = 2).map { it.toInt() }
 
         if (nukkitBlockId !in nukkitBlockNames) {
