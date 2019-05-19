@@ -3,6 +3,7 @@ package br.com.gamemods.nbtmanipulator
 import net.md_5.bungee.api.ChatColor
 import net.md_5.bungee.chat.ComponentSerializer
 import java.util.*
+import java.util.concurrent.ThreadLocalRandom
 import kotlin.Comparator
 
 fun Region.toNukkit(): Region {
@@ -607,7 +608,7 @@ fun NbtCompound.toNukkitItem(): NbtCompound {
     nukkitItem.copyFrom(this, "Count")
     val javaId = getString("id")
     val nbt = getNullableCompound("tag") ?: NbtCompound()
-    val damage = nbt?.getNullableInt("Damage") ?: 0
+    val damage = nbt.getNullableInt("Damage") ?: 0
     val internalId = javaId.removePrefix("minecraft:").toLowerCase()
     val bedrockMapping = java2bedrockItems[internalId] ?: "B,0,0"
     val (type, bedrockId, rawBedrockData) = bedrockMapping.split(',', limit = 3)
@@ -683,6 +684,27 @@ fun NbtCompound.toNukkitItem(): NbtCompound {
         nukkitDisplay.copyFrom(display, "Lore")
         display.getNullableInt("color")?.let {
             nukkitNbt["customColor"] = it
+        }
+    }
+
+    when (nukkitId) {
+        386 -> { // writable_book
+            nbt.getNullableStringList("pages")?.value?.map {
+                NbtCompound("text" to it)
+            }?.also {
+                nukkitNbt["pages"] = NbtList(it)
+            }
+        }
+        387 -> { // written_book
+            nukkitNbt.copyFrom(nbt, "author")
+            nukkitNbt.copyFrom(nbt, "title")
+            nukkitNbt.copyFrom(nbt, "generation")
+            nbt.getNullableStringList("pages")?.value?.map {
+                NbtCompound("text" to NbtString(it.value.fromJsonToLegacy()))
+            }?.also {
+                nukkitNbt["pages"] = NbtList(it)
+            }
+            nukkitNbt["id"] = 1095216660480L + ThreadLocalRandom.current().nextLong(0L, 2147483647L)
         }
     }
 
