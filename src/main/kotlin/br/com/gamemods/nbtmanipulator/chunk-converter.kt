@@ -606,7 +606,7 @@ fun NbtCompound.toNukkitItem(): NbtCompound {
     val nukkitItem = NbtCompound()
     nukkitItem.copyFrom(this, "Count")
     val javaId = getString("id")
-    val nbt = getNullableCompound("tag")
+    val nbt = getNullableCompound("tag") ?: NbtCompound()
     val damage = nbt?.getNullableInt("Damage") ?: 0
     val internalId = javaId.removePrefix("minecraft:").toLowerCase()
     val bedrockMapping = java2bedrockItems[internalId] ?: "B,0,0"
@@ -673,11 +673,24 @@ fun NbtCompound.toNukkitItem(): NbtCompound {
         else -> nukkitData
     }
 
+    val nukkitNbt = NbtCompound()
+    nukkitNbt.copyFrom(nbt, "Unbreakable")
+    nukkitNbt.copyFrom(nbt, "HideFlags")
+    nbt.getNullableCompound("display")?.also { display ->
+        val nukkitDisplay = NbtCompound()
+        nukkitNbt["display"] = nukkitDisplay
+        display.copyJsonToLegacyTo(nukkitDisplay, "Name")
+        nukkitDisplay.copyFrom(display, "Lore")
+        display.getNullableInt("color")?.let {
+            nukkitNbt["customColor"] = it
+        }
+    }
+
     if (customNukkitData != 0) {
         nukkitItem["Damage"] = customNukkitData.toShort()
     }
-    if (nbt != null) {
-        nukkitItem["tag"] = nbt
+    if (nukkitNbt.value.isNotEmpty()) {
+        nukkitItem["tag"] = nukkitNbt
     }
     return nukkitItem
 }
