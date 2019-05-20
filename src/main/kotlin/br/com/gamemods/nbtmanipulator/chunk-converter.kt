@@ -238,6 +238,58 @@ val java2bedrockEffectIds = Properties().apply {
     }
 }.mapKeys { it.key.toString().toLowerCase() }.mapValues { it.value.toString().toInt() }
 
+val javaTags = Properties().apply {
+    JavaPalette::class.java.getResourceAsStream("/tags.properties").bufferedReader().use {
+        load(it)
+    }
+}.mapKeys { it.key.toString().toLowerCase() }.mapValues { entry ->
+    entry.value.toString().split(',').map { it.trim() }
+}.let { tags2bedrock ->
+    val mutable = tags2bedrock.toMutableMap()
+    while (mutable.values.any { list-> list.any { it.startsWith("#") } }) {
+        mutable.iterator().forEach { entry ->
+            if (entry.value.any { it.startsWith('#') }) {
+                entry.setValue(entry.value.flatMap {
+                    if (it.startsWith('#')) {
+                        (mutable[it.substring(1)]?.asSequence() ?: sequenceOf()).asIterable()
+                    } else {
+                        sequenceOf(it).asIterable()
+                    }
+                }.toSet().toList())
+            }
+        }
+    }
+    mutable
+}
+
+val javaTags2Bedrock = javaTags.mapValues { entry ->
+    entry.value.asSequence().flatMap { javaBlock ->
+        val (bedrockId, bedrockData) = java2bedrockStates[javaBlock]?.split(',', limit = 2) ?: listOf("0","0").also {
+            println("The tag ${entry.key} points to a missing block $javaBlock")
+        }
+        val (nukkitId, _) = (
+                bedrock2nukkit.getProperty("B,$bedrockId,$bedrockData") ?: "$bedrockId,$bedrockData"
+            ).split(',', limit = 2)
+        if (nukkitId != "0") {
+            nukkitBlockNames[nukkitId.toInt()]?.asSequence() ?: sequenceOf(nukkitId, javaBlock)
+        } else {
+            sequenceOf(null)
+        }
+    }.filterNotNull().toList()
+}
+
+val javaBlockProps2Bedrock = javaTags2Bedrock + java2bedrockStates.asSequence().filter { ';' !in it.key }.flatMap { (javaBlock, mapping) ->
+    val (bedrockId, bedrockData) = mapping.split(',', limit = 2)
+    val (nukkitId, _) = (
+            bedrock2nukkit.getProperty("B,$bedrockId,$bedrockData") ?: "$bedrockId,$bedrockData"
+            ).split(',', limit = 2)
+    if (nukkitId != "0") {
+        sequenceOf(javaBlock to (nukkitBlockNames[nukkitId.toInt()] ?: listOf(nukkitId, javaBlock)))
+    } else {
+        sequenceOf(null)
+    }
+}.filterNotNull()
+
 object IdComparator: Comparator<Map.Entry<String, String>> {
     override fun compare(entry1: Map.Entry<String, String>, entry2: Map.Entry<String, String>): Int {
         val (blockId1, blockData1) = entry1.value.split(',', limit = 2).map { it.toInt() }
@@ -685,6 +737,15 @@ fun NbtCompound.toNukkitItem(): NbtCompound {
         display.getNullableInt("color")?.let {
             nukkitNbt["customColor"] = it
         }
+    }
+
+    nbt.getNullableStringList("CanDestroy")?.value?.also { canDestroy ->
+        val nukkitCanDestroy = NbtList(canDestroy.flatMap {tag ->
+            javaBlockProps2Bedrock[tag.value]?.map { name -> NbtString(name) } ?: listOf(tag)
+        })
+        nukkitNbt["CanDestroy"] = nukkitCanDestroy
+        nukkitNbt["minecraft:can_destroy"] = NbtCompound("blocks" to nukkitCanDestroy)
+        nukkitNbt["can_destroy"] = NbtCompound("blocks" to nukkitCanDestroy)
     }
 
     when (nukkitId) {
