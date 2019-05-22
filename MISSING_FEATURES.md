@@ -20,7 +20,8 @@ These things could be converted but are not supported by the tool yet:
 ## Unsupported by Minecraft Bedrock Edition
 These things have some differences from Java Edition and needs to be treated specially:
 * **Item Frames**: They are block in Bedrock Edition, not entities, so they must not overlap any block
-to be converted, otherwise it will be skipped.
+to be converted, otherwise it will be skipped. Item Frames facing down or up aren`t supported by Bedrock Edition and will
+be ignored.
 * **Lever and Buttons**: Java Edition allows you to place them facing north, south, east and west when place on the bottom 
 or the top part of a block. Bedrock Edition only supports south or east in that condition, so levers and buttons pointing to north
 will point to south and levers and buttons pointing to west will point to east.

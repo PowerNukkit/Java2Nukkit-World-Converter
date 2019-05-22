@@ -33,19 +33,20 @@ See also [the list of missing features](MISSING_FEATURES.md).
 | dead_tube_coral (in air) | air           | Bedrock Edition |
 | dead_brain_coral (in water) | water      | Bedrock Edition |
 | dead_brain_coral (in air) | air          | Bedrock Edition |
-| dead_fire_coral (in water) | water      | Bedrock Edition |
-| dead_fire_coral (in air) | air          | Bedrock Edition |
-| dead_horn_coral (in water) | water      | Bedrock Edition |
-| dead_horn_coral (in air) | air          | Bedrock Edition |
-| command                 | crafting_table | Nukkit          |
-| repeating_command_block | crafting       | Nukkit          |
-| chain_command_block     | crafting       | Nukkit          |
-| structure_block         | purpur_block   | Nukkit          |
-| seagrass                | water          | Nukkit          |
-| kelp                    | water          | Nukkit          |
-| bubble_column           | water          | Nukkit          |
-| bamboo                  | sugarcane      | Nukkit          |
-| bamboo_sapling          | sugarcane      | Nukkit          |
+| dead_fire_coral (in water) | water       | Bedrock Edition |
+| dead_fire_coral (in air) | air           | Bedrock Edition |
+| dead_horn_coral (in water) | water       | Bedrock Edition |
+| dead_horn_coral (in air) | air           | Bedrock Edition |
+| item_frame (facing down/up) | air        | Bedrock Edition |
+| command                 | crafting_table    | Nukkit       |
+| repeating_command_block | crafting          | Nukkit       |
+| chain_command_block     | crafting          | Nukkit       |
+| structure_block         | purpur_block      | Nukkit       |
+| seagrass                | water             | Nukkit       |
+| kelp                    | water             | Nukkit       |
+| bubble_column           | water             | Nukkit       |
+| bamboo                  | sugarcane         | Nukkit       |
+| bamboo_sapling          | sugarcane         | Nukkit       |
 | scaffolding             | ladder (floating) | Nukkit       |
 | mossy_stone_brick_slab  | stone_brick_slab  | Nukkit       |
 | smooth_quartz_slab      | quartz_slab       | Nukkit       |
