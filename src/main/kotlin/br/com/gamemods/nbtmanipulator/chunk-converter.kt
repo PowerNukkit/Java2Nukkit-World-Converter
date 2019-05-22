@@ -373,11 +373,11 @@ fun checkIds() {
 
         if (type == "I") {
             if (nukkitItemId.toInt() !in nukkitItemNames) {
-                error("The item $type,$nukkitItemId,$nukkitItemData is unsupported by Nukkit!\nItem: $item")
+                println("The item $type,$nukkitItemId,$nukkitItemData is unsupported by Nukkit!\nItem: $item")
             }
         } else {
             if (nukkitItemId.toInt() !in nukkitBlockNames) {
-                error("The item-block $type,$nukkitItemId,$nukkitItemData is unsupported by Nukkit!\nItem: $item")
+                println("The item-block $type,$nukkitItemId,$nukkitItemData is unsupported by Nukkit!\nItem: $item")
             }
         }
     }
