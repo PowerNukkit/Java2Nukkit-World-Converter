@@ -744,8 +744,13 @@ fun NbtCompound.toNukkitItem(): NbtCompound {
             javaBlockProps2Bedrock[tag.value]?.map { name -> NbtString(name) } ?: listOf(tag)
         })
         nukkitNbt["CanDestroy"] = nukkitCanDestroy
-        nukkitNbt["minecraft:can_destroy"] = NbtCompound("blocks" to nukkitCanDestroy)
-        nukkitNbt["can_destroy"] = NbtCompound("blocks" to nukkitCanDestroy)
+    }
+
+    nbt.getNullableStringList("CanPlaceOn")?.value?.also { canPlaceOn ->
+        val nukkitCanPlaceOn = NbtList(canPlaceOn.flatMap { tag ->
+            javaBlockProps2Bedrock[tag.value]?.map { name -> NbtString(name) } ?: listOf(tag)
+        })
+        nukkitNbt["CanPlaceOn"] = nukkitCanPlaceOn
     }
 
     when (nukkitId) {
