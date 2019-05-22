@@ -21,9 +21,9 @@ These things could be converted but are not supported by the tool yet:
 These things have some differences from Java Edition and needs to be treated specially:
 * **Item Frames**: They are block in Bedrock Edition, not entities, so they must not overlap any block
 to be converted, otherwise it will be skipped.
-* **Lever**: Java Edition allows you to place lever facing north, south, east and west when place on the bottom 
-or the top part of a block. Bedrock Edition only supports south or east in that condition, so levers pointing to north
-will point to south and levers pointing to west will point to east.
+* **Lever and Buttons**: Java Edition allows you to place them facing north, south, east and west when place on the bottom 
+or the top part of a block. Bedrock Edition only supports south or east in that condition, so levers and buttons pointing to north
+will point to south and levers and buttons pointing to west will point to east.
 * **HideFlags**: The tag is not supported, it will be migrated but it will be ignored by the client
 * **Debug Stick and customized states**: The block states in Bedrock Edition are not so customizable as it is in Java,
 so customized blocks may have theirs properties reversed, for example if you made a disconnected fence wall, they will
@@ -31,7 +31,12 @@ be connected after the conversion
 * **Spawn Eggs**: which spawns unsupported entities will be black and won't spawn anything.
 * **Custom Player Head**: Player head with skins will loose the skin. The Bedrock Edition doesn't support it.
 * **Blocks (+NBT)**: We are unable to pick blocks with it's NBT inside the item, so these blocks will loose the NBT tag.
-* **Written Books**: With custom events will loose their events as they are unsupported by Bedrock Edition (click and hover events)
+* **Written Books and Signs**: With custom events will loose their events as they are unsupported by Bedrock Edition (click and hover events)
+* **Big mushroom blocks**:  doesn't have all possible states in Bedrock Edition. Only states which occur when a red big 
+                            mushroom is grown are supported. Other custom states will be changed to show cap on all
+* **mushroom_stem**: will always be converted to the red mushroom stem as Java Edition has only one block type for both 
+                    mushrooms while Bedrock Edition has stems for each of them.        
+ 
 
 ## Unsupported by Nukkit
 These things won't work because it's a missing feature or a bug in Nukkit servers:
