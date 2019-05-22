@@ -5,6 +5,8 @@ or by the tool itself.
 Some to address this issue some items and blocks will be replaced by others and some others will be removed from the 
 world.
 
+See also [the list of replaced blocks and items](REPLACEMENTS.md).
+
 ## Unsupported by the tool
 These things could be converted but are not supported by the tool yet:
 * **Entities**: No entity will be converted, with exception of item frames which are blocks in Bedrock Edition
