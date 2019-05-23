@@ -1,5 +1,7 @@
-package br.com.gamemods.nbtmanipulator
+package br.com.gamemods.j2nwc
 
+import br.com.gamemods.nbtmanipulator.NbtCompound
+import br.com.gamemods.nbtmanipulator.NbtList
 import java.util.*
 
 data class JavaPalette(

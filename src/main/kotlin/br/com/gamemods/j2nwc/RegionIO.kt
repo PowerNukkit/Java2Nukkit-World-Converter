@@ -1,13 +1,13 @@
-package br.com.gamemods.nbtmanipulator
+package br.com.gamemods.j2nwc
 
+import br.com.gamemods.nbtmanipulator.NbtIO
 import java.io.*
 import java.nio.ByteBuffer
 import java.util.*
-import java.util.zip.*
-import kotlin.math.ceil
-import java.io.ByteArrayOutputStream
 import java.util.zip.Deflater
-
+import java.util.zip.GZIPInputStream
+import java.util.zip.InflaterInputStream
+import kotlin.math.ceil
 
 
 object RegionIO {

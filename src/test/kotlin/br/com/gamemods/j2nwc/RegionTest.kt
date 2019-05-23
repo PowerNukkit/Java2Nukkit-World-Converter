@@ -1,4 +1,4 @@
-package br.com.gamemods.nbtmanipulator
+package br.com.gamemods.j2nwc
 
 import org.junit.Test
 import java.io.File

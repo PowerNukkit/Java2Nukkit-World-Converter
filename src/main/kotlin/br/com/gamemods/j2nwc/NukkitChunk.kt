@@ -1,4 +1,6 @@
-package br.com.gamemods.nbtmanipulator
+package br.com.gamemods.j2nwc
+
+import br.com.gamemods.nbtmanipulator.*
 
 data class NukkitChunkSection(
     var yPos: Int,

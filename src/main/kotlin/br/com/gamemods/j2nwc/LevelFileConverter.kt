@@ -1,20 +1,10 @@
-package br.com.gamemods.nbtmanipulator
+package br.com.gamemods.j2nwc
 
+import br.com.gamemods.nbtmanipulator.NbtCompound
+import br.com.gamemods.nbtmanipulator.NbtFile
+import br.com.gamemods.nbtmanipulator.NbtIO
+import br.com.gamemods.nbtmanipulator.NbtString
 import java.io.File
-
-fun NbtCompound.copyFrom(other: NbtCompound, tagName: String, default: NbtTag? = null) {
-    val tag = other[tagName] ?: default
-    if (tag != null) {
-        this[tagName] = tag
-    }
-}
-
-fun NbtCompound.copyTo(other: NbtCompound, tagName: String, default: NbtTag? = null) {
-    val tag = this[tagName] ?: default
-    if (tag != null) {
-        other[tagName] = tag
-    }
-}
 
 internal fun convertLevelFile(from: File, to: File) {
     val input = NbtIO.readNbtFile(from)

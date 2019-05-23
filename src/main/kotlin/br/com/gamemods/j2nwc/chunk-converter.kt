@@ -1,10 +1,10 @@
-package br.com.gamemods.nbtmanipulator
+package br.com.gamemods.j2nwc
 
+import br.com.gamemods.nbtmanipulator.*
 import net.md_5.bungee.api.ChatColor
 import net.md_5.bungee.chat.ComponentSerializer
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
-import kotlin.Comparator
 
 fun Region.toNukkit(): Region {
     return Region(position, values.map { Chunk(it.lastModified, it.toNukkit().toNbt()) })

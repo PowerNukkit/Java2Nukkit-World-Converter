@@ -1,5 +1,5 @@
 @file:JvmName("LevelConverter")
-package br.com.gamemods.nbtmanipulator
+package br.com.gamemods.j2nwc
 
 import java.nio.file.Files
 import java.nio.file.Paths

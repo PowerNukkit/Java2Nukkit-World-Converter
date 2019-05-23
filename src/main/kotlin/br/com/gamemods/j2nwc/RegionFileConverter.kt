@@ -1,5 +1,5 @@
 @file:JvmName("RegionFileConverter")
-package br.com.gamemods.nbtmanipulator
+package br.com.gamemods.j2nwc
 
 import java.io.File
 

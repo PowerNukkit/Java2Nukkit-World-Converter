@@ -1,5 +1,7 @@
-package br.com.gamemods.nbtmanipulator
+package br.com.gamemods.j2nwc
 
+import br.com.gamemods.nbtmanipulator.NbtCompound
+import br.com.gamemods.nbtmanipulator.NbtFile
 import java.util.*
 
 data class Chunk(var lastModified: Date, var nbtFile: NbtFile) {
