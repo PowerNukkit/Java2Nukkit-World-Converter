@@ -36,7 +36,8 @@ be connected after the conversion
 * **Big mushroom blocks**:  doesn't have all possible states in Bedrock Edition. Only states which occur when a red big 
                             mushroom is grown are supported. Other custom states will be changed to show cap on all
 * **mushroom_stem**: will always be converted to the red mushroom stem as Java Edition has only one block type for both 
-                    mushrooms while Bedrock Edition has stems for each of them.        
+                    mushrooms while Bedrock Edition has stems for each of them.
+* **tipped arrow**: of type strong_slowness (-60% Speed) isn't supported by Bedrock Edition and will be converted to normal slowness.                    
  
 
 ## Unsupported by Nukkit
