@@ -119,7 +119,51 @@ fun toNukkitEntity(
     nukkitSections: Map<Int, NukkitChunkSection>,
     nukkitTileEntities: MutableMap<BlockPos, NbtCompound>
 ): NbtCompound? {
+    fun convertBaseEntity(): NbtCompound? {
+        return NbtCompound().apply {
+            val nukkitId = javaEntities2Nukkit[javaEntity.getNullableString("id")?.removePrefix("minecraft:") ?: return null] ?: return null
+            this["id"] = nukkitId
+            copyFrom(javaEntity, "CustomName")
+            copyFrom(javaEntity, "CustomNameVisible")
+            copyFrom(javaEntity, "Pos")
+            copyFrom(javaEntity, "Motion")
+            copyFrom(javaEntity, "Rotation")
+            copyFrom(javaEntity, "FallDistance")
+            copyFrom(javaEntity, "Fire")
+            copyFrom(javaEntity, "Air")
+            copyFrom(javaEntity, "OnGround")
+            copyFrom(javaEntity, "Invulnerable")
+            copyFrom(javaEntity, "Scale")
+            copyFrom(javaEntity, "Silent")
+            copyFrom(javaEntity, "NoGravity")
+            copyFrom(javaEntity, "Glowing")
+            //TODO Scoreboard Tags
+            //TODO Passengers
+        }
+    }
     return when(javaEntity.getString("id").removePrefix("minecraft:")) {
+        "painting" -> {
+            val nukkitEntity = convertBaseEntity() ?: return null
+            val paintingData = paintings[javaEntity.getNullableString("Motive")?.removePrefix("minecraft:") ?: ""] ?: return null
+            var (posX, posY, posZ) = nukkitEntity.getDoubleList("Pos").value.map { it.value }
+            nukkitEntity.copyFrom(javaEntity, "TileX")
+            nukkitEntity.copyFrom(javaEntity, "TileY")
+            nukkitEntity.copyFrom(javaEntity, "TileZ")
+            val facing = javaEntity.getNullableByte("Facing")
+            val direction: Byte = when (facing?.toInt()) {
+                0 -> 2
+                1 -> 2
+                2 -> 2
+                3 -> 2
+                null -> 2
+                else -> 2
+            }
+            nukkitEntity["Direction"] = direction
+            nukkitEntity["Rotation"] = NbtList(NbtFloat(direction.toFloat()), NbtFloat(0F))
+            nukkitEntity["Motive"] = paintingData.id
+            nukkitEntity
+            null //TODO Complete this
+        }
         "item_frame" -> {
             val tileX = javaEntity.getInt("TileX")
             val tileY = javaEntity.getInt("TileY")
@@ -269,6 +313,14 @@ val javaBlockProps2Bedrock = javaTags2Bedrock + java2bedrockStates.asSequence().
 }.filterNotNull()
 
 val tippedArrows = propertiesStringInt("/tipped-arrows.properties")
+
+data class PaintingData(val id: String, val width: Int, val height: Int)
+val paintings = propertiesStringString("/paintings.properties")
+    .mapValues { (_, value) ->
+        val (id, width, height) = value.split(',', limit = 3)
+        PaintingData(id, width.toInt(), height.toInt())
+    }
+val javaEntities2Nukkit = propertiesStringString("/java-entities.properties")
 
 object IdComparator: Comparator<Map.Entry<String, String>> {
     override fun compare(entry1: Map.Entry<String, String>, entry2: Map.Entry<String, String>): Int {
