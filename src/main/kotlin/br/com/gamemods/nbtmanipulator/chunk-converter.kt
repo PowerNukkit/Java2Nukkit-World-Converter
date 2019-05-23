@@ -178,41 +178,29 @@ fun toNukkitBiomes(biomes: IntArray): ByteArray {
     return biomes.map { it.toByte() }.toByteArray()
 }
 
-val java2bedrockEntities = Properties().apply {
-    JavaPalette::class.java.getResourceAsStream("/entity-ids.properties").bufferedReader().use {
-        load(it)
-    }
-}.mapKeys { it.key.toString().toLowerCase() }.mapValues { it.value.toString().toInt() }
-
-val java2bedrockStates = Properties().apply {
-    JavaPalette::class.java.getResourceAsStream("/block-states.properties").bufferedReader().use {
-        load(it)
-    }
-}.mapKeys { it.key.toString().toLowerCase() }.mapValues { it.value.toString() }
-
-val bedrock2nukkit = Properties().apply {
-    JavaPalette::class.java.getResourceAsStream("/bedrock-2-nukkit.properties").bufferedReader().use {
+private fun properties(name: String) = Properties().apply {
+    JavaPalette::class.java.getResourceAsStream(name).bufferedReader().use {
         load(it)
     }
 }
 
-val java2bedrockItems = Properties().apply {
-    JavaPalette::class.java.getResourceAsStream("/items.properties").bufferedReader().use {
-        load(it)
-    }
-}.mapKeys { it.key.toString().toLowerCase() }.mapValues { it.value.toString() }
+private fun propertiesStringString(name: String) = properties(name)
+    .mapKeys { it.key.toString().toLowerCase() }.mapValues { it.value.toString() }
 
-val nukkitBlockIds = Properties().apply {
-    JavaPalette::class.java.getResourceAsStream("/nukkit-block-ids.properties").bufferedReader().use {
-        load(it)
-    }
-}.mapKeys { it.key.toString().toLowerCase() }.mapValues { it.value.toString().toInt() }
+private fun propertiesStringInt(name: String) = properties(name)
+    .mapKeys { it.key.toString().toLowerCase() }.mapValues { it.value.toString().toInt() }
 
-val nukkitItemIds = Properties().apply {
-    JavaPalette::class.java.getResourceAsStream("/nukkit-item-ids.properties").bufferedReader().use {
-        load(it)
-    }
-}.mapKeys { it.key.toString().toLowerCase() }.mapValues { it.value.toString().toInt() }
+val java2bedrockEntities = propertiesStringInt("/entity-ids.properties")
+
+val java2bedrockStates = propertiesStringString("/block-states.properties")
+
+val bedrock2nukkit = properties("/bedrock-2-nukkit.properties")
+
+val java2bedrockItems = propertiesStringString("/items.properties")
+
+val nukkitBlockIds = propertiesStringInt("/nukkit-block-ids.properties")
+
+val nukkitItemIds = propertiesStringInt("/nukkit-item-ids.properties")
 
 val nukkitBlockNames = nukkitBlockIds.entries.asSequence()
     .map { (k,v) -> k to v }.groupBy { (_,v) -> v }
@@ -225,42 +213,32 @@ val nukkitItemNames = nukkitItemIds.entries.asSequence()
         mapOf(0 to "air") + it
     }
 
-val javaStatusEffectNames = Properties().apply {
-    JavaPalette::class.java.getResourceAsStream("/status-effect-java-ids.properties").bufferedReader().use {
-        load(it)
-    }
-}.mapKeys { it.key.toString().toInt() }.mapValues { it.value.toString().toLowerCase() }
+val javaStatusEffectNames = properties("/status-effect-java-ids.properties")
+    .mapKeys { it.key.toString().toInt() }.mapValues { it.value.toString().toLowerCase() }
 
 val javaStatusEffectIds = javaStatusEffectNames.entries.associate { it.value to it.key }
-val java2bedrockEffectIds = Properties().apply {
-    JavaPalette::class.java.getResourceAsStream("/status-effect-ids.properties").bufferedReader().use {
-        load(it)
-    }
-}.mapKeys { it.key.toString().toLowerCase() }.mapValues { it.value.toString().toInt() }
+val java2bedrockEffectIds = propertiesStringInt("/status-effect-ids.properties")
 
-val javaTags = Properties().apply {
-    JavaPalette::class.java.getResourceAsStream("/tags.properties").bufferedReader().use {
-        load(it)
-    }
-}.mapKeys { it.key.toString().toLowerCase() }.mapValues { entry ->
-    entry.value.toString().split(',').map { it.trim() }
-}.let { tags2bedrock ->
-    val mutable = tags2bedrock.toMutableMap()
-    while (mutable.values.any { list-> list.any { it.startsWith("#") } }) {
-        mutable.iterator().forEach { entry ->
-            if (entry.value.any { it.startsWith('#') }) {
-                entry.setValue(entry.value.flatMap {
-                    if (it.startsWith('#')) {
-                        (mutable[it.substring(1)]?.asSequence() ?: sequenceOf()).asIterable()
-                    } else {
-                        sequenceOf(it).asIterable()
-                    }
-                }.toSet().toList())
+val javaTags = properties("/tags.properties")
+    .mapKeys { it.key.toString().toLowerCase() }.mapValues { entry ->
+        entry.value.toString().split(',').map { it.trim() }
+    }.let { tags2bedrock ->
+        val mutable = tags2bedrock.toMutableMap()
+        while (mutable.values.any { list-> list.any { it.startsWith("#") } }) {
+            mutable.iterator().forEach { entry ->
+                if (entry.value.any { it.startsWith('#') }) {
+                    entry.setValue(entry.value.flatMap {
+                        if (it.startsWith('#')) {
+                            (mutable[it.substring(1)]?.asSequence() ?: sequenceOf()).asIterable()
+                        } else {
+                            sequenceOf(it).asIterable()
+                        }
+                    }.toSet().toList())
+                }
             }
         }
+        mutable
     }
-    mutable
-}
 
 val javaTags2Bedrock = javaTags.mapValues { entry ->
     entry.value.asSequence().flatMap { javaBlock ->
@@ -685,7 +663,7 @@ fun NbtCompound.toNukkitItem(): NbtCompound {
             java2bedrockEntities[entity] ?: 0
         }
         262 -> {
-            val potionInfo = nbt?.getNullableString("Potion")?.removePrefix("minecraft:")
+            val potionInfo = nbt.getNullableString("Potion")?.removePrefix("minecraft:")
             if (potionInfo == null) {
                 nukkitData
             } else {
