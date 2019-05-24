@@ -5,7 +5,7 @@ import br.com.gamemods.nbtmanipulator.NbtList
 import br.com.gamemods.nbtmanipulator.NbtString
 import java.util.concurrent.ThreadLocalRandom
 
-fun NbtCompound.toNukkitInventory(nukkitInventory: NbtCompound, slotRemapper: (Int)->Int = { it }) {
+internal fun NbtCompound.toNukkitInventory(nukkitInventory: NbtCompound, slotRemapper: (Int)->Int = { it }) {
     val javaItems = getNullableCompoundList("Items") ?: return
     val nukkitItems = javaItems.value.map { javaItem ->
         javaItem.toNukkitItem().also { nukkitItem ->
@@ -15,7 +15,7 @@ fun NbtCompound.toNukkitInventory(nukkitInventory: NbtCompound, slotRemapper: (I
     nukkitInventory["Items"] = NbtList(nukkitItems)
 }
 
-fun NbtCompound.toNukkitItem(): NbtCompound {
+internal fun NbtCompound.toNukkitItem(): NbtCompound {
     val nukkitItem = NbtCompound()
     nukkitItem.copyFrom(this, "Count")
     val javaId = getString("id")

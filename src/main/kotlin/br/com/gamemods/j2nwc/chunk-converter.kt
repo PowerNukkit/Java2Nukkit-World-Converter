@@ -4,7 +4,7 @@ import br.com.gamemods.nbtmanipulator.NbtCompound
 import br.com.gamemods.nbtmanipulator.NbtList
 import br.com.gamemods.regionmanipulator.Chunk
 
-fun Chunk.toNukkit(): NukkitChunk {
+internal fun Chunk.toNukkit(): NukkitChunk {
     val javaChunk = JavaChunk(this)
     val javaTileEntities = javaChunk.tileEntities.value.associate {
         BlockPos(it.getInt("x"), it.getInt("y"), it.getInt("z")) to it
@@ -33,10 +33,10 @@ fun Chunk.toNukkit(): NukkitChunk {
     return nukkitChunk
 }
 
-data class BlockPos(val xPos: Int, val yPos: Int, val zPos: Int)
-data class JavaBlock(val blockPos: BlockPos, val type: JavaPalette, var tileEntity: NbtCompound?)
-data class NukkitBlock(val blockPos: BlockPos, var blockData: BlockData, var tileEntity: NbtCompound?)
-fun JavaChunkSection.toNukkit(javaTileEntities: Map<BlockPos, NbtCompound>, nukkitTileEntities: MutableMap<BlockPos, NbtCompound>): NukkitChunkSection? {
+internal data class BlockPos(val xPos: Int, val yPos: Int, val zPos: Int)
+internal data class JavaBlock(val blockPos: BlockPos, val type: JavaPalette, var tileEntity: NbtCompound?)
+internal data class NukkitBlock(val blockPos: BlockPos, var blockData: BlockData, var tileEntity: NbtCompound?)
+internal fun JavaChunkSection.toNukkit(javaTileEntities: Map<BlockPos, NbtCompound>, nukkitTileEntities: MutableMap<BlockPos, NbtCompound>): NukkitChunkSection? {
     val blockStates = blockStates ?: return NukkitChunkSection(
         yPos = yPos,
         blockLight = ByteArray(2048),
@@ -103,6 +103,6 @@ fun JavaChunkSection.toNukkit(javaTileEntities: Map<BlockPos, NbtCompound>, nukk
     )
 }
 
-fun toNukkitBiomes(biomes: IntArray): ByteArray {
+internal fun toNukkitBiomes(biomes: IntArray): ByteArray {
     return biomes.map { it.toByte() }.toByteArray()
 }

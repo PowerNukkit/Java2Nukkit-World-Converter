@@ -6,7 +6,7 @@ import br.com.gamemods.regionmanipulator.Chunk
 import br.com.gamemods.regionmanipulator.ChunkPos
 import java.util.*
 
-data class JavaPalette(
+internal data class JavaPalette(
     var blockName: String,
     var properties: NbtCompound?
 ) {
@@ -16,7 +16,7 @@ data class JavaPalette(
     )
 }
 
-data class JavaChunkSection(
+internal data class JavaChunkSection(
     var chunkPos: ChunkPos,
     var yPos: Int,
     var blockStates: LongArray?,
@@ -60,7 +60,7 @@ data class JavaChunkSection(
     }
 }
 
-data class JavaChunk(
+internal data class JavaChunk(
     var lastModified: Date,
     var heightMap: NbtCompound,
     var structures: NbtCompound,

@@ -3,7 +3,7 @@ package br.com.gamemods.j2nwc
 import br.com.gamemods.nbtmanipulator.*
 import br.com.gamemods.regionmanipulator.ChunkPos
 
-data class NukkitChunkSection(
+internal data class NukkitChunkSection(
     var yPos: Int,
     var blockLight: ByteArray,
     var blocks: ByteArray,
@@ -45,7 +45,7 @@ data class NukkitChunkSection(
     }
 }
 
-data class NukkitChunk(
+internal data class NukkitChunk(
     var entities: NbtList<NbtCompound>,
     var sections: Map<Int, NukkitChunkSection>,
     var tileEntities: NbtList<NbtCompound>,

@@ -2,7 +2,7 @@ package br.com.gamemods.j2nwc
 
 import br.com.gamemods.nbtmanipulator.*
 
-fun toNukkitEntity(
+internal fun toNukkitEntity(
     javaEntity: NbtCompound,
     javaChunk: JavaChunk,
     nukkitSections: Map<Int, NukkitChunkSection>,
@@ -107,7 +107,7 @@ fun toNukkitEntity(
     }
 }
 
-fun NbtCompound.entityToId(): Int? {
+internal fun NbtCompound.entityToId(): Int? {
     val javaId = getNullableString("id")?.toLowerCase()?.removePrefix("minecraft:") ?: return null
     return java2bedrockEntities[javaId].takeUnless { it == 0 }
 }

@@ -3,7 +3,7 @@ package br.com.gamemods.j2nwc
 import br.com.gamemods.nbtmanipulator.*
 import java.util.*
 
-fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
+internal fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
     val blockData = this.type.toNukkit()
 
     fun commonBlockEntityData(id: String) = arrayOf(
@@ -242,14 +242,14 @@ fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
     return NukkitBlock(blockPos, blockData, nukkitTileEntity)
 }
 
-fun toNukkitTileEntity(javaEntity: NbtCompound): NbtCompound? {
+internal fun toNukkitTileEntity(javaEntity: NbtCompound): NbtCompound? {
     return null
 }
 
-data class BlockData(var blockId: Int, var data: Int) {
+internal data class BlockData(var blockId: Int, var data: Int) {
     val byteBlockId: Byte get() = (blockId and 0xFF).toByte()
 }
-fun JavaPalette.toNukkit(): BlockData {
+internal fun JavaPalette.toNukkit(): BlockData {
     val propertiesId = properties?.value
         ?.mapValuesTo(TreeMap()) { (it.value as NbtString).value }
         ?.map { "${it.key}-${it.value}" }

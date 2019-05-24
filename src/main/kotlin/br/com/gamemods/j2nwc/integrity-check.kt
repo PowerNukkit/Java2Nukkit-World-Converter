@@ -2,7 +2,7 @@ package br.com.gamemods.j2nwc
 
 import java.util.*
 
-object IdComparator: Comparator<Map.Entry<String, String>> {
+internal object IdComparator: Comparator<Map.Entry<String, String>> {
     override fun compare(entry1: Map.Entry<String, String>, entry2: Map.Entry<String, String>): Int {
         val (blockId1, blockData1) = entry1.value.split(',', limit = 2).map { it.toInt() }
         val (blockId2, blockData2) = entry2.value.split(',', limit = 2).map { it.toInt() }
@@ -12,7 +12,7 @@ object IdComparator: Comparator<Map.Entry<String, String>> {
     }
 }
 
-object TypeIdComparator: Comparator<Map.Entry<String, String>> {
+internal object TypeIdComparator: Comparator<Map.Entry<String, String>> {
     override fun compare(entry1: Map.Entry<String, String>, entry2: Map.Entry<String, String>): Int {
         val (type1, blockId1, blockData1) = entry1.value.split(',', limit = 3)
         val (type2, blockId2, blockData2) = entry2.value.split(',', limit = 3)
@@ -24,7 +24,7 @@ object TypeIdComparator: Comparator<Map.Entry<String, String>> {
     }
 }
 
-fun checkIds() {
+internal fun checkIds() {
     val validBlockPattern = Regex("^\\d+,\\d+$")
     java2bedrockStates.values.find { !validBlockPattern.matches(it) }?.let {
         error("Found an invalid mapping at block-states.properties: $it")

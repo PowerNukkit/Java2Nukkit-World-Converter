@@ -6,7 +6,7 @@ import br.com.gamemods.regionmanipulator.Region
 import br.com.gamemods.regionmanipulator.RegionIO
 import java.io.File
 
-internal fun convertRegionFile(from: File, to: File) {
+fun convertRegionFile(from: File, to: File) {
     val javaRegion = RegionIO.readRegion(from)
     val nukkitRegion = javaRegion.toNukkit()
     RegionIO.writeRegion(to, nukkitRegion)
