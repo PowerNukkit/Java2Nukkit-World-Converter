@@ -1,6 +1,7 @@
 @file:JvmName("RegionFileConverter")
 package br.com.gamemods.j2nwc
 
+import br.com.gamemods.regionmanipulator.RegionIO
 import java.io.File
 
 internal fun convertRegionFile(from: File, to: File) {

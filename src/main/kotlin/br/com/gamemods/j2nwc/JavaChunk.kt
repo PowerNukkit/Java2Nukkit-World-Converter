@@ -2,6 +2,8 @@ package br.com.gamemods.j2nwc
 
 import br.com.gamemods.nbtmanipulator.NbtCompound
 import br.com.gamemods.nbtmanipulator.NbtList
+import br.com.gamemods.regionmanipulator.Chunk
+import br.com.gamemods.regionmanipulator.ChunkPos
 import java.util.*
 
 data class JavaPalette(

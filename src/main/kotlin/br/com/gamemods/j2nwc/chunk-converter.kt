@@ -1,6 +1,8 @@
 package br.com.gamemods.j2nwc
 
 import br.com.gamemods.nbtmanipulator.*
+import br.com.gamemods.regionmanipulator.Chunk
+import br.com.gamemods.regionmanipulator.Region
 import net.md_5.bungee.api.ChatColor
 import net.md_5.bungee.chat.ComponentSerializer
 import java.util.*

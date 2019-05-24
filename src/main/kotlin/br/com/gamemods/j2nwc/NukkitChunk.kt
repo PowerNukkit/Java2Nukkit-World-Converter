@@ -1,6 +1,7 @@
 package br.com.gamemods.j2nwc
 
 import br.com.gamemods.nbtmanipulator.*
+import br.com.gamemods.regionmanipulator.ChunkPos
 
 data class NukkitChunkSection(
     var yPos: Int,

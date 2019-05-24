@@ -1,5 +1,7 @@
 package br.com.gamemods.j2nwc
 
+import br.com.gamemods.regionmanipulator.RegionIO
+import br.com.gamemods.regionmanipulator.RegionPos
 import org.junit.Test
 import java.io.File
 
@@ -17,6 +19,7 @@ class RegionTest {
         val mca = RegionIO.readRegion(tempFile, RegionPos(1, -1))
         println(mca.hashCode())
         val nukkitRegion = mca.toNukkit()
+        println(nukkitRegion.hashCode())
     }
 
 }
