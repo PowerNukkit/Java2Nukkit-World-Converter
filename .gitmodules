@@ -1,0 +1,4 @@
+[submodule "gh-pages"]
+	path = gh-pages
+	url = https://github.com/GameModsBR/Java2Nukkit-World-Converter.git
+	branch = gh-pages
