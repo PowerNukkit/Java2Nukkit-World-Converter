@@ -34,24 +34,33 @@ internal fun toNukkitEntity(
         "painting" -> {
             val nukkitEntity = convertBaseEntity() ?: return null
             val paintingData = paintings[javaEntity.getNullableString("Motive")?.removePrefix("minecraft:") ?: ""] ?: return null
-            var (posX, posY, posZ) = nukkitEntity.getDoubleList("Pos").value.map { it.value }
-            nukkitEntity.copyFrom(javaEntity, "TileX")
-            nukkitEntity.copyFrom(javaEntity, "TileY")
-            nukkitEntity.copyFrom(javaEntity, "TileZ")
-            val facing = javaEntity.getNullableByte("Facing")
-            val direction: Byte = when (facing?.toInt()) {
-                0 -> 2
-                1 -> 2
-                2 -> 2
-                3 -> 2
-                null -> 2
-                else -> 2
-            }
-            nukkitEntity["Direction"] = direction
-            nukkitEntity["Rotation"] = NbtList(NbtFloat(direction.toFloat()), NbtFloat(0F))
             nukkitEntity["Motive"] = paintingData.id
+            val javaFacing = javaEntity.getNullableByte("Facing")
+            val (nukkitDirection, xInc, zInc) = when (javaFacing?.toInt()) {
+                0 -> arrayOf(3, 0, 1) // south
+                1 -> arrayOf(4, -1, 0) // west
+                2 -> arrayOf(2, 0, -1) // north
+                3 -> arrayOf(5, 1, 0) // east
+                else -> arrayOf(2, 0, -1) // north
+            }
+
+            val javaTileX = javaEntity.getInt("TileX")
+            val tileY = javaEntity.getInt("TileY")
+            val javaTileZ = javaEntity.getInt("TileZ")
+
+            val nukkitTileX = javaTileX + xInc*-1
+            val nukkitTileZ = javaTileZ + zInc*-1
+            nukkitEntity["Pos"] = NbtList(
+                NbtDouble(nukkitTileX.toDouble()),
+                NbtDouble(tileY.toDouble()),
+                NbtDouble(nukkitTileZ.toDouble())
+            )
+            nukkitEntity["TileX"] = nukkitTileX
+            nukkitEntity["TileY"] = tileY
+            nukkitEntity["TileZ"] = nukkitTileZ
+            nukkitEntity["Direction"] = nukkitDirection.toByte()
+            nukkitEntity["Rotation"] = NbtList(NbtFloat(nukkitDirection * 90F), NbtFloat(0F))
             nukkitEntity
-            null //TODO Complete this
         }
         "item_frame" -> {
             val tileX = javaEntity.getInt("TileX")
