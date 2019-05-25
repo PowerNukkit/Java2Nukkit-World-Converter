@@ -15,7 +15,6 @@ These things could be converted but are not supported by the tool yet:
 * **Firework**: Will not be converted correctly yet
 * **Firework stars**: Will not be converted correctly yet
 * **Enchantments**: No item will be enchanted after the conversion yet
-* **Suspicious Stew**: Will not have the potion effect converted. The behavior after conversion is currently unknown. 
 
 ## Unsupported by Minecraft Bedrock Edition
 These things have some differences from Java Edition and needs to be treated specially:
@@ -39,6 +38,7 @@ be connected after the conversion
                     mushrooms while Bedrock Edition has stems for each of them.
 * **Tipped Arrow**: of type strong_slowness (-60% Speed) isn't supported by Bedrock Edition and will be converted to normal slowness.
 * **Fireworks rockets and stars**: with customized colors will always be converted to blue because it's not supported by Bedrock Edition.
+* **Suspicious Stew**: Is not available in Bedrock Edition and will be converted to a normal mushroom stew
  
 
 ## Unsupported by Nukkit
