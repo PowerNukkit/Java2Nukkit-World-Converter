@@ -37,6 +37,13 @@ internal fun toNukkitEntity(
         }
     }
     return when(javaEntity.getString("id").removePrefix("minecraft:")) {
+        "experience_orb" -> {
+            val nukkitEntity = convertBaseEntity() ?: return null
+            nukkitEntity.copyFrom(javaEntity, "Health")
+            nukkitEntity.copyFrom(javaEntity, "Age")
+            nukkitEntity.copyFrom(javaEntity, "Value")
+            nukkitEntity
+        }
         "tnt" -> {
             val nukkitEntity = convertBaseEntity() ?: return null
             val fuse = javaEntity.getNullableShort("Fuse") ?: 0

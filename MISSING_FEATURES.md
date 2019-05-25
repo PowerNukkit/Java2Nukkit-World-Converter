@@ -49,3 +49,5 @@ These things won't work because it's a missing feature or a bug in Nukkit server
 * **Attribute Modifiers**: Nukkit doesn't seems to have any support to attribute modifiers.
 * **Falling Block**: Will not hurt entities on landing. Nukkit also supports only the block id and data value so
 `TileEntityData`, `Time`, `DropItem`, `HurtEntities`, `FallHurtMax` and `FallHurtAmount` will be ignored. 
+* **Experience orbs**: Will be migrated but will loose it's value because Nukkit does not save and neither load it, 
+so collecting it will give nothing.
