@@ -1,12 +1,14 @@
 package br.com.gamemods.j2nwc
 
 import br.com.gamemods.nbtmanipulator.*
+import br.com.gamemods.regionmanipulator.ChunkPos
 
 internal fun toNukkitEntity(
     javaEntity: NbtCompound,
     javaChunk: JavaChunk,
     nukkitSections: Map<Int, NukkitChunkSection>,
-    nukkitTileEntities: MutableMap<BlockPos, NbtCompound>
+    nukkitTileEntities: MutableMap<BlockPos, NbtCompound>,
+    regionPostConversionHooks: MutableList<PostConversionHook>
 ): NbtCompound? {
     fun convertBaseEntity(): NbtCompound? {
         return NbtCompound().apply {
@@ -60,7 +62,16 @@ internal fun toNukkitEntity(
             nukkitEntity["TileZ"] = nukkitTileZ
             nukkitEntity["Direction"] = nukkitDirection.toByte()
             nukkitEntity["Rotation"] = NbtList(NbtFloat(nukkitDirection * 90F), NbtFloat(0F))
-            nukkitEntity
+
+            val chunkPos = ChunkPos(nukkitTileX / 16, nukkitTileZ / 16)
+            if (javaChunk.position == chunkPos) {
+                nukkitEntity
+            } else {
+                regionPostConversionHooks += { _, nukkitRegion ->
+                    nukkitRegion[chunkPos]?.level?.getCompoundList("Entities")?.value?.add(nukkitEntity)
+                }
+                null
+            }
         }
         "item_frame" -> {
             val tileX = javaEntity.getInt("TileX")

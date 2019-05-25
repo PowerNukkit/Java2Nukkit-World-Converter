@@ -14,6 +14,13 @@ fun convertRegionFile(from: File, to: File) {
     println(test.hashCode())
 }
 
+internal typealias PostConversionHook = (javaRegion: Region, nukkitRegion: Region) -> Unit
+
 fun Region.toNukkit(): Region {
-    return Region(position, values.map { Chunk(it.lastModified, it.toNukkit().toNbt()) })
+    val postConversionHooks = mutableListOf<PostConversionHook>()
+    val nukkitRegion = Region(position, values.map { Chunk(it.lastModified, it.toNukkit(postConversionHooks).toNbt()) })
+    postConversionHooks.forEach {
+        it(this, nukkitRegion)
+    }
+    return nukkitRegion
 }

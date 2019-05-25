@@ -4,7 +4,7 @@ import br.com.gamemods.nbtmanipulator.NbtCompound
 import br.com.gamemods.nbtmanipulator.NbtList
 import br.com.gamemods.regionmanipulator.Chunk
 
-internal fun Chunk.toNukkit(): NukkitChunk {
+internal fun Chunk.toNukkit(regionPostConversionHooks: MutableList<PostConversionHook>): NukkitChunk {
     val javaChunk = JavaChunk(this)
     val javaTileEntities = javaChunk.tileEntities.value.associate {
         BlockPos(it.getInt("x"), it.getInt("y"), it.getInt("z")) to it
@@ -15,7 +15,9 @@ internal fun Chunk.toNukkit(): NukkitChunk {
         .mapNotNull { it.key to (it.value.toNukkit(javaTileEntities, nukkitTileEntities) ?: return@mapNotNull null) }
         .toMap()
     val nukkitChunk = NukkitChunk(
-        NbtList(javaChunk.entities.value.mapNotNull { toNukkitEntity(it, javaChunk, nukkitSections, nukkitTileEntities) }),
+        NbtList(javaChunk.entities.value.mapNotNull {
+            toNukkitEntity(it, javaChunk, nukkitSections, nukkitTileEntities, regionPostConversionHooks)
+        }),
         nukkitSections,
         NbtList(nukkitTileEntities.values.toMutableList()),
         javaChunk.inhabitedTime,
