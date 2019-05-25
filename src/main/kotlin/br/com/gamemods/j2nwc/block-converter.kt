@@ -2,9 +2,14 @@ package br.com.gamemods.j2nwc
 
 import br.com.gamemods.nbtmanipulator.*
 import br.com.gamemods.regionmanipulator.ChunkPos
+import br.com.gamemods.regionmanipulator.Region
 import java.util.*
+import kotlin.math.floor
 
-internal fun JavaBlock.toNukkit(regionPostConversionHooks: MutableList<PostConversionHook>): NukkitBlock {
+internal fun JavaBlock.toNukkit(
+    regionPostConversionHooks: MutableList<PostConversionHook>,
+    worldHooks: MutableList<PostWorldConversionHook>
+): NukkitBlock {
     val blockData = this.type.toNukkit()
 
     fun commonBlockEntityData(id: String) = arrayOf(
@@ -64,8 +69,9 @@ internal fun JavaBlock.toNukkit(regionPostConversionHooks: MutableList<PostConve
                 nukkitEntity["pairz"] = z
 
                 val y = blockPos.yPos
-                val pairedChunkPos = ChunkPos(x / 16, z /16)
-                regionPostConversionHooks += { _, nukkitRegion ->
+                val pairedChunkPos = ChunkPos(floor(x / 16.0).toInt(), floor(z / 16.0).toInt())
+                val currentChunkPos = ChunkPos(floor(blockPos.xPos / 16.0).toInt(), floor(blockPos.zPos / 16.0).toInt())
+                fun swapItems(nukkitRegion: Region) {
                     nukkitRegion[pairedChunkPos]?.level?.getCompoundList("TileEntities")?.value
                         ?.find { it.getInt("x") == x && it.getInt("y") == y && it.getInt("z") == z }
                         ?.also { pairedEntity ->
@@ -80,6 +86,20 @@ internal fun JavaBlock.toNukkit(regionPostConversionHooks: MutableList<PostConve
                                 nukkitEntity["--pair-processed--"] = true
                             }
                         }
+                }
+
+                val currentRegX = floor(currentChunkPos.xPos / 32.0).toInt()
+                val currentRegZ = floor(currentChunkPos.zPos / 32.0).toInt()
+                val pairedRegX = floor(pairedChunkPos.xPos / 32.0).toInt()
+                val pairedRegZ = floor(pairedChunkPos.zPos / 32.0).toInt()
+                if (currentRegX == pairedRegX && currentRegZ == pairedRegZ) {
+                    regionPostConversionHooks += { _, nukkitRegion ->
+                        swapItems(nukkitRegion)
+                    }
+                } else {
+                    worldHooks += { _, worldDir ->
+                        modifyRegion(worldDir, pairedRegX, pairedRegZ, ::swapItems)
+                    }
                 }
             }
         }

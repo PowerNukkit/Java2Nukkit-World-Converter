@@ -15,7 +15,12 @@ internal fun Chunk.toNukkit(
     val nukkitTileEntities = mutableMapOf<BlockPos, NbtCompound>()
     val nukkitSections = javaChunk.sections.entries.asSequence()
         .filter { it.value.yPos >= 0 }
-        .mapNotNull { it.key to (it.value.toNukkit(javaTileEntities, nukkitTileEntities, regionPostConversionHooks) ?: return@mapNotNull null) }
+        .mapNotNull {
+            it.key to (
+                it.value.toNukkit(javaTileEntities, nukkitTileEntities, regionPostConversionHooks, worldHooks)
+                    ?: return@mapNotNull null
+            )
+        }
         .toMap()
     val nukkitChunk = NukkitChunk(
         NbtList(javaChunk.entities.value.mapNotNull {
@@ -44,7 +49,8 @@ internal data class NukkitBlock(val blockPos: BlockPos, var blockData: BlockData
 internal fun JavaChunkSection.toNukkit(
     javaTileEntities: Map<BlockPos, NbtCompound>,
     nukkitTileEntities: MutableMap<BlockPos, NbtCompound>,
-    regionPostConversionHooks: MutableList<PostConversionHook>
+    regionPostConversionHooks: MutableList<PostConversionHook>,
+    worldHooks: MutableList<PostWorldConversionHook>
 ): NukkitChunkSection? {
     val blockStates = blockStates ?: return NukkitChunkSection(
         yPos = yPos,
@@ -88,7 +94,7 @@ internal fun JavaChunkSection.toNukkit(
         JavaBlock(blockPos, palette[paletteIndexes[it]], javaTileEntities[blockPos])
     }
 
-    val nukkitBlocks = blockPalettes.map { it.toNukkit(regionPostConversionHooks).also { block ->
+    val nukkitBlocks = blockPalettes.map { it.toNukkit(regionPostConversionHooks, worldHooks).also { block ->
         block.tileEntity?.let { nukkitTileEntity ->
             nukkitTileEntities[block.blockPos] = nukkitTileEntity
         }
