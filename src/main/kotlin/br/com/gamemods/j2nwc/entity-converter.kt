@@ -37,6 +37,12 @@ internal fun toNukkitEntity(
         }
     }
     return when(javaEntity.getString("id").removePrefix("minecraft:")) {
+        "tnt" -> {
+            val nukkitEntity = convertBaseEntity() ?: return null
+            val fuse = javaEntity.getNullableShort("Fuse") ?: 0
+            nukkitEntity["Fuse"] = fuse.coerceIn(Byte.MIN_VALUE.toShort(), Byte.MAX_VALUE.toShort()).toByte()
+            nukkitEntity
+        }
         "falling_block" -> {
             val nukkitEntity = convertBaseEntity() ?: return null
             val javaTileEntity = javaEntity.getNullableCompound("TileEntityData")
