@@ -127,10 +127,15 @@ WorldConverterCLI.main(
 ```
 
 ### Adding as dependency
+The tool is shared on jcenter but it has dependencies that are on different repositories.
+
+Make sure you have add all repositories listed below
 #### Gradle
 ```groovy
 repositories {
     jcenter()
+    maven { url 'https://hub.spigotmc.org/nexus/content/groups/public/' }
+    maven { url 'https://dl.bintray.com/orangy/maven' }
 }
 
 dependencies {
@@ -144,6 +149,14 @@ dependencies {
     <repository>
         <id>jcenter</id>
         <url>https://jcenter.bintray.com/</url>
+    </repository>
+    <repository>
+        <id>spigotmc</id>
+        <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+    </repository>
+    <repository>
+        <id>kotlinx-cli</id>
+        <url>https://dl.bintray.com/orangy/maven</url>
     </repository>
 </repositories>
 <dependencies>
@@ -159,6 +172,8 @@ dependencies {
 ```xml
 <resolvers>
     <bintray />
+    <bintray subject="orangy" repo="maven"/>
+    <ibiblio name="spigotmc" root="https://hub.spigotmc.org/nexus/content/groups/public/" m2compatible="true" />
 </resolvers>
 <dependencies>
     <dependency org='br.com.gamemods' name='java2nukkit-world-converter' rev='1.0.0'>
