@@ -103,3 +103,5 @@ internal val paintings = propertiesStringString("/paintings.properties")
 internal val javaEntities2Nukkit = propertiesStringString("/java-entities.properties")
 
 internal val javaEnchantments2Nukkit = propertiesStringInt("/enchantments.properties")
+
+internal val javaPotions2Bedrock = propertiesStringInt("/potions.properties")

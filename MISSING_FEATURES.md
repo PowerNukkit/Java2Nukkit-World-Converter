@@ -36,7 +36,8 @@ be connected after the conversion
 * **Tipped Arrow**: of type strong_slowness (-60% Speed) isn't supported by Bedrock Edition and will be converted to normal slowness.
 * **Fireworks rockets and stars**: with customized colors will always be converted to blue because it's not supported by Bedrock Edition.
 * **Suspicious Stew**: Is not available in Bedrock Edition and will be converted to a normal mushroom stew
- 
+* **All potions types**: Custom effects and colors aren't supported and they will revert back to the normal potion indicated in the `Potion` NBT tag.
+    Also, some potions aren't supported and they will be converted as stated in the [replacements file](REPLACEMENTS.md)
 
 ## Unsupported by Nukkit
 These things won't work because it's a missing feature or a bug in Nukkit servers:

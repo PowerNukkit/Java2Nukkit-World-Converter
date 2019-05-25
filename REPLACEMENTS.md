@@ -20,6 +20,9 @@ See also [the list of missing features](MISSING_FEATURES.md).
 | shield                 | air           | Nukkit          |
 | crossbow               | bow           | Nukkit          |
 | sweet_berries          | cookies       | Nukkit          |
+| Potions of Slowness II | Potion of Slowness I | Bedrock Edition |
+| Uncraftable Potion     | Water Potion  | Bedrock Edition |
+| Potions of Lucky       | Water Potion  | Bedrock Edition |
 
 ## Blocks
 

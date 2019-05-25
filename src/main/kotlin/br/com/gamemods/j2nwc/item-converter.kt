@@ -52,6 +52,14 @@ internal fun NbtCompound.toNukkitItem(): NbtCompound {
                 tippedArrows[potionInfo] ?: 0
             }
         }
+        373, 438, 441 -> { // potions
+            val potionInfo = nbt.getNullableString("Potion")?.removePrefix("minecraft:")
+            if (potionInfo == null) {
+                nukkitData
+            } else {
+                javaPotions2Bedrock[potionInfo] ?: 0
+            }
+        }
         else -> nukkitData
     }
 
