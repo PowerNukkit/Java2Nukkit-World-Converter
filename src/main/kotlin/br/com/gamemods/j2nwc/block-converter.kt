@@ -3,6 +3,7 @@ package br.com.gamemods.j2nwc
 import br.com.gamemods.nbtmanipulator.*
 import br.com.gamemods.regionmanipulator.ChunkPos
 import br.com.gamemods.regionmanipulator.Region
+import java.io.FileNotFoundException
 import java.util.*
 import kotlin.math.floor
 
@@ -98,7 +99,14 @@ internal fun JavaBlock.toNukkit(
                     }
                 } else {
                     worldHooks += { _, worldDir ->
-                        modifyRegion(worldDir, pairedRegX, pairedRegZ, ::swapItems)
+                        try {
+                            modifyRegion(worldDir, pairedRegX, pairedRegZ, ::swapItems)
+                        } catch (e: FileNotFoundException) {
+                            System.err.println(
+                                "Could not swap the double chest items between the chests $blockPos and ${BlockPos(x, y, z)} because the file r.$pairedRegX.$pairedRegZ.mca does not exists!"
+                            )
+                            System.err.println(e.toString())
+                        }
                     }
                 }
             }
