@@ -2,13 +2,17 @@ package br.com.gamemods.j2nwc
 
 import br.com.gamemods.nbtmanipulator.*
 import br.com.gamemods.regionmanipulator.ChunkPos
+import br.com.gamemods.regionmanipulator.Region
+import java.io.FileNotFoundException
+import kotlin.math.floor
 
 internal fun toNukkitEntity(
     javaEntity: NbtCompound,
     javaChunk: JavaChunk,
     nukkitSections: Map<Int, NukkitChunkSection>,
     nukkitTileEntities: MutableMap<BlockPos, NbtCompound>,
-    regionPostConversionHooks: MutableList<PostConversionHook>
+    regionPostConversionHooks: MutableList<PostConversionHook>,
+    worldHooks: MutableList<PostWorldConversionHook>
 ): NbtCompound? {
     fun convertBaseEntity(): NbtCompound? {
         return NbtCompound().apply {
@@ -63,12 +67,31 @@ internal fun toNukkitEntity(
             nukkitEntity["Direction"] = nukkitDirection.toByte()
             nukkitEntity["Rotation"] = NbtList(NbtFloat(nukkitDirection * 90F), NbtFloat(0F))
 
-            val chunkPos = ChunkPos(nukkitTileX / 16, nukkitTileZ / 16)
-            if (javaChunk.position == chunkPos) {
+            val nukkitChunkPos = ChunkPos(floor(nukkitTileX / 16.0).toInt(), floor(nukkitTileZ / 16.0).toInt())
+            val javaChunkPos = ChunkPos(floor(javaTileX / 16.0).toInt(), floor(javaTileZ / 16.0).toInt())
+            if (javaChunk.position == nukkitChunkPos) {
                 nukkitEntity
             } else {
-                regionPostConversionHooks += { _, nukkitRegion ->
-                    nukkitRegion[chunkPos]?.level?.getCompoundList("Entities")?.value?.add(nukkitEntity)
+                val nukkitRegX = floor(nukkitChunkPos.xPos / 32.0).toInt()
+                val nukkitRegZ = floor(nukkitChunkPos.zPos / 32.0).toInt()
+                val javaRegX = floor(javaChunkPos.xPos / 32.0).toInt()
+                val javaRegZ = floor(javaChunkPos.zPos / 32.0).toInt()
+                fun addEntity(nukkitRegion: Region) {
+                    nukkitRegion[nukkitChunkPos]?.level?.getCompoundList("Entities")?.value?.add(nukkitEntity)
+                }
+                if (nukkitRegX == javaRegX && nukkitRegZ == javaRegZ) {
+                    regionPostConversionHooks += { _, nukkitRegion ->
+                        addEntity(nukkitRegion)
+                    }
+                } else {
+                    worldHooks += { _, worldDir ->
+                        try {
+                            modifyRegion(worldDir, nukkitRegX, nukkitRegZ, ::addEntity)
+                        } catch (e: FileNotFoundException) {
+                            System.err.println("Unable to migrate the painting at $javaTileX,$tileY,$javaTileZ because " +
+                                    "the region file r.$nukkitRegX,$nukkitRegZ.mca does not exists")
+                        }
+                    }
                 }
                 null
             }

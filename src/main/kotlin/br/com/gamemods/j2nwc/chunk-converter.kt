@@ -4,7 +4,10 @@ import br.com.gamemods.nbtmanipulator.NbtCompound
 import br.com.gamemods.nbtmanipulator.NbtList
 import br.com.gamemods.regionmanipulator.Chunk
 
-internal fun Chunk.toNukkit(regionPostConversionHooks: MutableList<PostConversionHook>): NukkitChunk {
+internal fun Chunk.toNukkit(
+    regionPostConversionHooks: MutableList<PostConversionHook>,
+    worldHooks: MutableList<PostWorldConversionHook>
+): NukkitChunk {
     val javaChunk = JavaChunk(this)
     val javaTileEntities = javaChunk.tileEntities.value.associate {
         BlockPos(it.getInt("x"), it.getInt("y"), it.getInt("z")) to it
@@ -16,7 +19,7 @@ internal fun Chunk.toNukkit(regionPostConversionHooks: MutableList<PostConversio
         .toMap()
     val nukkitChunk = NukkitChunk(
         NbtList(javaChunk.entities.value.mapNotNull {
-            toNukkitEntity(it, javaChunk, nukkitSections, nukkitTileEntities, regionPostConversionHooks)
+            toNukkitEntity(it, javaChunk, nukkitSections, nukkitTileEntities, regionPostConversionHooks, worldHooks)
         }),
         nukkitSections,
         NbtList(nukkitTileEntities.values.toMutableList()),
@@ -84,8 +87,6 @@ internal fun JavaChunkSection.toNukkit(
         val blockPos = BlockPos(x + chunkPos.xPos * 16, y + yPos * 16, z + chunkPos.zPos * 16)
         JavaBlock(blockPos, palette[paletteIndexes[it]], javaTileEntities[blockPos])
     }
-
-    //val javaBlocks = blockPalettes.associate { it.blockPos to it }
 
     val nukkitBlocks = blockPalettes.map { it.toNukkit(regionPostConversionHooks).also { block ->
         block.tileEntity?.let { nukkitTileEntity ->

@@ -6,19 +6,29 @@ import br.com.gamemods.regionmanipulator.Region
 import br.com.gamemods.regionmanipulator.RegionIO
 import java.io.File
 
-fun convertRegionFile(from: File, to: File) {
+internal fun convertRegionFile(
+    from: File,
+    to: File,
+    worldHooks: MutableList<PostWorldConversionHook>
+) {
     val javaRegion = RegionIO.readRegion(from)
-    val nukkitRegion = javaRegion.toNukkit()
+    val nukkitRegion = javaRegion.toNukkit(worldHooks)
     RegionIO.writeRegion(to, nukkitRegion)
-    val test = RegionIO.readRegion(to)
-    println(test.hashCode())
+}
+
+internal inline fun modifyRegion(worldDir: File, xPos: Int, zPos: Int, modify: (Region) -> Unit) {
+    val regionFile = File(worldDir, "region/r.$xPos.$zPos.mca")
+    RegionIO.readRegion(regionFile).let {
+        modify(it)
+        RegionIO.writeRegion(regionFile, it)
+    }
 }
 
 internal typealias PostConversionHook = (javaRegion: Region, nukkitRegion: Region) -> Unit
 
-fun Region.toNukkit(): Region {
+internal fun Region.toNukkit(worldHooks: MutableList<PostWorldConversionHook>): Region {
     val postConversionHooks = mutableListOf<PostConversionHook>()
-    val nukkitRegion = Region(position, values.map { Chunk(it.lastModified, it.toNukkit(postConversionHooks).toNbt()) })
+    val nukkitRegion = Region(position, values.map { Chunk(it.lastModified, it.toNukkit(postConversionHooks, worldHooks).toNbt()) })
     postConversionHooks.forEach {
         it(this, nukkitRegion)
     }
