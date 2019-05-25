@@ -6,6 +6,8 @@ import br.com.gamemods.regionmanipulator.Region
 import br.com.gamemods.regionmanipulator.RegionIO
 import java.io.File
 
+internal typealias PostWorldConversionHook = (from: File, to: File) -> Unit
+
 internal fun convertRegionFile(
     from: File,
     to: File,

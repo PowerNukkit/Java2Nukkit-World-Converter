@@ -2,8 +2,6 @@ package br.com.gamemods.j2nwc
 
 import java.io.File
 
-internal typealias PostWorldConversionHook = (from: File, to: File) -> Unit
-
 /**
  * A region position extracted from the region file name.
  *
