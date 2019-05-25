@@ -18,9 +18,7 @@ class RegionTest {
         }
 
         val mca = RegionIO.readRegion(tempFile, RegionPos(1, -1))
-        println(mca.hashCode())
-        val nukkitRegion = mca.toNukkit()
-        println(nukkitRegion.hashCode())
+        mca.toNukkit(mutableListOf())
     }
 
 }
