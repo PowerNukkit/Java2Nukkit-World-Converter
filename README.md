@@ -52,7 +52,7 @@ please, report it in the issues section, or, attempt to fix the mapping in the p
 Simply open your favorite terminal/console application, cmd.exe for example, navigate to the folder that you have 
 downloaded the tool and execute this command:
 ```batch
-java -jar TheToolJarFile.jar "C:\Path\To\The\Java\World\Dir" "C:\Were\The\Converted\Folder\Will\Be"
+java -jar TheToolJarFile.jar "C:\Path\To\The\Java\World\Dir" "C:\Where\The\Converted\Folder\Will\Be"
 ```
 
 Don't forget to replace the directory paths and the tool jar file name.
