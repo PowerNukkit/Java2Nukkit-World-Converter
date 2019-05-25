@@ -1,4 +1,4 @@
-@file:JvmName("LevelConverter")
+@file:JvmName("WorldConverterCLI")
 package br.com.gamemods.j2nwc
 
 import kotlinx.cli.CommandLineInterface
