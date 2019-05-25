@@ -12,9 +12,6 @@ These things could be converted but are not supported by the tool yet:
 * **Entities**: No entity will be converted, with exception of item frames which are blocks in Bedrock Edition
 * **Potion effects**: They will be converted as water potion for now
 * **Open maps**: No map content will be migrated yet
-* **Firework**: Will not be converted correctly yet
-* **Firework stars**: Will not be converted correctly yet
-* **Enchantments**: No item will be enchanted after the conversion yet
 
 ## Unsupported by Minecraft Bedrock Edition
 These things have some differences from Java Edition and needs to be treated specially:
