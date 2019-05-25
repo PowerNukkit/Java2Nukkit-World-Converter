@@ -67,7 +67,7 @@ internal val javaTags = properties("/tags.properties")
 internal val javaTags2Bedrock = javaTags.mapValues { entry ->
     entry.value.asSequence().flatMap { javaBlock ->
         val (bedrockId, bedrockData) = java2bedrockStates[javaBlock]?.split(',', limit = 2) ?: listOf("0","0").also {
-            println("The tag ${entry.key} points to a missing block $javaBlock")
+            //println("The tag ${entry.key} points to a missing block $javaBlock")
         }
         val (nukkitId, _) = (
                 bedrock2nukkit.getProperty("B,$bedrockId,$bedrockData") ?: "$bedrockId,$bedrockData"
