@@ -2,6 +2,7 @@
 package br.com.gamemods.j2nwc
 
 import kotlinx.cli.CommandLineInterface
+import kotlinx.cli.flagValueArgument
 import kotlinx.cli.parse
 import kotlinx.cli.positionalArgument
 import java.nio.file.Files
@@ -16,6 +17,7 @@ fun main(args: Array<String>) {
     val cli = CommandLineInterface("java -jar $jarFileName")
     val from by cli.positionalArgument("from-dir", "The world Java Edition world directory")
     val to by cli.positionalArgument("to-dir", "The location where the Nukkit world will be created")
+    val regionsArg by cli.flagValueArgument("-r", "regions", "A list of region positions that will be converted. Example: -r 0,0;-1,0;-1,-1")
 
     try {
         cli.parse(args)
@@ -35,6 +37,22 @@ fun main(args: Array<String>) {
         exitProcess(3)
     }
 
+    val regionLimit = if (regionsArg == null) {
+        emptyList()
+    } else {
+        val regions = regionsArg!!
+        if (!regions.matches(Regex("^(-?\\d,-?\\d)(;-?\\d,-?\\d)*$"))) {
+            System.err.println("The regions parameter must follow this syntax:\n-r 0,0;-1,0;-1,-1")
+            cli.printHelp()
+            exitProcess(6)
+        } else {
+            regions.split(';').asSequence()
+                .map { it.split(',') }
+                .map { RegionPos(it[0].toInt(), it[1].toInt()) }
+                .toList()
+        }
+    }
+
     val fromPath = Paths.get(from)
     if (!Files.isDirectory(fromPath)) {
         System.err.println("$from is not a folder!")
@@ -44,7 +62,10 @@ fun main(args: Array<String>) {
 
     val toPath = Paths.get(to)
     try {
-        WorldConverter(fromPath.toFile(), toPath.toFile()).convert()
+        WorldConverter(fromPath.toFile(), toPath.toFile()).apply {
+            regionFilter = regionLimit.toMutableSet()
+            convert()
+        }
         println("The world has been converted successfully")
     } catch (e: Exception) {
         System.err.println("An error has occurred while converting the world!")
