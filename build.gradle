@@ -1,5 +1,7 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.3.31'
+    id 'com.jfrog.bintray' version '1.8.4'
+    id 'maven'
     id 'org.jetbrains.dokka' version '0.9.18'
     id 'org.ajoberstar.git-publish' version '2.1.1'
 }
@@ -33,6 +35,72 @@ compileKotlin {
 }
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            packaging 'jar'
+            groupId project.group
+            artifactId 'java2nukkit-world-converter'
+            version project.version
+            name project.name
+            description "Converts worlds from Minecraft 1.14+ Java Edition to the newest Nukkit MCA file format"
+            url "https://github.com/GameModsBR/Java2Nukkit-World-Converter"
+            inceptionYear '2019'
+            licenses {
+                license {
+                    name 'MIT'
+                    url 'https://raw.githubusercontent.com/GameModsBR/Java2Nukkit-World-Converter/master/LICENSE'
+                    distribution 'repo'
+                }
+            }
+            developers {
+                developer {
+                    id = 'joserobjr'
+                    name = 'José Roberto de Araújo Júnior'
+                    email = 'joserobjr@gamemods.com.br'
+                }
+            }
+            scm {
+                connection "https://github.com/GameModsBR/Java2Nukkit-World-Converter.git"
+                developerConnection "https://github.com/GameModsBR/Java2Nukkit-World-Converter.git"
+                url "https://github.com/GameModsBR/Java2Nukkit-World-Converter"
+            }
+        }
+    }
+}
+
+if (!ext.has('gamemodsBintrayUser')) {
+    ext.gamemodsBintrayUser = ""
+}
+if (!ext.has('gamemodsBintrayApiKey')) {
+    ext.gamemodsBintrayApiKey = ""
+}
+
+bintray {
+    user = "$gamemodsBintrayUser"
+    key = "$gamemodsBintrayApiKey"
+    configurations = ['archives']
+    pkg {
+        repo = 'GameMods'
+        name = 'Java2Nukkit-World-Converter'
+        userOrg = 'gamemods'
+        licenses = ['MIT']
+        vcsUrl = 'https://github.com/GameModsBR/Java2Nukkit-World-Converter.git'
+        websiteUrl = 'https://github.com/GameModsBR/Java2Nukkit-World-Converter'
+        //publish = false
+        version {
+            name = project.version
+            desc = "Java2Nukkit-World-Converter version ${project.version}"
+            //released = new Date()
+            vcsTag = "v${project.version}"
+            gpg {
+                sign = true //Determines whether to GPG sign the files. The default is false
+                //passphrase = '123' //Optional. The passphrase for GPG signing'
+            }
+        }
+    }
 }
 
 task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
