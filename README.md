@@ -96,7 +96,7 @@ val converter = WorldConverter(
 
 // Allows you to specify which region will be converter
 // useful for debugging, if not changed will convert everything
-converter.regionFilter = mutableListOf(RegionPos(0,0), RegionPos(-1,0))
+converter.regionFilter = mutableSetOf(RegionPos(0,0), RegionPos(-1,0))
 
 // Executes the conversion
 converter.convert()
@@ -110,7 +110,7 @@ WorldConverter converter = new WorldConverter(
 
 // Allows you to specify which region will be converter
 // useful for debugging, if not changed will convert everything
-converter.regionFilter = Arrays.asList(new RegionPos(0,0), new RegionPos(-1,0));
+converter.regionFilter = new HashSet<>(Arrays.asList(new RegionPos(0,0), new RegionPos(-1,0)));
 
 // Executes the conversion
 converter.convert();
