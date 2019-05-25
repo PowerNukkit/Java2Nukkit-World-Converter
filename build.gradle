@@ -15,6 +15,7 @@ targetCompatibility = sourceCompatibility
 repositories {
     mavenCentral()
     maven { url 'https://hub.spigotmc.org/nexus/content/groups/public/' }
+    maven { url 'https://dl.bintray.com/orangy/maven' }
 }
 
 dependencies {
@@ -22,6 +23,7 @@ dependencies {
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-reflect'
     implementation group: 'net.md-5', name: 'bungeecord-chat', version: '1.14-SNAPSHOT'
     implementation 'br.com.gamemods:region-manipulator:0.0.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-cli-jvm:0.1.0-dev-4'
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 

@@ -6,7 +6,7 @@ typealias PostWorldConversionHook = (from: File, to: File) -> Unit
 class WorldConverter(val from: File, val to: File) {
     fun convert() {
         check(to.isDirectory || to.mkdirs()) {
-            "Falha ao criar a pasta $to"
+            "Failed to create the folder $to"
         }
 
         convertLevelFile(File(from, "level.dat"), File(to, "level.dat"))
