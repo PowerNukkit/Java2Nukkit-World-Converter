@@ -101,6 +101,62 @@ internal fun NbtCompound.toNukkitItem(): NbtCompound {
             }
             nukkitNbt["id"] = 1095216660480L + ThreadLocalRandom.current().nextLong(0L, 2147483647L)
         }
+        401, 402 -> { // firework
+            fun NbtCompound.copyToRenaming(to: NbtCompound, tagName: String, newName: String) {
+                this[tagName]?.let {
+                    to[newName] = it
+                }
+            }
+            fun Int.fireworkColorToDyeColor(): Byte = when (this) {
+                15790320 -> 15
+                15435844 -> 14
+                12801229 -> 13
+                6719955 -> 12
+                14602026 -> 11
+                4312372 -> 10
+                14188952 -> 9
+                4408131 -> 8
+                11250603 -> 7
+                2651799 -> 6
+                8073150 -> 5
+                2437522 -> 4
+                5320730 -> 3
+                3887386 -> 2
+                11743532 -> 1
+                1973019 -> 0
+                else -> 4
+            }
+            fun NbtCompound.convertExplosion(): NbtCompound {
+                val converted = NbtCompound()
+                copyToRenaming(converted, "Flicker", "FireworkFlicker")
+                copyToRenaming(converted, "Trail", "FireworkTrail")
+                copyToRenaming(converted, "Type", "FireworkType")
+                getNullableIntArray("Colors")?.map { it.fireworkColorToDyeColor() }?.also {
+                    converted["FireworkColor"] = it.toByteArray()
+                }
+                getNullableIntArray("FadeColors")?.map { it.fireworkColorToDyeColor() }?.also {
+                    converted["FireworkFade"] = it.toByteArray()
+                }
+                return converted
+            }
+            when (nukkitId) {
+                402 -> nbt.getNullableCompound("Explosion")?.also {
+                    nukkitNbt["Explosion"] = it.convertExplosion()
+                }
+                401 -> nbt.getNullableCompound("Fireworks")?.also { fireworks ->
+                    val convertedFireworks = NbtCompound()
+                    convertedFireworks.copyFrom(fireworks, "Flight")
+
+                    fireworks.getNullableCompoundList("Explosions")?.also { explosions ->
+                        convertedFireworks["Explosions"] = NbtList(
+                            explosions.value.map { it.convertExplosion() }
+                        )
+                    }
+
+                    nukkitNbt["Fireworks"] = convertedFireworks
+                }
+            }
+        }
     }
 
     if (customNukkitData != 0) {
