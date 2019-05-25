@@ -101,3 +101,5 @@ internal val paintings = propertiesStringString("/paintings.properties")
         PaintingData(id, width.toInt(), height.toInt())
     }
 internal val javaEntities2Nukkit = propertiesStringString("/java-entities.properties")
+
+internal val javaEnchantments2Nukkit = propertiesStringInt("/enchantments.properties")

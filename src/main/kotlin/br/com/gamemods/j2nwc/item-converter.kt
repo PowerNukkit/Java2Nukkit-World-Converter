@@ -82,6 +82,15 @@ internal fun NbtCompound.toNukkitItem(): NbtCompound {
         nukkitNbt["CanPlaceOn"] = nukkitCanPlaceOn
     }
 
+    val enchantments = nbt.getNullableCompoundList("Enchantments")?.value ?: emptyList<NbtCompound>()
+    val storedEnchantments = nbt.getNullableCompoundList("StoredEnchantments")?.value ?: emptyList<NbtCompound>()
+
+    (enchantments.asSequence() + storedEnchantments.asSequence()).mapNotNull(::convertEnch).also {
+        nukkitNbt["ench"] = NbtList(it.toMutableList())
+    }
+
+    nbt.copyTo(nukkitNbt, "RepairCost")
+
     when (nukkitId) {
         386 -> { // writable_book
             nbt.getNullableStringList("pages")?.value?.map {
@@ -150,6 +159,17 @@ internal fun NbtCompound.toNukkitItem(): NbtCompound {
         nukkitItem["tag"] = nukkitNbt
     }
     return nukkitItem
+}
+
+internal fun convertEnch(from: NbtCompound): NbtCompound? {
+    val id = javaEnchantments2Nukkit[from.getNullableString("id")?.removePrefix("minecraft:") ?: ""]
+        ?.takeIf { it >= 0 }
+        ?: return null
+
+    return NbtCompound().also { to ->
+        to["id"] = id.toShort()
+        from.copyTo(to, "lvl")
+    }
 }
 
 internal fun NbtCompound.copyToRenaming(to: NbtCompound, tagName: String, newName: String) {
