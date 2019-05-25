@@ -1,4 +1,4 @@
-package br.com.gamemods.j2nwc
+package br.com.gamemods.j2nwc.internal
 
 import java.util.*
 

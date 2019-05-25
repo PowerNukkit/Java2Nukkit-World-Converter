@@ -1,4 +1,4 @@
-package br.com.gamemods.j2nwc
+package br.com.gamemods.j2nwc.internal
 
 import br.com.gamemods.nbtmanipulator.*
 import br.com.gamemods.regionmanipulator.ChunkPos

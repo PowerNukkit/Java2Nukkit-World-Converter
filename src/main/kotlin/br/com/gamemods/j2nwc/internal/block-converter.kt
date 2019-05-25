@@ -1,4 +1,4 @@
-package br.com.gamemods.j2nwc
+package br.com.gamemods.j2nwc.internal
 
 import br.com.gamemods.nbtmanipulator.*
 import br.com.gamemods.regionmanipulator.ChunkPos
@@ -103,7 +103,11 @@ internal fun JavaBlock.toNukkit(
                             modifyRegion(worldDir, pairedRegX, pairedRegZ, ::swapItems)
                         } catch (e: FileNotFoundException) {
                             System.err.println(
-                                "Could not swap the double chest items between the chests $blockPos and ${BlockPos(x, y, z)} because the file r.$pairedRegX.$pairedRegZ.mca does not exists!"
+                                "Could not swap the double chest items between the chests $blockPos and ${BlockPos(
+                                    x,
+                                    y,
+                                    z
+                                )} because the file r.$pairedRegX.$pairedRegZ.mca does not exists!"
                             )
                             System.err.println(e.toString())
                         }
@@ -183,32 +187,32 @@ internal fun JavaBlock.toNukkit(
         }
         140 -> createTileEntity("FlowerPot") { nukkitEntity ->
             val potted = when (type.blockName.removePrefix("minecraft:")) {
-                "potted_oak_sapling" -> BlockData(6,0)
-                "potted_spruce_sapling" -> BlockData(6,1)
-                "potted_birch_sapling" -> BlockData(6,2)
-                "potted_jungle_sapling" -> BlockData(6,3)
-                "potted_acacia_sapling" -> BlockData(6,4)
-                "potted_dark_oak_sapling" -> BlockData(6,5)
-                "potted_fern" -> BlockData(31,1)
-                "potted_dandelion" -> BlockData(37,0)
-                "potted_poppy" -> BlockData(38,0)
-                "potted_blue_orchid" -> BlockData(38,1)
-                "potted_allium" -> BlockData(38,2)
-                "potted_azure_bluet" -> BlockData(38,3)
-                "potted_red_tulip" -> BlockData(38,4)
-                "potted_orange_tulip" -> BlockData(38,5)
-                "potted_white_tulip" -> BlockData(38,6)
-                "potted_pink_tulip" -> BlockData(38,7)
-                "potted_oxeye_daisy" -> BlockData(38,8)
-                "potted_cornflower" -> BlockData(38,9)
-                "potted_lily_of_the_valley" -> BlockData(38,10)
-                "potted_wither_rose" -> BlockData(38,2)
-                "potted_brown_mushroom" -> BlockData(39,0)
-                "potted_red_mushroom" -> BlockData(40,0)
-                "potted_dead_bush" ->BlockData(32,0)
-                "potted_cactus" ->BlockData(81,0)
-                "potted_bamboo" -> BlockData(38,0)
-                else -> BlockData(0,0)
+                "potted_oak_sapling" -> BlockData(6, 0)
+                "potted_spruce_sapling" -> BlockData(6, 1)
+                "potted_birch_sapling" -> BlockData(6, 2)
+                "potted_jungle_sapling" -> BlockData(6, 3)
+                "potted_acacia_sapling" -> BlockData(6, 4)
+                "potted_dark_oak_sapling" -> BlockData(6, 5)
+                "potted_fern" -> BlockData(31, 1)
+                "potted_dandelion" -> BlockData(37, 0)
+                "potted_poppy" -> BlockData(38, 0)
+                "potted_blue_orchid" -> BlockData(38, 1)
+                "potted_allium" -> BlockData(38, 2)
+                "potted_azure_bluet" -> BlockData(38, 3)
+                "potted_red_tulip" -> BlockData(38, 4)
+                "potted_orange_tulip" -> BlockData(38, 5)
+                "potted_white_tulip" -> BlockData(38, 6)
+                "potted_pink_tulip" -> BlockData(38, 7)
+                "potted_oxeye_daisy" -> BlockData(38, 8)
+                "potted_cornflower" -> BlockData(38, 9)
+                "potted_lily_of_the_valley" -> BlockData(38, 10)
+                "potted_wither_rose" -> BlockData(38, 2)
+                "potted_brown_mushroom" -> BlockData(39, 0)
+                "potted_red_mushroom" -> BlockData(40, 0)
+                "potted_dead_bush" -> BlockData(32, 0)
+                "potted_cactus" -> BlockData(81, 0)
+                "potted_bamboo" -> BlockData(38, 0)
+                else -> BlockData(0, 0)
             }
             potted.blockId.takeIf { it != 0 }?.let {
                 nukkitEntity["item"] = it

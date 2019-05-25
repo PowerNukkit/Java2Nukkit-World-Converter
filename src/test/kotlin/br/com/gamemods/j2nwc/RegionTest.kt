@@ -1,5 +1,6 @@
 package br.com.gamemods.j2nwc
 
+import br.com.gamemods.j2nwc.internal.toNukkit
 import br.com.gamemods.regionmanipulator.RegionIO
 import br.com.gamemods.regionmanipulator.RegionPos
 import org.junit.Test

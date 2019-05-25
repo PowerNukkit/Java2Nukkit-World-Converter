@@ -1,4 +1,4 @@
-package br.com.gamemods.j2nwc
+package br.com.gamemods.j2nwc.internal
 
 import br.com.gamemods.nbtmanipulator.NbtCompound
 import br.com.gamemods.nbtmanipulator.NbtList

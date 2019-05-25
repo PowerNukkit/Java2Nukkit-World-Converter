@@ -1,4 +1,4 @@
-package br.com.gamemods.j2nwc
+package br.com.gamemods.j2nwc.internal
 
 import br.com.gamemods.nbtmanipulator.NbtCompound
 import br.com.gamemods.nbtmanipulator.NbtList
@@ -24,7 +24,14 @@ internal fun Chunk.toNukkit(
         .toMap()
     val nukkitChunk = NukkitChunk(
         NbtList(javaChunk.entities.value.mapNotNull {
-            toNukkitEntity(it, javaChunk, nukkitSections, nukkitTileEntities, regionPostConversionHooks, worldHooks)
+            toNukkitEntity(
+                it,
+                javaChunk,
+                nukkitSections,
+                nukkitTileEntities,
+                regionPostConversionHooks,
+                worldHooks
+            )
         }),
         nukkitSections,
         NbtList(nukkitTileEntities.values.toMutableList()),
@@ -90,7 +97,8 @@ internal fun JavaChunkSection.toNukkit(
         val y = (it shr 8) and 0xF
         val z = (it shr 4) and 0xF
         val x = it and 0xF
-        val blockPos = BlockPos(x + chunkPos.xPos * 16, y + yPos * 16, z + chunkPos.zPos * 16)
+        val blockPos =
+            BlockPos(x + chunkPos.xPos * 16, y + yPos * 16, z + chunkPos.zPos * 16)
         JavaBlock(blockPos, palette[paletteIndexes[it]], javaTileEntities[blockPos])
     }
 

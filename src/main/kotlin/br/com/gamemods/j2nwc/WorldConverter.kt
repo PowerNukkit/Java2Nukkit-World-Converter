@@ -1,5 +1,8 @@
 package br.com.gamemods.j2nwc
 
+import br.com.gamemods.j2nwc.internal.PostWorldConversionHook
+import br.com.gamemods.j2nwc.internal.convertLevelFile
+import br.com.gamemods.j2nwc.internal.convertRegionFile
 import java.io.File
 
 /**
@@ -49,7 +52,11 @@ class WorldConverter(val from: File, val to: File) {
             .filter { it.name.toLowerCase().matches(Regex("""^r\.-?\d\.-?\d\.mca$""")) }
             .filter { regionFilter.isEmpty() || RegionPos(it.name) in regionFilter }
             .forEach { fromRegion ->
-                convertRegionFile(fromRegion, File(toRegionDir, fromRegion.name), worldHooks)
+                convertRegionFile(
+                    fromRegion,
+                    File(toRegionDir, fromRegion.name),
+                    worldHooks
+                )
             }
         worldHooks.forEach {
             it(from, to)

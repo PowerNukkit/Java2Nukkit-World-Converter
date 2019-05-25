@@ -1,5 +1,5 @@
 @file:JvmName("RegionFileConverter")
-package br.com.gamemods.j2nwc
+package br.com.gamemods.j2nwc.internal
 
 import br.com.gamemods.regionmanipulator.Chunk
 import br.com.gamemods.regionmanipulator.Region

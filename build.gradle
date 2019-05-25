@@ -130,6 +130,13 @@ if (JavaVersion.current().majorVersion == "8") {
         archives javadocJar
     }
 
+    dokka {
+        packageOptions {
+            prefix = "br.com.gamemods.j2nwc.internal"
+            suppress = true
+        }
+    }
+
     if (ext.has('org.ajoberstar.grgit.auth.username')) {
         System.setProperty('org.ajoberstar.grgit.auth.username', ext['org.ajoberstar.grgit.auth.username'].toString())
         System.setProperty('org.ajoberstar.grgit.auth.password', ext['org.ajoberstar.grgit.auth.password'].toString())

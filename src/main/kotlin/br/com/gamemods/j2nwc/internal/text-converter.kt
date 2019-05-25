@@ -1,4 +1,4 @@
-package br.com.gamemods.j2nwc
+package br.com.gamemods.j2nwc.internal
 
 import br.com.gamemods.nbtmanipulator.NbtCompound
 import net.md_5.bungee.api.ChatColor

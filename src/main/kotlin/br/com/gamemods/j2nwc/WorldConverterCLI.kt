@@ -1,6 +1,8 @@
 @file:JvmName("WorldConverterCLI")
 package br.com.gamemods.j2nwc
 
+import br.com.gamemods.j2nwc.internal.JavaChunk
+import br.com.gamemods.j2nwc.internal.checkIds
 import kotlinx.cli.CommandLineInterface
 import kotlinx.cli.flagValueArgument
 import kotlinx.cli.parse

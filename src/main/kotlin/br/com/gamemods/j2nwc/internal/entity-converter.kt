@@ -1,4 +1,4 @@
-package br.com.gamemods.j2nwc
+package br.com.gamemods.j2nwc.internal
 
 import br.com.gamemods.nbtmanipulator.*
 import br.com.gamemods.regionmanipulator.ChunkPos
@@ -71,7 +71,11 @@ internal fun toNukkitEntity(
                 javaBlockState.getNullableString("Name") ?: "minecraft:sand",
                 javaBlockState.getNullableCompound("Properties")
             )
-            val javaBlock = JavaBlock(BlockPos(0, 0, 0), javaPalette, javaTileEntity)
+            val javaBlock = JavaBlock(
+                BlockPos(0, 0, 0),
+                javaPalette,
+                javaTileEntity
+            )
             val nukkitBlock = javaBlock.toNukkit(mutableListOf(), mutableListOf())
             if (nukkitBlock.blockData.blockId == 0) {
                 null
