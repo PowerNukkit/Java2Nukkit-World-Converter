@@ -9,6 +9,9 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import kotlin.system.exitProcess
 
+/**
+ * Executes the tool as CLI.
+ */
 fun main(args: Array<String>) {
     checkIds()
 
