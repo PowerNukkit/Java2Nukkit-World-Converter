@@ -37,6 +37,18 @@ internal fun toNukkitEntity(
         }
     }
     return when(javaEntity.getString("id").removePrefix("minecraft:")) {
+        "item" -> {
+            val nukkitEntity = convertBaseEntity() ?: return null
+            val nukkitItem = javaEntity.getNullableCompound("Item")?.toNukkitItem()
+                ?.takeIf { it.getShort("id").toInt() != 0 } ?: return null
+            nukkitEntity["Item"] = nukkitItem
+            nukkitEntity.copyFrom(javaEntity, "Health")
+            nukkitEntity.copyFrom(javaEntity, "Age")
+            nukkitEntity.copyFrom(javaEntity, "PickupDelay")
+            // The Owner and Thrower aren't migrated because they players account
+            // from Java Edition differs from accounts from Bedrock Edition
+            nukkitEntity
+        }
         "experience_orb" -> {
             val nukkitEntity = convertBaseEntity() ?: return null
             nukkitEntity.copyFrom(javaEntity, "Health")

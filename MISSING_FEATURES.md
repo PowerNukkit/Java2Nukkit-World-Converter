@@ -12,6 +12,7 @@ These things could be converted but are not supported by the tool yet:
 * **Entities**: No entity will be converted, with exception of item frames which are blocks in Bedrock Edition
 * **Potion effects**: They will be converted as water potion for now
 * **Open maps**: No map content will be migrated yet
+* **Dropped items**: Will loose the `Owner` and `Thrower` tags because Java Edition accounts are not the same as Bedrock Edition accounts. 
 
 ## Unsupported by Minecraft Bedrock Edition
 These things have some differences from Java Edition and needs to be treated specially:
