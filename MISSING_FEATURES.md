@@ -34,6 +34,7 @@ be connected after the conversion
 * **mushroom_stem**: will always be converted to the red mushroom stem as Java Edition has only one block type for both 
                     mushrooms while Bedrock Edition has stems for each of them.
 * **Tipped Arrow**: of type strong_slowness (-60% Speed) isn't supported by Bedrock Edition and will be converted to normal slowness.
+* **Spectral Arrow**: is missing on Bedrock Edition and will be converted to regular arrows
 * **Fireworks rockets and stars**: with customized colors will always be converted to blue because it's not supported by Bedrock Edition.
 * **Suspicious Stew**: Is not available in Bedrock Edition and will be converted to a normal mushroom stew
 * **All potions types**: Custom effects and colors aren't supported and they will revert back to the normal potion indicated in the `Potion` NBT tag.

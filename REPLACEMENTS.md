@@ -20,9 +20,12 @@ See also [the list of missing features](MISSING_FEATURES.md).
 | shield                 | air           | Nukkit          |
 | crossbow               | bow           | Nukkit          |
 | sweet_berries          | cookies       | Nukkit          |
-| Potions of Slowness II | Potion of Slowness I | Bedrock Edition |
+| Potions of Slowness IV | Potion of Slowness I | Bedrock Edition |
 | Uncraftable Potion     | Water Potion  | Bedrock Edition |
 | Potions of Lucky       | Water Potion  | Bedrock Edition |
+| Arrow of Slowness IV | Arrow of Slowness I | Bedrock Edition |
+| Arrow of Lucky         | Regular Arrow | Bedrock Edition |
+| Spectral Arrow         | Regular Arrow | Bedrock Edition |
 
 ## Blocks
 
@@ -148,3 +151,9 @@ See also [the list of missing features](MISSING_FEATURES.md).
 | barrier                 | invisible_bedrock | Nukkit       |
 | dark_oak_trapdoor       | oak_trapdoor      | Nukkit       |
 | spruce_trapdoor         | oak_trapdoor      | Nukkit       |
+
+## Entities
+
+| Name                    | Replacement    | Unsupported by  |
+| ----------------------- | -------------- | --------------- |
+| spectral_arrow          | arrow          | Bedrock Edition |
