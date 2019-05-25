@@ -37,7 +37,8 @@ be connected after the conversion
                             mushroom is grown are supported. Other custom states will be changed to show cap on all
 * **mushroom_stem**: will always be converted to the red mushroom stem as Java Edition has only one block type for both 
                     mushrooms while Bedrock Edition has stems for each of them.
-* **tipped arrow**: of type strong_slowness (-60% Speed) isn't supported by Bedrock Edition and will be converted to normal slowness.                    
+* **tipped arrow**: of type strong_slowness (-60% Speed) isn't supported by Bedrock Edition and will be converted to normal slowness.
+* **fireworks**: with customized colors will always be converted to blue because it's not supported by Bedrock Edition.
  
 
 ## Unsupported by Nukkit
