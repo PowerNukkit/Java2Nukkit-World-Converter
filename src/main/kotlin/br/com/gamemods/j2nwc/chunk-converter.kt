@@ -12,7 +12,7 @@ internal fun Chunk.toNukkit(regionPostConversionHooks: MutableList<PostConversio
     val nukkitTileEntities = mutableMapOf<BlockPos, NbtCompound>()
     val nukkitSections = javaChunk.sections.entries.asSequence()
         .filter { it.value.yPos >= 0 }
-        .mapNotNull { it.key to (it.value.toNukkit(javaTileEntities, nukkitTileEntities) ?: return@mapNotNull null) }
+        .mapNotNull { it.key to (it.value.toNukkit(javaTileEntities, nukkitTileEntities, regionPostConversionHooks) ?: return@mapNotNull null) }
         .toMap()
     val nukkitChunk = NukkitChunk(
         NbtList(javaChunk.entities.value.mapNotNull {
@@ -38,7 +38,11 @@ internal fun Chunk.toNukkit(regionPostConversionHooks: MutableList<PostConversio
 internal data class BlockPos(val xPos: Int, val yPos: Int, val zPos: Int)
 internal data class JavaBlock(val blockPos: BlockPos, val type: JavaPalette, var tileEntity: NbtCompound?)
 internal data class NukkitBlock(val blockPos: BlockPos, var blockData: BlockData, var tileEntity: NbtCompound?)
-internal fun JavaChunkSection.toNukkit(javaTileEntities: Map<BlockPos, NbtCompound>, nukkitTileEntities: MutableMap<BlockPos, NbtCompound>): NukkitChunkSection? {
+internal fun JavaChunkSection.toNukkit(
+    javaTileEntities: Map<BlockPos, NbtCompound>,
+    nukkitTileEntities: MutableMap<BlockPos, NbtCompound>,
+    regionPostConversionHooks: MutableList<PostConversionHook>
+): NukkitChunkSection? {
     val blockStates = blockStates ?: return NukkitChunkSection(
         yPos = yPos,
         blockLight = ByteArray(2048),
@@ -81,9 +85,9 @@ internal fun JavaChunkSection.toNukkit(javaTileEntities: Map<BlockPos, NbtCompou
         JavaBlock(blockPos, palette[paletteIndexes[it]], javaTileEntities[blockPos])
     }
 
-    val javaBlocks = blockPalettes.associate { it.blockPos to it }
+    //val javaBlocks = blockPalettes.associate { it.blockPos to it }
 
-    val nukkitBlocks = blockPalettes.map { it.toNukkit(javaBlocks).also {block ->
+    val nukkitBlocks = blockPalettes.map { it.toNukkit(regionPostConversionHooks).also { block ->
         block.tileEntity?.let { nukkitTileEntity ->
             nukkitTileEntities[block.blockPos] = nukkitTileEntity
         }

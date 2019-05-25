@@ -1,9 +1,10 @@
 package br.com.gamemods.j2nwc
 
 import br.com.gamemods.nbtmanipulator.*
+import br.com.gamemods.regionmanipulator.ChunkPos
 import java.util.*
 
-internal fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlock {
+internal fun JavaBlock.toNukkit(regionPostConversionHooks: MutableList<PostConversionHook>): NukkitBlock {
     val blockData = this.type.toNukkit()
 
     fun commonBlockEntityData(id: String) = arrayOf(
@@ -57,11 +58,30 @@ internal fun JavaBlock.toNukkit(javaBlocks: Map<BlockPos, JavaBlock>): NukkitBlo
                 }
                 else -> null
             }
-            pair?.let { (x, z) ->
+            tileEntity?.toNukkitInventory(nukkitEntity)
+            pair?.also { (x, z) ->
                 nukkitEntity["pairx"] = x
                 nukkitEntity["pairz"] = z
+
+                val y = blockPos.yPos
+                val pairedChunkPos = ChunkPos(x / 16, z /16)
+                regionPostConversionHooks += { _, nukkitRegion ->
+                    nukkitRegion[pairedChunkPos]?.level?.getCompoundList("TileEntities")?.value
+                        ?.find { it.getInt("x") == x && it.getInt("y") == y && it.getInt("z") == z }
+                        ?.also { pairedEntity ->
+                            if (pairedEntity.getNullableBooleanByte("--pair-processed--")) {
+                                pairedEntity.value.remove("--pair-processed--")
+                            } else {
+                                val thisItems = nukkitEntity.getList("Items")
+                                val otherItems = pairedEntity.getList("Items")
+
+                                pairedEntity["Items"] = thisItems
+                                nukkitEntity["Items"] = otherItems
+                                nukkitEntity["--pair-processed--"] = true
+                            }
+                        }
+                }
             }
-            tileEntity?.toNukkitInventory(nukkitEntity)
         }
         130 -> createTileEntity("EnderChest")
         61, 62 -> createTileEntity("Furnace") { nukkitEntity ->
