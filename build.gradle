@@ -111,11 +111,24 @@ task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
 task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
     classifier = 'javadoc'
     from dokkaJavadoc.outputDirectory
+    from file("$projectDir/LICENSE")
+    from file("$projectDir/README.md")
+    from file("$projectDir/CHANGELOG.md")
+    from file("$projectDir/REPLACEMENTS.md")
+    from file("$projectDir/MISSING_FEATURES.md")
     // options.encoding = 'UTF-8'
 }
 
 task sourcesJar(type: Jar) {
     from sourceSets.main.java.srcDirs
+    from file("$projectDir/build.gradle")
+    from file("$projectDir/gradle.properties")
+    from file("$projectDir/settings.gradle")
+    from file("$projectDir/LICENSE")
+    from file("$projectDir/README.md")
+    from file("$projectDir/CHANGELOG.md")
+    from file("$projectDir/REPLACEMENTS.md")
+    from file("$projectDir/MISSING_FEATURES.md")
     classifier = 'sources'
 }
 
@@ -161,6 +174,7 @@ if (JavaVersion.current().majorVersion == "8") {
             from 'README.md'
             from 'MISSING_FEATURES.md'
             from 'REPLACEMENTS.md'
+            from 'CHANGELOG.md'
             rename ('README.md', 'index.md')
             from("$buildDir/javadoc") {
                 into 'javadoc'

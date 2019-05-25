@@ -7,6 +7,8 @@ Bedrock Edition or Nukkit.
 Also take a look at the [replacements file](REPLACEMENTS.md) to be aware of all block and items replacements that are
 done due to the lack of support by Nukkit or Bedrock Edition.
 
+You may also want to see the [changelog](CHANGELOG.md) file to be aware of all changes in the tool that may impact you.
+
 ## Requeriments
 Before you convert you need to optimize your world using Minecraft 1.14.1.
 
@@ -55,9 +57,6 @@ java -jar TheToolJarFile.jar "C:\Path\To\The\Java\World\Dir" "C:\Were\The\Conver
 
 Don't forget to replace the directory paths and the tool jar file name.
 
-## Can I use it as library?
-I don't recommend doing it yet, an official API will be built soon and this project will be push to maven center when ready.
-
 ## How do I build the project?
 Just open your terminal software, cmd.exe for example, navigate to inside the project directory and type:
 
@@ -76,3 +75,94 @@ The JAR file will be inside the `build/libs` folder. Use the one which ends with
 
 ## I have a question or I want to talk about the tool
 Open an issue, it will be flagged as question or dialog and I it will be replied soon.
+
+## Can I use it as library?
+Yes you can!
+
+Currently this tool is shared to jcenter, so make sure you have it in your repository list.
+
+The API is very simple now and doesn't allows customizations. It can be used both on Kotlin and Java.
+
+[Click here to see the javadoc](https://gamemodsbr.github.io/Java2Nukkit-World-Converter/javadoc/).
+
+### Examples
+
+#### Kotlin
+```kotlin
+val converter = WorldConverter(
+    from = File("""Z:\Users\Fake\.minecraft\saves\Fake World"""),
+    to   = File("""Z:\Fake\Nukkit\Server\worlds\FakeWorld""")
+)
+
+// Allows you to specify which region will be converter
+// useful for debugging, if not changed will convert everything
+converter.regionFilter = mutableListOf(RegionPos(0,0), RegionPos(-1,0))
+
+// Executes the conversion
+converter.convert()
+```
+#### Java
+```java
+WorldConverter converter = new WorldConverter(
+    new File("Z:\\Users\\Fake\\.minecraft\\saves\\Fake World"),
+    new File("Z:\\Fake\\Nukkit\\Server\\worlds\\FakeWorld")
+);
+
+// Allows you to specify which region will be converter
+// useful for debugging, if not changed will convert everything
+converter.regionFilter = Arrays.asList(new RegionPos(0,0), new RegionPos(-1,0));
+
+// Executes the conversion
+converter.convert();
+```
+
+
+#### Calling as CLI
+You can also call it as CLI:
+```kotlin
+WorldConverterCLI.main(
+    """Z:\Users\Fake\.minecraft\saves\Fake World""",
+    """Z:\Fake\Nukkit\Server\worlds\FakeWorld"""
+)
+```
+
+### Adding as dependency
+#### Gradle
+```groovy
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'br.com.gamemods:java2nukkit-world-converter:1.0.0'    
+}
+```
+
+### Maven
+```xml
+<repositories>
+    <repository>
+        <id>jcenter</id>
+        <url>https://jcenter.bintray.com/</url>
+    </repository>
+</repositories>
+<dependencies>
+    <dependency>
+      <groupId>br.com.gamemods</groupId>
+      <artifactId>java2nukkit-world-converter</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+</dependencies>
+```
+
+### Ivy
+```xml
+<resolvers>
+    <bintray />
+</resolvers>
+<dependencies>
+    <dependency org='br.com.gamemods' name='java2nukkit-world-converter' rev='1.0.0'>
+      <artifact name='java2nukkit-world-converter' ext='jar' />
+    </dependency>
+</dependencies>
+```
