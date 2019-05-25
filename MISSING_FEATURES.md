@@ -47,3 +47,5 @@ These things won't work because it's a missing feature or a bug in Nukkit server
 * **Spawn Eggs**: Custom JSON values for entities will not work.
 * **Book and Quill**: Writable Books will be converted and will be readable but won't be editable.
 * **Attribute Modifiers**: Nukkit doesn't seems to have any support to attribute modifiers.
+* **Falling Block**: Will not hurt entities on landing. Nukkit also supports only the block id and data value so
+`TileEntityData`, `Time`, `DropItem`, `HurtEntities`, `FallHurtMax` and `FallHurtAmount` will be ignored. 

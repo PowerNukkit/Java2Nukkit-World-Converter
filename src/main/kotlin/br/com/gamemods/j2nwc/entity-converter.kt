@@ -37,6 +37,25 @@ internal fun toNukkitEntity(
         }
     }
     return when(javaEntity.getString("id").removePrefix("minecraft:")) {
+        "falling_block" -> {
+            val nukkitEntity = convertBaseEntity() ?: return null
+            val javaTileEntity = javaEntity.getNullableCompound("TileEntityData")
+            val javaBlockState = javaEntity.getNullableCompound("BlockState")
+                ?: NbtCompound("Name" to NbtString("minecraft:sand"))
+            val javaPalette = JavaPalette(
+                javaBlockState.getNullableString("Name") ?: "minecraft:sand",
+                javaBlockState.getNullableCompound("Properties")
+            )
+            val javaBlock = JavaBlock(BlockPos(0, 0, 0), javaPalette, javaTileEntity)
+            val nukkitBlock = javaBlock.toNukkit(mutableListOf(), mutableListOf())
+            if (nukkitBlock.blockData.blockId == 0) {
+                null
+            } else {
+                nukkitEntity["TileID"] = nukkitBlock.blockData.blockId
+                nukkitEntity["Data"] = nukkitBlock.blockData.data.toByte()
+                nukkitEntity
+            }
+        }
         "painting" -> {
             val nukkitEntity = convertBaseEntity() ?: return null
             val paintingData = paintings[javaEntity.getNullableString("Motive")?.removePrefix("minecraft:") ?: ""] ?: return null
