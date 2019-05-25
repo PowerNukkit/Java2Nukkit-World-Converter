@@ -93,9 +93,11 @@ internal fun NbtCompound.toNukkitItem(): NbtCompound {
     val enchantments = nbt.getNullableCompoundList("Enchantments")?.value ?: emptyList<NbtCompound>()
     val storedEnchantments = nbt.getNullableCompoundList("StoredEnchantments")?.value ?: emptyList<NbtCompound>()
 
-    (enchantments.asSequence() + storedEnchantments.asSequence()).mapNotNull(::convertEnch).also {
-        nukkitNbt["ench"] = NbtList(it.toMutableList())
-    }
+    (enchantments.asSequence() + storedEnchantments.asSequence())
+        .mapNotNull(::convertEnch)
+        .toMutableList()
+        .takeIf { it.isNotEmpty() }
+        ?.also { nukkitNbt["ench"] = NbtList(it) }
 
     nbt.copyTo(nukkitNbt, "RepairCost")
 
