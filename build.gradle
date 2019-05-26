@@ -8,7 +8,7 @@ plugins {
 }
 
 group 'br.com.gamemods'
-version '1.0-SNAPSHOT'
+version '1.0.0'
 
 sourceSets.main.java.srcDirs = ["src/main/kotlin"]
 sourceSets.test.java.srcDirs = ["src/main/kotlin"]
