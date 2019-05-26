@@ -22,7 +22,7 @@ object WorldConverterCLI {
     fun main(args: Array<String>) {
         checkIds()
 
-        val jarFileName = JavaChunk::class.java.protectionDomain.codeSource.location.toURI().path
+        val jarFileName = JavaChunk::class.java.protectionDomain.codeSource.location.toURI().path.substringAfterLast('/')
 
         val cli = CommandLineInterface("java -jar $jarFileName")
         val from by cli.positionalArgument("from-dir", "The world Java Edition world directory")

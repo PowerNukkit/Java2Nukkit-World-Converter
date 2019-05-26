@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- [#38](https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/38) 
+The entire path is shown in Usage at --help
 
 ## [1.0.0] - 2019-05-25
 ### Added
