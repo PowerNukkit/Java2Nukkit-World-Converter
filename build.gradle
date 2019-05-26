@@ -104,6 +104,10 @@ bintray {
     }
 }
 
+jar {
+    from file("$projectDir/LICENSE")
+}
+
 task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
     outputFormat = 'javadoc'
     outputDirectory = "$buildDir/javadoc"
@@ -200,6 +204,10 @@ shadowJar {
     manifest {
         attributes 'Main-Class': 'br.com.gamemods.j2nwc.WorldConverterCLI'
     }
+    from file("$projectDir/README.md")
+    from file("$projectDir/CHANGELOG.md")
+    from file("$projectDir/REPLACEMENTS.md")
+    from file("$projectDir/MISSING_FEATURES.md")
 }
 
 build.finalizedBy shadowJar
