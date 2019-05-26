@@ -4,6 +4,7 @@ plugins {
     id 'maven'
     id 'org.jetbrains.dokka' version '0.9.18'
     id 'org.ajoberstar.git-publish' version '2.1.1'
+    id 'com.github.johnrengelman.shadow' version '5.0.0'
 }
 
 group 'br.com.gamemods'
@@ -25,7 +26,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-reflect'
     implementation group: 'net.md-5', name: 'bungeecord-chat', version: '1.14-SNAPSHOT'
-    implementation 'br.com.gamemods:region-manipulator:0.0.2'
+    compile 'br.com.gamemods:region-manipulator:0.0.3'
     implementation 'org.jetbrains.kotlinx:kotlinx-cli-jvm:0.1.0-dev-4'
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
@@ -109,7 +110,7 @@ task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
 }
 
 task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
-    classifier = 'javadoc'
+    archiveClassifier.set('javadoc')
     from dokkaJavadoc.outputDirectory
     from file("$projectDir/LICENSE")
     from file("$projectDir/README.md")
@@ -129,7 +130,7 @@ task sourcesJar(type: Jar) {
     from file("$projectDir/CHANGELOG.md")
     from file("$projectDir/REPLACEMENTS.md")
     from file("$projectDir/MISSING_FEATURES.md")
-    classifier = 'sources'
+    archiveClassifier.set('sources')
 }
 
 artifacts {
@@ -193,3 +194,12 @@ if (JavaVersion.current().majorVersion == "8") {
 }
 
 gitPublishCopy.dependsOn dokkaJavadoc
+
+shadowJar {
+    archiveClassifier.set('cli')
+    manifest {
+        attributes 'Main-Class': 'br.com.gamemods.j2nwc.WorldConverterCLI'
+    }
+}
+
+build.finalizedBy shadowJar

@@ -71,7 +71,7 @@ If you are on Windows:
 gradlew.bat build
 ```
 
-The JAR file will be inside the `build/libs` folder. Use the one which ends with `-all`
+The JAR file will be inside the `build/libs` folder. Use the one which ends with `-cli`
 
 ## I have a question or I want to talk about the tool
 Open an issue, it will be flagged as question or dialog and I it will be replied soon.
