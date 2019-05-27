@@ -73,11 +73,11 @@ internal fun JavaBlock.toNukkit(
                 val pairedChunkPos = ChunkPos(floor(x / 16.0).toInt(), floor(z / 16.0).toInt())
                 val currentChunkPos = ChunkPos(floor(blockPos.xPos / 16.0).toInt(), floor(blockPos.zPos / 16.0).toInt())
                 fun swapItems(nukkitRegion: Region) {
-                    nukkitRegion[pairedChunkPos]?.level?.getCompoundList("TileEntities")?.value
+                    nukkitRegion[pairedChunkPos]?.level?.getCompoundList("TileEntities")
                         ?.find { it.getInt("x") == x && it.getInt("y") == y && it.getInt("z") == z }
                         ?.also { pairedEntity ->
                             if (pairedEntity.getNullableBooleanByte("--pair-processed--")) {
-                                pairedEntity.value.remove("--pair-processed--")
+                                pairedEntity.remove("--pair-processed--")
                             } else {
                                 val thisItems = nukkitEntity.getList("Items")
                                 val otherItems = pairedEntity.getList("Items")
@@ -302,7 +302,7 @@ internal data class BlockData(var blockId: Int, var data: Int) {
     val byteBlockId: Byte get() = (blockId and 0xFF).toByte()
 }
 internal fun JavaPalette.toNukkit(): BlockData {
-    val propertiesId = properties?.value
+    val propertiesId = properties
         ?.mapValuesTo(TreeMap()) { (it.value as NbtString).value }
         ?.map { "${it.key}-${it.value}" }
         ?.joinToString(";", prefix = ";")

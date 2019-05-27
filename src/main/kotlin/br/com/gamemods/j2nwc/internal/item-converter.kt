@@ -7,7 +7,7 @@ import java.util.concurrent.ThreadLocalRandom
 
 internal fun NbtCompound.toNukkitInventory(nukkitInventory: NbtCompound, slotRemapper: (Int)->Int = { it }) {
     val javaItems = getNullableCompoundList("Items") ?: return
-    val nukkitItems = javaItems.value.map { javaItem ->
+    val nukkitItems = javaItems.map { javaItem ->
         javaItem.toNukkitItem().also { nukkitItem ->
             nukkitItem["Slot"] = slotRemapper(javaItem.getByte("Slot").toInt()).toByte()
         }
@@ -76,22 +76,22 @@ internal fun NbtCompound.toNukkitItem(): NbtCompound {
         }
     }
 
-    nbt.getNullableStringList("CanDestroy")?.value?.also { canDestroy ->
+    nbt.getNullableStringList("CanDestroy")?.also { canDestroy ->
         val nukkitCanDestroy = NbtList(canDestroy.flatMap {tag ->
             javaBlockProps2Bedrock[tag.value]?.map { name -> NbtString(name) } ?: listOf(tag)
         })
         nukkitNbt["CanDestroy"] = nukkitCanDestroy
     }
 
-    nbt.getNullableStringList("CanPlaceOn")?.value?.also { canPlaceOn ->
+    nbt.getNullableStringList("CanPlaceOn")?.also { canPlaceOn ->
         val nukkitCanPlaceOn = NbtList(canPlaceOn.flatMap { tag ->
             javaBlockProps2Bedrock[tag.value]?.map { name -> NbtString(name) } ?: listOf(tag)
         })
         nukkitNbt["CanPlaceOn"] = nukkitCanPlaceOn
     }
 
-    val enchantments = nbt.getNullableCompoundList("Enchantments")?.value ?: emptyList<NbtCompound>()
-    val storedEnchantments = nbt.getNullableCompoundList("StoredEnchantments")?.value ?: emptyList<NbtCompound>()
+    val enchantments = nbt.getNullableCompoundList("Enchantments") ?: emptyList<NbtCompound>()
+    val storedEnchantments = nbt.getNullableCompoundList("StoredEnchantments") ?: emptyList<NbtCompound>()
 
     (enchantments.asSequence() + storedEnchantments.asSequence())
         .mapNotNull(::convertEnch)
@@ -103,7 +103,7 @@ internal fun NbtCompound.toNukkitItem(): NbtCompound {
 
     when (nukkitId) {
         386 -> { // writable_book
-            nbt.getNullableStringList("pages")?.value?.map {
+            nbt.getNullableStringList("pages")?.map {
                 NbtCompound("text" to it)
             }?.also {
                 nukkitNbt["pages"] = NbtList(it)
@@ -113,7 +113,7 @@ internal fun NbtCompound.toNukkitItem(): NbtCompound {
             nukkitNbt.copyFrom(nbt, "author")
             nukkitNbt.copyFrom(nbt, "title")
             nukkitNbt.copyFrom(nbt, "generation")
-            nbt.getNullableStringList("pages")?.value?.map {
+            nbt.getNullableStringList("pages")?.map {
                 NbtCompound("text" to NbtString(it.value.fromJsonToLegacy()))
             }?.also {
                 nukkitNbt["pages"] = NbtList(it)
@@ -143,7 +143,7 @@ internal fun NbtCompound.toNukkitItem(): NbtCompound {
 
                         fireworks.getNullableCompoundList("Explosions")?.also { explosions ->
                             convertedFireworks["Explosions"] = NbtList(
-                                explosions.value.map { it.convertExplosion() }
+                                explosions.map { it.convertExplosion() }
                             )
                         }
 
@@ -165,7 +165,7 @@ internal fun NbtCompound.toNukkitItem(): NbtCompound {
     if (customNukkitData != 0) {
         nukkitItem["Damage"] = customNukkitData.toShort()
     }
-    if (nukkitNbt.value.isNotEmpty()) {
+    if (nukkitNbt.isNotEmpty()) {
         nukkitItem["tag"] = nukkitNbt
     }
     return nukkitItem

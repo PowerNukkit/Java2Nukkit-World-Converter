@@ -62,7 +62,7 @@ object WorldConverterCLI {
             } else {
                 regions.split(';').asSequence()
                     .map { it.split(',') }
-                    .map { RegionPos(it[0].toInt(), it[1].toInt()) }
+                    .map { RegionPosition(it[0].toInt(), it[1].toInt()) }
                     .toList()
             }
         }
@@ -77,7 +77,7 @@ object WorldConverterCLI {
         val toPath = Paths.get(to)
         try {
             WorldConverter(fromPath.toFile(), toPath.toFile()).apply {
-                regionFilter = regionLimit.toMutableSet()
+                regions = regionLimit.toMutableSet()
                 convert()
             }
             println("The world has been converted successfully")

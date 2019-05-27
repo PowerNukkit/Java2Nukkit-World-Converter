@@ -125,7 +125,7 @@ internal fun toNukkitEntity(
                 val javaRegX = floor(javaChunkPos.xPos / 32.0).toInt()
                 val javaRegZ = floor(javaChunkPos.zPos / 32.0).toInt()
                 fun addEntity(nukkitRegion: Region) {
-                    nukkitRegion[nukkitChunkPos]?.level?.getCompoundList("Entities")?.value?.add(nukkitEntity)
+                    nukkitRegion[nukkitChunkPos]?.level?.getCompoundList("Entities")?.add(nukkitEntity)
                 }
                 if (nukkitRegX == javaRegX && nukkitRegZ == javaRegZ) {
                     regionPostConversionHooks += { _, nukkitRegion ->

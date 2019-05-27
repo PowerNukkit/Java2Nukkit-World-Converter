@@ -27,7 +27,7 @@ internal data class JavaChunkSection(
         chunkPos,
         compound.getByte("Y").toInt(),
         compound.getNullableLongArray("BlockStates"),
-        compound.getNullableCompoundList("Palette")?.value?.map { JavaPalette(it) },
+        compound.getNullableCompoundList("Palette")?.map { JavaPalette(it) },
         compound.getNullableByteArray("SkyLight")
     )
 
@@ -87,7 +87,7 @@ internal data class JavaChunk(
         chunk.level.getNullableListOfList("LiquidsToBeTicked"),
         chunk.level.getList("LiquidTicks"),
         chunk.level.getListOfList("PostProcessing"),
-        chunk.level.getCompoundList("Sections").value.associate {
+        chunk.level.getCompoundList("Sections").associate {
             it.getByte("Y").toInt() to JavaChunkSection(
                 it,
                 ChunkPos(chunk.level.getInt("xPos"), chunk.level.getInt("zPos"))

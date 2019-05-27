@@ -26,7 +26,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-reflect'
     implementation group: 'net.md-5', name: 'bungeecord-chat', version: '1.14-SNAPSHOT'
-    compile 'br.com.gamemods:region-manipulator:0.0.3'
+    compile 'br.com.gamemods:region-manipulator:1.0.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-cli-jvm:0.1.0-dev-4'
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
@@ -175,15 +175,15 @@ if (JavaVersion.current().majorVersion == "8") {
 
         // what to publish, this is a standard CopySpec
         contents {
+            from("$buildDir/javadoc") {
+                into 'javadoc'
+            }
             from 'src/pages'
             from 'README.md'
             from 'MISSING_FEATURES.md'
             from 'REPLACEMENTS.md'
             from 'CHANGELOG.md'
             rename ('README.md', 'index.md')
-            from("$buildDir/javadoc") {
-                into 'javadoc'
-            }
         }
 
         // what to keep in the existing branch (include=keep)

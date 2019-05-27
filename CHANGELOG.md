@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#38](https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/38) 
 The entire path is shown in Usage at --help
 
+### Added
+- `WorldConveter.regions` to filter regions using the Region-Manipulator's `RegionPos`.
+- Type alias `RegionPosition` to help the conversion from the deprecated `RegionPos` to Region-Manipulator's `RegionPos`
+- `RegionPos.toRegionManipulator()` to convert the object to the equivalent's Region-Manipulator object.
+
+### Changed
+- Updated Region-Manipulator to `1.0.0`
+- Deprecated `RegionPos`. Users should use the one provided by Region-Manipulator.
+- Deprecated `WorldConverter.regionFilter`. Users should use `WorldConverter.regions` instead.
+
 ## [1.0.0] - 2019-05-25
 ### Added
 - Support for Minecraft 1.14.1 to Nukkit [ccd5d78](https://github.com/NukkitX/Nukkit/tree/ccd5d78aee06d6097327dc825e32d10482c79043)

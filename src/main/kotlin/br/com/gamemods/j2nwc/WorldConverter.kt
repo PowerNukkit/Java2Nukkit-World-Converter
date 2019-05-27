@@ -12,15 +12,42 @@ import java.io.File
  * @property xPos The first number in the region file name. May be negative.
  * @property zPos The second number in the region file name. May be negative.
  */
-data class RegionPos(val xPos: Int, val zPos: Int) {
+@Deprecated(
+    "Already provided by Region-Manipulator",
+    ReplaceWith("RegionPosition", "br.com.gamemods.j2nwc.RegionPosition")
+)
+data class RegionPos
+    @Deprecated(
+        "Already provided by Region-Manipulator",
+        ReplaceWith("RegionPosition(xPos, zPos)", "br.com.gamemods.j2nwc.RegionPosition")
+    )
+    constructor (val xPos: Int, val zPos: Int) {
+
+    @Suppress("DEPRECATION")
     private constructor(mcaFileNameParts: List<String>): this(mcaFileNameParts[1].toInt(), mcaFileNameParts[2].toInt())
 
     /**
      * Parses a region file name. Only support valid names like `r.-3.2.mca`.
      * @param mcaFileName A valid file name
      */
+    @Deprecated(
+        "Already provided by Region-Manipulator",
+        ReplaceWith("RegionPosition(mcaFileName)", "br.com.gamemods.j2nwc.RegionPosition")
+    )
     constructor(mcaFileName: String): this(mcaFileName.split('.'))
+
+    /**
+     * Converts this deprecated object to it's replacement.
+     */
+    fun toRegionManipulator() = RegionPosition(xPos, zPos)
 }
+
+/**
+ * A region position extracted from the region file name.
+ *
+ * `r.-2.3.mca` must be `Region(-2,3)` for example
+ */
+typealias RegionPosition = br.com.gamemods.regionmanipulator.RegionPos
 
 /**
  * Prepare a conversion from a Java World 1.14+ to Nukkit.
@@ -33,7 +60,17 @@ class WorldConverter(val from: File, val to: File) {
     /**
      * A collection which determines which region files will be converted. When empty all regions are converted.
      */
+    @Suppress("DEPRECATION")
+    @Deprecated(
+        "Uses a duplicated type, please use regions instead",
+        ReplaceWith("regions")
+    )
     var regionFilter = mutableSetOf<RegionPos>()
+
+    /**
+     * A collection which determines which region files will be converted. When empty all regions are converted.
+     */
+    var regions = mutableSetOf<RegionPosition>()
 
     /**
      * Executes the conversion in the current thread. Will take a while to complete.
@@ -48,9 +85,11 @@ class WorldConverter(val from: File, val to: File) {
         val toRegionDir = File(to, "region")
         toRegionDir.mkdirs()
         val worldHooks = mutableListOf<PostWorldConversionHook>()
+        @Suppress("DEPRECATION")
+        val regions = (regions + regionFilter.map { it.toRegionManipulator() }).toSet()
         File(from, "region").listFiles().asSequence()
             .filter { it.name.toLowerCase().matches(Regex("""^r\.-?\d\.-?\d\.mca$""")) }
-            .filter { regionFilter.isEmpty() || RegionPos(it.name) in regionFilter }
+            .filter { regions.isEmpty() || RegionPosition(it.name) in regions }
             .forEach { fromRegion ->
                 convertRegionFile(
                     fromRegion,

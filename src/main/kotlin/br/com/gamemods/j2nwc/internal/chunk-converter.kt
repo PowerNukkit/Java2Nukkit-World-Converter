@@ -9,7 +9,7 @@ internal fun Chunk.toNukkit(
     worldHooks: MutableList<PostWorldConversionHook>
 ): NukkitChunk {
     val javaChunk = JavaChunk(this)
-    val javaTileEntities = javaChunk.tileEntities.value.associate {
+    val javaTileEntities = javaChunk.tileEntities.associate {
         BlockPos(it.getInt("x"), it.getInt("y"), it.getInt("z")) to it
     }
     val nukkitTileEntities = mutableMapOf<BlockPos, NbtCompound>()
@@ -23,7 +23,7 @@ internal fun Chunk.toNukkit(
         }
         .toMap()
     val nukkitChunk = NukkitChunk(
-        NbtList(javaChunk.entities.value.mapNotNull {
+        NbtList(javaChunk.entities.mapNotNull {
             toNukkitEntity(
                 it,
                 javaChunk,
