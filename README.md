@@ -85,7 +85,7 @@ The API is very simple now and doesn't allows customizations. It can be used bot
 
 Here you can find the API documentation:
 * [Java Documentation](https://gamemodsbr.github.io/Java2Nukkit-World-Converter/javadoc)
-* [Kotlin Documentation](https://gamemodsbr.github.io/Java2Nukkit-World-Converter/kdoc/br.com.gamemods.regionmanipulator/index.html)
+* [Kotlin Documentation](https://gamemodsbr.github.io/Java2Nukkit-World-Converter/kdoc/br.com.gamemods.j2nwc/)
 
 
 ### Examples
