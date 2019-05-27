@@ -15,7 +15,7 @@ The entire path is shown in Usage at --help
 - `RegionPos.toRegionManipulator()` to convert the object to the equivalent's Region-Manipulator object.
 
 ### Changed
-- Updated Region-Manipulator to `1.0.0`
+- Updated Region-Manipulator to `1.0.1`
 - Deprecated `RegionPos`. Users should use the one provided by Region-Manipulator.
 - Deprecated `WorldConverter.regionFilter`. Users should use `WorldConverter.regions` instead.
 
