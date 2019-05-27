@@ -52,7 +52,7 @@ please, report it in the issues section, or, attempt to fix the mapping in the p
 Simply open your favorite terminal/console application, cmd.exe for example, navigate to the folder that you have 
 downloaded the tool and execute this command:
 ```batch
-java -jar TheToolJarFile.jar "C:\Path\To\The\Java\World\Dir" "C:\Were\The\Converted\Folder\Will\Be"
+java -jar TheToolJarFile.jar "C:\Path\To\The\Java\World\Dir" "C:\Where\The\Converted\Folder\Will\Be"
 ```
 
 Don't forget to replace the directory paths and the tool jar file name.
@@ -71,7 +71,7 @@ If you are on Windows:
 gradlew.bat build
 ```
 
-The JAR file will be inside the `build/libs` folder. Use the one which ends with `-all`
+The JAR file will be inside the `build/libs` folder. Use the one which ends with `-cli`
 
 ## I have a question or I want to talk about the tool
 Open an issue, it will be flagged as question or dialog and I it will be replied soon.
@@ -96,7 +96,7 @@ val converter = WorldConverter(
 
 // Allows you to specify which region will be converter
 // useful for debugging, if not changed will convert everything
-converter.regionFilter = mutableListOf(RegionPos(0,0), RegionPos(-1,0))
+converter.regionFilter = mutableSetOf(RegionPos(0,0), RegionPos(-1,0))
 
 // Executes the conversion
 converter.convert()
@@ -110,7 +110,7 @@ WorldConverter converter = new WorldConverter(
 
 // Allows you to specify which region will be converter
 // useful for debugging, if not changed will convert everything
-converter.regionFilter = Arrays.asList(new RegionPos(0,0), new RegionPos(-1,0));
+converter.regionFilter = new HashSet<>(Arrays.asList(new RegionPos(0,0), new RegionPos(-1,0)));
 
 // Executes the conversion
 converter.convert();
@@ -127,10 +127,15 @@ WorldConverterCLI.main(
 ```
 
 ### Adding as dependency
+The tool is shared on jcenter but it has dependencies that are on different repositories.
+
+Make sure you have add all repositories listed below
 #### Gradle
 ```groovy
 repositories {
     jcenter()
+    maven { url 'https://hub.spigotmc.org/nexus/content/groups/public/' }
+    maven { url 'https://dl.bintray.com/orangy/maven' }
 }
 
 dependencies {
@@ -144,6 +149,14 @@ dependencies {
     <repository>
         <id>jcenter</id>
         <url>https://jcenter.bintray.com/</url>
+    </repository>
+    <repository>
+        <id>spigotmc</id>
+        <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+    </repository>
+    <repository>
+        <id>kotlinx-cli</id>
+        <url>https://dl.bintray.com/orangy/maven</url>
     </repository>
 </repositories>
 <dependencies>
@@ -159,6 +172,8 @@ dependencies {
 ```xml
 <resolvers>
     <bintray />
+    <bintray subject="orangy" repo="maven"/>
+    <ibiblio name="spigotmc" root="https://hub.spigotmc.org/nexus/content/groups/public/" m2compatible="true" />
 </resolvers>
 <dependencies>
     <dependency org='br.com.gamemods' name='java2nukkit-world-converter' rev='1.0.0'>
