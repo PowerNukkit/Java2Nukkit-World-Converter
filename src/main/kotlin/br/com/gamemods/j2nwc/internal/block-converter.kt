@@ -288,14 +288,10 @@ internal fun JavaBlock.toNukkit(
             }
             nukkitEntity["Base"] = baseColor
         }
-        else -> tileEntity?.let { toNukkitTileEntity(it) }
+        else -> null
     }
 
     return NukkitBlock(blockPos, blockData, nukkitTileEntity)
-}
-
-internal fun toNukkitTileEntity(javaEntity: NbtCompound): NbtCompound? {
-    return null
 }
 
 internal data class BlockData(var blockId: Int, var data: Int) {
