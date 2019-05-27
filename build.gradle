@@ -124,6 +124,35 @@ task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
     // options.encoding = 'UTF-8'
 }
 
+
+task dokkaKdoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
+    outputFormat = 'gfm'
+    outputDirectory = "$buildDir/kdoc"
+}
+
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.file.StandardCopyOption
+task createReadmeFiles(dependsOn: dokkaKdoc) {
+    doFirst {
+        Files.walk(Paths.get(dokkaKdoc.outputDirectory))
+                .filter { it.getFileName().toString().toLowerCase() == "index.md" }
+                .forEach {
+                    try {
+                        Files.copy(it, it.resolveSibling("README.md"), StandardCopyOption.REPLACE_EXISTING)
+                    } catch (Throwable e) {
+                        throw new RuntimeException(e)
+                    }
+                }
+    }
+}
+
+task createIndexMd(type: Copy) {
+    from file("$projectDir/README.md")
+    into "$buildDir/pages"
+    rename 'README.md', 'index.md'
+}
+
 task sourcesJar(type: Jar) {
     from sourceSets.main.java.srcDirs
     from file("$projectDir/build.gradle")
@@ -178,12 +207,15 @@ if (JavaVersion.current().majorVersion == "8") {
             from("$buildDir/javadoc") {
                 into 'javadoc'
             }
+            from("$buildDir/kdoc") {
+                into 'kdoc'
+            }
+            from "$buildDir/pages"
             from 'src/pages'
             from 'README.md'
             from 'MISSING_FEATURES.md'
             from 'REPLACEMENTS.md'
             from 'CHANGELOG.md'
-            rename ('README.md', 'index.md')
         }
 
         // what to keep in the existing branch (include=keep)
@@ -198,6 +230,8 @@ if (JavaVersion.current().majorVersion == "8") {
 }
 
 gitPublishCopy.dependsOn dokkaJavadoc
+gitPublishCopy.dependsOn createReadmeFiles
+gitPublishCopy.dependsOn createIndexMd
 
 shadowJar {
     archiveClassifier.set('cli')
