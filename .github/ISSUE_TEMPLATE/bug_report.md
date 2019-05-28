@@ -7,6 +7,9 @@ assignees: ''
 
 ---
 
+**Affected Version**
+The exact version number. Do not type latest, please be specific.
+
 **Describe the bug**
 A clear and concise description of what the bug is.
 
