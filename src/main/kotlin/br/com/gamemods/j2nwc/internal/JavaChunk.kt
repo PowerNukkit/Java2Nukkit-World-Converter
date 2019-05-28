@@ -1,6 +1,8 @@
 package br.com.gamemods.j2nwc.internal
 
+import br.com.gamemods.nbtmanipulator.NbtByteArray
 import br.com.gamemods.nbtmanipulator.NbtCompound
+import br.com.gamemods.nbtmanipulator.NbtIntArray
 import br.com.gamemods.nbtmanipulator.NbtList
 import br.com.gamemods.regionmanipulator.Chunk
 import br.com.gamemods.regionmanipulator.ChunkPos
@@ -101,7 +103,16 @@ internal data class JavaChunk(
         Date(chunk.level.getLong("LastUpdate") * 1000L),
         chunk.level.getString("Status"),
         ChunkPos(chunk.level.getInt("xPos"), chunk.level.getInt("zPos")),
-        chunk.level.getIntArray("Biomes")
+        chunk.level["Biomes"].let { tag ->
+            requireNotNull(tag) {
+                "The Biomes tag is missing."
+            }
+            when (tag) {
+                is NbtIntArray -> tag.value
+                is NbtByteArray -> tag.value.map { it.toInt() }.toIntArray()
+                else -> error("Unexpected type for Biomes tag: ${tag::class.java}")
+            }
+        }
     )
 
     override fun equals(other: Any?): Boolean {
