@@ -62,15 +62,15 @@ internal data class JavaChunkSection(
 
 internal data class JavaChunk(
     var lastModified: Date,
-    var heightMap: NbtCompound,
+    var heightMap: NbtCompound?,
     var structures: NbtCompound,
     var entities: NbtList<NbtCompound>,
     var liquidsToBeTicked: NbtList<NbtList<*>>?,
-    var liquidTicks: NbtList<*>,
-    var postProcessing: NbtList<NbtList<*>>,
+    var liquidTicks: NbtList<*>?,
+    var postProcessing: NbtList<NbtList<*>>?,
     var sections: Map<Int, JavaChunkSection>,
     var tileEntities: NbtList<NbtCompound>,
-    var tileTicks: NbtList<*>,
+    var tileTicks: NbtList<*>?,
     var toBeTicked: NbtList<NbtList<*>>?,
     var inhabitedTime: Long,
     var isLightOn: Boolean,
@@ -81,22 +81,22 @@ internal data class JavaChunk(
 ) {
     constructor(chunk: Chunk): this(
         chunk.lastModified,
-        chunk.level.getCompound("Heightmaps"),
+        chunk.level.getNullableCompound("Heightmaps"),
         chunk.level.getCompound("Structures"),
-        chunk.level.getCompoundList("Entities"),
+        chunk.level.getNullableCompoundList("Entities") ?: NbtList(),
         chunk.level.getNullableListOfList("LiquidsToBeTicked"),
-        chunk.level.getList("LiquidTicks"),
-        chunk.level.getListOfList("PostProcessing"),
-        chunk.level.getCompoundList("Sections").associate {
+        chunk.level.getNullableList("LiquidTicks"),
+        chunk.level.getNullableListOfList("PostProcessing"),
+        (chunk.level.getNullableCompoundList("Sections") ?: NbtList()).associate {
             it.getByte("Y").toInt() to JavaChunkSection(
                 it,
                 ChunkPos(chunk.level.getInt("xPos"), chunk.level.getInt("zPos"))
             )
         },
-        chunk.level.getCompoundList("TileEntities"),
-        chunk.level.getList("TileTicks"),
+        chunk.level.getNullableCompoundList("TileEntities") ?: NbtList(),
+        chunk.level.getNullableList("TileTicks"),
         chunk.level.getNullableListOfList("ToBeTicked"),
-        chunk.level.getLong("InhabitedTime"),
+        chunk.level.getNullableLong("InhabitedTime") ?: 0,
         chunk.level.getNullableBooleanByte("isLightOn"),
         Date(chunk.level.getLong("LastUpdate") * 1000L),
         chunk.level.getString("Status"),
