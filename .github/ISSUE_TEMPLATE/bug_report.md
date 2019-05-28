@@ -23,6 +23,12 @@ Steps to reproduce the behavior:
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
+**Exception stack trace**
+If applicable, paste it below to help explain your problem.
+```java
+{{paste the exception stack trace here}}
+```
+
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
