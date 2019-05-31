@@ -23,7 +23,7 @@ internal val java2bedrockStates = propertiesStringString("/block-states.properti
         sequenceOf(e.toPair())
     }
 }.flatMap { e ->
-    if (";powered-false" in e.first && e.first.matches(Regex("\\w+_trapdoor;"))) {
+    if (";powered-false" in e.first && e.first.matches(Regex("^[^_]+_trapdoor;.*"))) {
         sequenceOf(e, e.first.replace(";powered-false", "") to e.second)
     } else {
         sequenceOf(e)
