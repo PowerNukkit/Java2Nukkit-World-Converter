@@ -16,10 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Deprecated `WorldConverter.regionFilter`. Users should use `WorldConverter.regions` instead.
 
 ### Fixed
-- [#38](https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/38) 
-The entire path is shown in Usage at --help
+- [#38] The entire path is shown in Usage at --help
 - Exceptions when converting optimized 1.8.8 to Nukkit.
-
+- [#50] waterloggable block states migrated from optimized 1.8.8 world becomes stone.
 
 ## [1.0.0] - 2019-05-25
 ### Added
@@ -37,3 +36,6 @@ The entire path is shown in Usage at --help
 
 [Unreleased]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v1.0.0...HEAD
 [1.0.0]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/a8f41900b32740648752ff214581eb8da0f928f6..v1.0.0
+
+[#38]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/38
+[#50]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/50
