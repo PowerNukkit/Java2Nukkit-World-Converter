@@ -43,8 +43,8 @@ internal fun Chunk.toNukkit(
         javaChunk.position,
         toNukkitBiomes(javaChunk.biomes),
         byteArrayOf(0, 0, 0, 0),
-        IntArray(256) {
-            64
+        ByteArray(256) {
+            255.toByte()
         }
     )
     return nukkitChunk

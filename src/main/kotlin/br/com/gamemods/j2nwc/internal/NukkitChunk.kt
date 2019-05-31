@@ -57,7 +57,7 @@ internal data class NukkitChunk(
     var position: ChunkPos,
     var biomes: ByteArray,
     var extraData: ByteArray,
-    var heightMap: IntArray
+    var heightMap: ByteArray
 ) {
     fun toNbt(): NbtFile {
         val level = NbtCompound()
