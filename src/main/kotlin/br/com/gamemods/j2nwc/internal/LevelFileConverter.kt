@@ -3,7 +3,6 @@ package br.com.gamemods.j2nwc.internal
 import br.com.gamemods.nbtmanipulator.NbtCompound
 import br.com.gamemods.nbtmanipulator.NbtFile
 import br.com.gamemods.nbtmanipulator.NbtIO
-import br.com.gamemods.nbtmanipulator.NbtString
 import java.io.File
 
 internal fun convertLevelFile(from: File, to: File) {
@@ -17,7 +16,7 @@ internal fun convertLevelFile(from: File, to: File) {
     outputData.copyFrom(inputData, "generatorName")
     outputData.copyFrom(inputData, "generatorVersion")
     outputData.copyFrom(inputData, "generatorVersion")
-    outputData.copyFrom(inputData, "generatorOptions", NbtString(""))
+    //outputData["generatorOptions"] = ""
     outputData["hardcore"] = false
     outputData["initialized"] = false
     outputData.copyFrom(inputData, "LastPlayed")
