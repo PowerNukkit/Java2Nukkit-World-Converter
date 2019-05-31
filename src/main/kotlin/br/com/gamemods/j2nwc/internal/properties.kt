@@ -16,7 +16,19 @@ private fun propertiesStringInt(name: String) = properties(name)
 
 internal val java2bedrockEntities = propertiesStringInt("/entity-ids.properties")
 
-internal val java2bedrockStates = propertiesStringString("/block-states.properties")
+internal val java2bedrockStates = propertiesStringString("/block-states.properties").entries.asSequence().flatMap { e->
+    if (";waterlogged-false" in e.key) {
+        sequenceOf(e.key to e.value, e.key.replace(";waterlogged-false", "") to e.value)
+    } else {
+        sequenceOf(e.toPair())
+    }
+}.flatMap { e ->
+    if (";powered-false" in e.first && e.first.matches(Regex("\\w+_trapdoor;"))) {
+        sequenceOf(e, e.first.replace(";powered-false", "") to e.second)
+    } else {
+        sequenceOf(e)
+    }
+}.toMap()
 
 internal val bedrock2nukkit = properties("/bedrock-2-nukkit.properties")
 
