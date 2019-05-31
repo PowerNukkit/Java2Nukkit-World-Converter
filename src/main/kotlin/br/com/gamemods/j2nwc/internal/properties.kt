@@ -18,7 +18,7 @@ internal val java2bedrockEntities = propertiesStringInt("/entity-ids.properties"
 
 internal val java2bedrockStates = propertiesStringString("/block-states.properties").entries.asSequence().flatMap { e->
     if (";waterlogged-false" in e.key) {
-        sequenceOf(e.key to e.value, e.key.replace(";waterlogged-false", "") to e.value)
+        sequenceOf(e.toPair(), e.key.replace(";waterlogged-false", "") to e.value)
     } else {
         sequenceOf(e.toPair())
     }
