@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 them will be very bright. 
 - [#54] Player heads with custom skins will now be skipped by default. This can be changed using `--keep-custom-heads` or `WorldConverter.skipSkinHeads` 
 - [#59] `smooth_red_sandstone_slab` is now replaced with `red_sandstone_slab` instead of `acacia_slab`.  
+- [#60] `red_nether_brick_stairs` is now replaced with `nether_brick_stairs` instead of `brick_stairs`.  
 
 ### Fixed
 - [#38] The entire path is shown in Usage at --help
@@ -73,4 +74,5 @@ them will be very bright.
 [#56]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/56
 [#57]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/57
 [#58]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/58
-[#58]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/59
+[#59]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/59
+[#60]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/60

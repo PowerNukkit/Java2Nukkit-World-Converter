@@ -146,7 +146,7 @@ See also [the list of missing features](MISSING_FEATURES.md).
 | end_stone_brick_stairs  | sandstone_stairs  | Nukkit       |
 | mossy_coblestone_stairs | cobblestone_stairs| Nukkit       |
 | stone_stairs            | stone_brick_stairs| Nukkit       |
-| red_nether_brick_stairs | brick_stairs      | Nukkit       |
+| red_nether_brick_stairs | nether_brick_stairs | Nukkit     |
 | smooth_quartz_stairs    | quartz_stairs     | Nukkit       |
 | barrier                 | invisible_bedrock | Nukkit       |
 | dark_oak_trapdoor       | oak_trapdoor      | Nukkit       |
