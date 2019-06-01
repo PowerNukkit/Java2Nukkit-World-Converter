@@ -19,9 +19,11 @@ These things have some differences from Java Edition and needs to be treated spe
 * **Item Frames**: They are block in Bedrock Edition, not entities, so they must not overlap any block
 to be converted, otherwise it will be skipped. Item Frames facing down or up aren`t supported by Bedrock Edition and will
 be ignored.
-* **Lever and Buttons**: Java Edition allows you to place them facing north, south, east and west when place on the bottom 
-or the top part of a block. Bedrock Edition only supports south or east in that condition, so levers and buttons pointing to north
-will point to south and levers and buttons pointing to west will point to east.
+* **Lever**: Java Edition allows you to place them facing north, south, east and west when place on the bottom 
+or the top part of a block. Bedrock Edition only supports south or east in that condition, so levers pointing to north
+will point to south and levers pointing to west will point to east.
+* **Buttons**: Bedrock Edition doesn't allow you to place rotated buttons on the top or bottom face of a block. 
+They will always face to north (the larger sides will be to east-west axis).
 * **HideFlags**: The tag is not supported, it will be migrated but it will be ignored by the client
 * **Debug Stick and customized states**: The block states in Bedrock Edition are not so customizable as it is in Java,
 so customized blocks may have theirs properties reversed, for example if you made a disconnected fence wall, they will
