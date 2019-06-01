@@ -117,3 +117,7 @@ internal val javaEntities2Nukkit = propertiesStringString("/java-entities.proper
 internal val javaEnchantments2Nukkit = propertiesStringInt("/enchantments.properties")
 
 internal val javaPotions2Bedrock = propertiesStringInt("/potions.properties")
+
+internal val javaBiomes2Bedrock = properties("/biomes.properties").asSequence()
+    .map { it.key.toString().substringBefore('-').toInt() to it.value.toString().toInt().toByte() }
+    .toMap()
