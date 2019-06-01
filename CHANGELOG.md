@@ -22,6 +22,7 @@ them will be very bright.
 - [#54] Player heads with custom skins will now be skipped by default. This can be changed using `--keep-custom-heads` or `WorldConverter.skipSkinHeads` 
 - [#59] `smooth_red_sandstone_slab` is now replaced with `red_sandstone_slab` instead of `acacia_slab`.  
 - [#60] `red_nether_brick_stairs` is now replaced with `nether_brick_stairs` instead of `brick_stairs`.  
+- [#63] `dark_prismarine_stairs` is now replaced with `stone_brick_stairs` instead of `cobblestone_stairs`.  
 
 ### Fixed
 - [#38] The entire path is shown in Usage at --help
@@ -79,3 +80,4 @@ them will be very bright.
 [#60]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/60
 [#61]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/61
 [#62]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/62
+[#62]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/63

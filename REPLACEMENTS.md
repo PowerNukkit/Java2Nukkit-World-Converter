@@ -91,7 +91,7 @@ See also [the list of missing features](MISSING_FEATURES.md).
 | bell (on floor)         | anvil             | Nukkit       |
 | bell (on wall and celling) | stone brick wall | Nukkit     |
 | prismarine_stairs       | cobblestone_stairs  | Nukkit     |
-| dark_prismarine_stairs  | cobblestone_stairs  | Nukkit     |
+| dark_prismarine_stairs  | stone_brick_stairs  | Nukkit     |
 | prismarine_brick_stairs | mossy_stone_brick_stairs | Nukkit|
 | stripped_spruce_log     | spruce_log        | Nukkit       |
 | stripped_birch_log      | birch_log         | Nukkit       |
