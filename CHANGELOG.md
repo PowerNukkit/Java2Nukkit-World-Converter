@@ -32,6 +32,7 @@ them will be very bright.
 - [#49] Nukkit crash due to an illegal conversion of generatorOption settings
 - [#50] waterloggable block states migrated from optimized 1.8.8 world becomes stone.
 - [#51] noteblocks migrated from optimized 1.8.8 world becomes stone.
+- [#52] generatorOptions conversion for flat worlds
 - [#53] The trapdoor placement and open/close state changes after conversion.
 - [#55] Signs are empty after the conversion.
 - [#56] The buttons placement and pressed state changes after conversion.
@@ -70,6 +71,7 @@ them will be very bright.
 [#49]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/49
 [#50]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/50
 [#51]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/51
+[#52]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/52
 [#53]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/53
 [#54]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/54
 [#55]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/55

@@ -87,7 +87,7 @@ class WorldConverter(val from: File, val to: File) {
             "Failed to create the folder $to"
         }
 
-        convertLevelFile(File(from, "level.dat"), File(to, "level.dat"))
+        convertLevelFile(File(from, "level.dat"), File(to, "level.dat"), this)
 
         val toRegionDir = File(to, "region")
         toRegionDir.mkdirs()

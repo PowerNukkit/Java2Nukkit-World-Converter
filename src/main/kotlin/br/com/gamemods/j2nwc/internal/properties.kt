@@ -121,3 +121,7 @@ internal val javaPotions2Bedrock = propertiesStringInt("/potions.properties")
 internal val javaBiomes2Bedrock = properties("/biomes.properties").asSequence()
     .map { it.key.toString().substringBefore('-').toInt() to it.value.toString().toInt().toByte() }
     .toMap()
+
+internal val javaBiomesString2Bedrock = properties("/biomes.properties").asSequence()
+    .map { it.key.toString().substringAfter('-') to it.value.toString().toInt().toByte() }
+    .toMap()
