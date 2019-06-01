@@ -3,6 +3,7 @@ package br.com.gamemods.j2nwc.internal
 import br.com.gamemods.nbtmanipulator.*
 import br.com.gamemods.regionmanipulator.ChunkPos
 import br.com.gamemods.regionmanipulator.Region
+import net.md_5.bungee.api.ChatColor
 import java.io.FileNotFoundException
 import java.util.*
 import kotlin.math.floor
@@ -149,10 +150,32 @@ internal fun JavaBlock.toNukkit(
         }
         63,436,441,443,445,447,68,437,442,444,446,448,323,472,473,474,475,476 ->
             createTileEntity("Sign") { nukkitEntity ->
+                val lines = StringBuilder()
+                val color = when (tileEntity?.getNullableString("Color")) {
+                    "white" -> ChatColor.WHITE
+                    "orange" -> ChatColor.GOLD
+                    "magenta" -> ChatColor.LIGHT_PURPLE
+                    "light_blue" -> ChatColor.DARK_AQUA
+                    "yellow" -> ChatColor.YELLOW
+                    "lime" -> ChatColor.GREEN
+                    "pink" -> ChatColor.LIGHT_PURPLE
+                    "gray" -> ChatColor.DARK_GRAY
+                    "light_gray" -> ChatColor.GRAY
+                    "cyan" -> ChatColor.AQUA
+                    "purple" -> ChatColor.DARK_PURPLE
+                    "blue" -> ChatColor.DARK_BLUE
+                    "brown" -> ChatColor.DARK_RED
+                    "green" -> ChatColor.DARK_GREEN
+                    "red" -> ChatColor.RED
+                    "black" -> ChatColor.BLACK
+                    else -> null
+                }
                 for (i in 1..4) {
                     val text = tileEntity?.getString("Text$i")?.fromJsonToLegacy() ?: ""
-                    nukkitEntity["Text$i"] = text
+                    color?.let(lines::append)
+                    lines.append(text).append('\n')
                 }
+                nukkitEntity["Text"] = lines.toString()
             }
         52 -> createTileEntity("MobSpawner") { nukkitEntity ->
             // Tile entity based on

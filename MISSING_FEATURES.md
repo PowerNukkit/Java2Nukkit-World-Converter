@@ -42,6 +42,9 @@ be connected after the conversion
 * **Suspicious Stew**: Is not available in Bedrock Edition and will be converted to a normal mushroom stew
 * **All potions types**: Custom effects and colors aren't supported and they will revert back to the normal potion indicated in the `Potion` NBT tag.
     Also, some potions aren't supported and they will be converted as stated in the [replacements file](REPLACEMENTS.md)
+* **Colored signs**: They are unsupported by Bedrock but the tool will convert the color using the text color system instead
+of the dye colors. Some colors will be a little different and all them will be very bright. 
+Brown is missing so it will be red and there are two pinks (magenta and pink).
 
 ## Unsupported by Nukkit
 These things won't work because it's a missing feature or a bug in Nukkit servers:
