@@ -33,6 +33,7 @@ them will be very bright.
 - [#55] Signs are empty after the conversion.
 - [#56] The buttons placement and pressed state changes after conversion.
 - [#57] Stained glasses are becoming invisible bedrock.
+- [#58] prismarine_brick_slab and dark_prismarine_slab are swapped.
 
 ## [1.0.0] - 2019-05-25
 ### Added
@@ -70,3 +71,4 @@ them will be very bright.
 [#55]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/55
 [#56]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/56
 [#57]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/57
+[#58]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/57
