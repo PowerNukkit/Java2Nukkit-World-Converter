@@ -1,5 +1,6 @@
 package br.com.gamemods.j2nwc.internal
 
+import br.com.gamemods.j2nwc.WorldConverter
 import br.com.gamemods.nbtmanipulator.*
 import br.com.gamemods.regionmanipulator.ChunkPos
 import br.com.gamemods.regionmanipulator.Region
@@ -12,7 +13,8 @@ internal fun toNukkitEntity(
     nukkitSections: Map<Int, NukkitChunkSection>,
     nukkitTileEntities: MutableMap<BlockPos, NbtCompound>,
     regionPostConversionHooks: MutableList<PostConversionHook>,
-    worldHooks: MutableList<PostWorldConversionHook>
+    worldHooks: MutableList<PostWorldConversionHook>,
+    worldConverter: WorldConverter
 ): NbtCompound? {
     fun convertBaseEntity(): NbtCompound? {
         return NbtCompound().apply {
@@ -76,7 +78,7 @@ internal fun toNukkitEntity(
                 javaPalette,
                 javaTileEntity
             )
-            val nukkitBlock = javaBlock.toNukkit(mutableListOf(), mutableListOf())
+            val nukkitBlock = javaBlock.toNukkit(mutableListOf(), mutableListOf(), worldConverter)
             if (nukkitBlock.blockData.blockId == 0) {
                 null
             } else {

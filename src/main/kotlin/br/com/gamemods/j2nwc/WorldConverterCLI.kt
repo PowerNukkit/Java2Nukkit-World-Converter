@@ -2,10 +2,7 @@ package br.com.gamemods.j2nwc
 
 import br.com.gamemods.j2nwc.internal.JavaChunk
 import br.com.gamemods.j2nwc.internal.checkIds
-import kotlinx.cli.CommandLineInterface
-import kotlinx.cli.flagValueArgument
-import kotlinx.cli.parse
-import kotlinx.cli.positionalArgument
+import kotlinx.cli.*
 import java.nio.file.Files
 import java.nio.file.Paths
 import kotlin.system.exitProcess
@@ -31,6 +28,10 @@ object WorldConverterCLI {
             "-r",
             "regions",
             "A list of region positions that will be converted. Example: -r 0,0;-1,0;-1,-1"
+        )
+        val keepCustomHeads by cli.flagArgument(
+            "--keep-custom-heads",
+            "Makes the tool convert player heads with custom skins as regular player heads. The default behaviour is to remove them."
         )
 
         try {
@@ -78,6 +79,7 @@ object WorldConverterCLI {
         try {
             WorldConverter(fromPath.toFile(), toPath.toFile()).apply {
                 regions = regionLimit.toMutableSet()
+                skipSkinHeads = !keepCustomHeads
                 convert()
             }
             println("The world has been converted successfully")

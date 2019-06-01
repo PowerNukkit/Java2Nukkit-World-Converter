@@ -1,6 +1,7 @@
 @file:JvmName("RegionFileConverter")
 package br.com.gamemods.j2nwc.internal
 
+import br.com.gamemods.j2nwc.WorldConverter
 import br.com.gamemods.regionmanipulator.Chunk
 import br.com.gamemods.regionmanipulator.Region
 import br.com.gamemods.regionmanipulator.RegionIO
@@ -11,10 +12,11 @@ internal typealias PostWorldConversionHook = (from: File, to: File) -> Unit
 internal fun convertRegionFile(
     from: File,
     to: File,
-    worldHooks: MutableList<PostWorldConversionHook>
+    worldHooks: MutableList<PostWorldConversionHook>,
+    worldConverter: WorldConverter
 ) {
     val javaRegion = RegionIO.readRegion(from)
-    val nukkitRegion = javaRegion.toNukkit(worldHooks)
+    val nukkitRegion = javaRegion.toNukkit(worldHooks, worldConverter)
     RegionIO.writeRegion(to, nukkitRegion)
 }
 
@@ -28,9 +30,12 @@ internal inline fun modifyRegion(worldDir: File, xPos: Int, zPos: Int, modify: (
 
 internal typealias PostConversionHook = (javaRegion: Region, nukkitRegion: Region) -> Unit
 
-internal fun Region.toNukkit(worldHooks: MutableList<PostWorldConversionHook>): Region {
+internal fun Region.toNukkit(
+    worldHooks: MutableList<PostWorldConversionHook>,
+    worldConverter: WorldConverter
+): Region {
     val postConversionHooks = mutableListOf<PostConversionHook>()
-    val nukkitRegion = Region(position, values.map { Chunk(it.lastModified, it.toNukkit(postConversionHooks, worldHooks).toNbt()) })
+    val nukkitRegion = Region(position, values.map { Chunk(it.lastModified, it.toNukkit(postConversionHooks, worldHooks, worldConverter).toNbt()) })
     postConversionHooks.forEach {
         it(this, nukkitRegion)
     }

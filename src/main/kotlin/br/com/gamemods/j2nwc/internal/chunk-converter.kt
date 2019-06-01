@@ -1,12 +1,14 @@
 package br.com.gamemods.j2nwc.internal
 
+import br.com.gamemods.j2nwc.WorldConverter
 import br.com.gamemods.nbtmanipulator.NbtCompound
 import br.com.gamemods.nbtmanipulator.NbtList
 import br.com.gamemods.regionmanipulator.Chunk
 
 internal fun Chunk.toNukkit(
     regionPostConversionHooks: MutableList<PostConversionHook>,
-    worldHooks: MutableList<PostWorldConversionHook>
+    worldHooks: MutableList<PostWorldConversionHook>,
+    worldConverter: WorldConverter
 ): NukkitChunk {
     val javaChunk = JavaChunk(this)
     val javaTileEntities = javaChunk.tileEntities.associate {
@@ -17,7 +19,7 @@ internal fun Chunk.toNukkit(
         .filter { it.value.yPos >= 0 }
         .mapNotNull {
             it.key to (
-                it.value.toNukkit(javaTileEntities, nukkitTileEntities, regionPostConversionHooks, worldHooks)
+                it.value.toNukkit(javaTileEntities, nukkitTileEntities, regionPostConversionHooks, worldHooks, worldConverter)
                     ?: return@mapNotNull null
             )
         }
@@ -30,7 +32,8 @@ internal fun Chunk.toNukkit(
                 nukkitSections,
                 nukkitTileEntities,
                 regionPostConversionHooks,
-                worldHooks
+                worldHooks,
+                worldConverter
             )
         }),
         nukkitSections,
@@ -55,7 +58,8 @@ internal fun JavaChunkSection.toNukkit(
     javaTileEntities: Map<BlockPos, NbtCompound>,
     nukkitTileEntities: MutableMap<BlockPos, NbtCompound>,
     regionPostConversionHooks: MutableList<PostConversionHook>,
-    worldHooks: MutableList<PostWorldConversionHook>
+    worldHooks: MutableList<PostWorldConversionHook>,
+    worldConverter: WorldConverter
 ): NukkitChunkSection? {
     val blockStates = blockStates ?: return NukkitChunkSection(
         yPos = yPos,
@@ -100,7 +104,7 @@ internal fun JavaChunkSection.toNukkit(
         JavaBlock(blockPos, palette[paletteIndexes[it]], javaTileEntities[blockPos])
     }
 
-    val nukkitBlocks = blockPalettes.map { it.toNukkit(regionPostConversionHooks, worldHooks).also { block ->
+    val nukkitBlocks = blockPalettes.map { it.toNukkit(regionPostConversionHooks, worldHooks, worldConverter).also { block ->
         block.tileEntity?.let { nukkitTileEntity ->
             nukkitTileEntities[block.blockPos] = nukkitTileEntity
         }

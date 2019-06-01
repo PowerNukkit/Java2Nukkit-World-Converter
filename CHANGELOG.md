@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `WorldConveter.regions` to filter regions using the Region-Manipulator's `RegionPos`.
 - Type alias `RegionPosition` to help the conversion from the deprecated `RegionPos` to Region-Manipulator's `RegionPos`
 - `RegionPos.toRegionManipulator()` to convert the object to the equivalent's Region-Manipulator object.
+- `--keep-custom-heads` argument to keep converting the player heads with custom skins as regular player heads.
+- `WorldConverter.skipSkinHeads` if player heads with custom skins as regular player heads should be skipped.
 
 ### Changed
 - Updated Region-Manipulator to `1.0.1`
@@ -17,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unmapped block states will now log a warning
 - Colored signs will be colored using text color instead of dye color. Some colors will be a little different and all
 them will be very bright. 
+- [#54] Player heads with custom skins will now be skipped by default. This can be changed using `--keep-custom-heads` or `WorldConverter.skipSkinHeads` 
 
 ### Fixed
 - [#38] The entire path is shown in Usage at --help
@@ -63,6 +66,7 @@ them will be very bright.
 [#50]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/50
 [#51]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/51
 [#53]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/53
+[#54]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/54
 [#55]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/55
 [#56]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/56
 [#57]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/57

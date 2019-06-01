@@ -29,7 +29,8 @@ They will always face to north (the larger sides will be to east-west axis).
 so customized blocks may have theirs properties reversed, for example if you made a disconnected fence wall, they will
 be connected after the conversion
 * **Spawn Eggs**: which spawns unsupported entities will be black and won't spawn anything.
-* **Custom Player Head**: Player head with skins will loose the skin. The Bedrock Edition doesn't support it.
+* **Custom Player Head**: Player head with skins will be skipped by default. The Bedrock Edition doesn't support it.
+This can be changed using `--keep-custom-heads` or `WorldConverter.skipSkinHeads` so the player heads will be converted as regular heads (Steve skin).
 * **Blocks (+NBT)**: We are unable to pick blocks with it's NBT inside the item, so these blocks will loose the NBT tag.
 * **Written Books and Signs**: With custom events will loose their events as they are unsupported by Bedrock Edition (click and hover events)
 * **Big mushroom blocks**:  doesn't have all possible states in Bedrock Edition. Only states which occur when a red big 

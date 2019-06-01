@@ -73,6 +73,13 @@ class WorldConverter(val from: File, val to: File) {
     var regions = mutableSetOf<RegionPosition>()
 
     /**
+     * Determines if player heads which contains custom skins should be skipped.
+     *
+     * Player heads without skins are unaffected.
+     */
+    var skipSkinHeads = true
+
+    /**
      * Executes the conversion in the current thread. Will take a while to complete.
      */
     fun convert() {
@@ -94,7 +101,8 @@ class WorldConverter(val from: File, val to: File) {
                 convertRegionFile(
                     fromRegion,
                     File(toRegionDir, fromRegion.name),
-                    worldHooks
+                    worldHooks,
+                    this
                 )
             }
         worldHooks.forEach {

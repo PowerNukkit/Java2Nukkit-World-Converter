@@ -1,5 +1,6 @@
 package br.com.gamemods.j2nwc.internal
 
+import br.com.gamemods.j2nwc.WorldConverter
 import br.com.gamemods.nbtmanipulator.*
 import br.com.gamemods.regionmanipulator.ChunkPos
 import br.com.gamemods.regionmanipulator.Region
@@ -8,23 +9,24 @@ import java.io.FileNotFoundException
 import java.util.*
 import kotlin.math.floor
 
+private fun JavaBlock.commonBlockEntityData(id: String) = arrayOf(
+    "id" to NbtString(id),
+    "x" to NbtInt(blockPos.xPos),
+    "y" to NbtInt(blockPos.yPos),
+    "z" to NbtInt(blockPos.zPos),
+    "isMoveable" to NbtByte(false)
+)
+
+private inline fun JavaBlock.createTileEntity(id: String, vararg tags: Pair<String, NbtTag>, action: (NbtCompound)->Unit = {}): NbtCompound {
+    return NbtCompound(*commonBlockEntityData(id), *tags).also(action)
+}
+
 internal fun JavaBlock.toNukkit(
     regionPostConversionHooks: MutableList<PostConversionHook>,
-    worldHooks: MutableList<PostWorldConversionHook>
+    worldHooks: MutableList<PostWorldConversionHook>,
+    worldConverter: WorldConverter
 ): NukkitBlock {
     val blockData = this.type.toNukkit()
-
-    fun commonBlockEntityData(id: String) = arrayOf(
-        "id" to NbtString(id),
-        "x" to NbtInt(blockPos.xPos),
-        "y" to NbtInt(blockPos.yPos),
-        "z" to NbtInt(blockPos.zPos),
-        "isMoveable" to NbtByte(false)
-    )
-
-    fun createTileEntity(id: String, vararg tags: Pair<String, NbtTag>, action: (NbtCompound)->Unit = {}): NbtCompound {
-        return NbtCompound(*commonBlockEntityData(id), *tags).also(action)
-    }
 
     val nukkitTileEntity = when (blockData.blockId) {
         26 -> createTileEntity("Bed",
@@ -198,7 +200,13 @@ internal fun JavaBlock.toNukkit(
                 "skeleton_skull", "skeleton_wall_skull" -> 0
                 "wither_skeleton_skull", "wither_skeleton_wall_skull" -> 1
                 "zombie_head", "zombie_wall_head" -> 2
-                "player_head", "player_wall_head" -> 3
+                "player_head", "player_wall_head" -> {
+                    if (tileEntity?.containsKey("Owner") == true && worldConverter.skipSkinHeads) {
+                        return NukkitBlock(blockPos, BlockData(0, 0), null)
+                    } else {
+                        3
+                    }
+                }
                 "creeper_head", "creeper_wall_head" -> 4
                 else -> 0
             }
