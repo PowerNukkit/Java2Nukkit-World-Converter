@@ -5,13 +5,14 @@ or by the tool itself.
 Some to address this issue some items and blocks will be replaced by others and some others will be removed from the 
 world.
 
-See also [the list of replaced blocks and items](REPLACEMENTS.md).
+See also [the list of replaced blocks, items, entities and biomes](REPLACEMENTS.md).
 
 ## Unsupported by the tool
 These things could be converted but are not supported by the tool yet:
 * **Entities**: No entity will be converted, with exception of item frames which are blocks in Bedrock Edition
 * **Potion effects**: They will be converted as water potion for now
-* **Dropped items**: Will loose the `Owner` and `Thrower` tags because Java Edition accounts are not the same as Bedrock Edition accounts. 
+* **Dropped items**: Will loose the `Owner` and `Thrower` tags because Java Edition accounts are not the same as Bedrock Edition accounts.
+* **generatorOptions**: Will not be converted yet and will be missing on the converted world. 
 
 ## Unsupported by Minecraft Bedrock Edition
 These things have some differences from Java Edition and needs to be treated specially:
@@ -53,3 +54,4 @@ These things won't work because it's a missing feature or a bug in Nukkit server
 * **Experience orbs**: Will be migrated but will loose it's value because Nukkit does not save and neither load it, 
 so collecting it will give nothing.
 * **Open maps**: They are not supported by Nukkit so no map content will be migrated
+* **Biomes**: Biomes related to the end and oceans from aquatic update aren't supported and will be replaced by similar biomes.
