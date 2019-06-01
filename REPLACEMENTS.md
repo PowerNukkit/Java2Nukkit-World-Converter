@@ -1,5 +1,5 @@
 # Replacements
-This file lists all blocks and items which cannot be migrated to Nukkit and was replaced by other blocks.
+This file lists all things that cannot be migrated to Nukkit and was replaced by other.
 
 See also [the list of missing features](MISSING_FEATURES.md).
 
@@ -157,3 +157,22 @@ See also [the list of missing features](MISSING_FEATURES.md).
 | Name                    | Replacement    | Unsupported by  |
 | ----------------------- | -------------- | --------------- |
 | spectral_arrow          | arrow          | Bedrock Edition |
+
+
+## Biomes
+
+| Name                    | Replacement    | Unsupported by  |
+| the_end                 | nether         | Nukkit          |
+| end_midlands            | nether         | Nukkit          |
+| end_highlands           | nether         | Nukkit          |
+| end_barrens             | nether         | Nukkit          |
+| warm_ocean              | ocean          | Nukkit          |
+| lukewarm_ocean          | ocean          | Nukkit          |
+| cold_ocean              | ocean          | Nukkit          |
+| deep_warm_ocean         | deep_ocean     | Nukkit          |
+| deep_lukewarm_ocean     | deep_ocean     | Nukkit          |
+| deep_cold_ocean         | deep_ocean     | Nukkit          |
+| the_void                | plains         | Nukkit          |
+| snowy_mountains         | snowy_tundra   | Nukkit          |
+| bamboo_jungle           | jungle         | Nukkit          |
+| bamboo_jungle_hills     | jungle_hills   | Nukkit          |

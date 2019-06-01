@@ -125,5 +125,11 @@ internal fun JavaChunkSection.toNukkit(
 }
 
 internal fun toNukkitBiomes(biomes: IntArray): ByteArray {
-    return biomes.map { it.toByte() }.toByteArray()
+    return biomes.map { id ->
+        val remap = javaBiomes2Bedrock[id]
+        if (remap == null) {
+            System.err.println("Unmapped biome with id $id")
+        }
+        remap ?: 1
+    }.toByteArray()
 }
