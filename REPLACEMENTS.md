@@ -125,7 +125,7 @@ See also [the list of missing features](MISSING_FEATURES.md).
 | conduit                 | water             | Nukkit       |
 | turtle_egg              | air               | Nukkit       |
 | end_stone_brick_slab    | smooth_sandstone_slab | Nukkit   |
-| smooth_red_sandstone_slab | acacia_slab     | Nukkit       |
+| smooth_red_sandstone_slab | red_sandstone_slab | Nukkit    |
 | polished_andesite_slab  | smooth_stone_slab | Nukkit       |
 | andesite_slab           | smooth_stone_slab | Nukkit       |
 | diorite_slab            | quartz_slab       | Nukkit       |
