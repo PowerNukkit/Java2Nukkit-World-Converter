@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#49] Nukkit crash due to an illegal conversion of generatorOption settings
 - [#50] waterloggable block states migrated from optimized 1.8.8 world becomes stone.
 - [#51] noteblocks migrated from optimized 1.8.8 world becomes stone.
+- [#57] Stained glasses are becoming invisible bedrock.
 
 ## [1.0.0] - 2019-05-25
 ### Added
@@ -56,3 +57,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#49]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/49
 [#50]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/50
 [#51]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/51
+[#57]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/57
