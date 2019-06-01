@@ -39,6 +39,7 @@ them will be very bright.
 - [#57] Stained glasses are becoming invisible bedrock.
 - [#58] `prismarine_brick_slab` and `dark_prismarine_slab` are swapped.
 - [#61] [#62] `nether_brick_wall` and `end_stone_brick_wall` are swapped.
+- [#64] Empty chunks being recreated.
 
 ## [1.0.0] - 2019-05-25
 ### Added
@@ -82,4 +83,5 @@ them will be very bright.
 [#60]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/60
 [#61]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/61
 [#62]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/62
-[#62]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/63
+[#63]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/63
+[#64]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/64
