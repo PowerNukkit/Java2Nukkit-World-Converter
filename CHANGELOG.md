@@ -14,11 +14,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated Region-Manipulator to `1.0.1`
 - Deprecated `RegionPos`. Users should use the one provided by Region-Manipulator.
 - Deprecated `WorldConverter.regionFilter`. Users should use `WorldConverter.regions` instead.
+- Unmapped block states will now log a warning
 
 ### Fixed
 - [#38] The entire path is shown in Usage at --help
-- Exceptions when converting optimized 1.8.8 to Nukkit.
+- [#39] HeightMap is not converted properly
+- [#40] Biomes are not converted properly
+- Exceptions when converting optimized 1.8.8 to Nukkit. ([#41], [#42], [#43], [#44], [#45], [#46], [#47], [#48])
+- [#49] Nukkit crash due to an illegal conversion of generatorOption settings
 - [#50] waterloggable block states migrated from optimized 1.8.8 world becomes stone.
+- [#51] noteblocks migrated from optimized 1.8.8 world becomes stone.
 
 ## [1.0.0] - 2019-05-25
 ### Added
@@ -38,4 +43,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.0.0]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/a8f41900b32740648752ff214581eb8da0f928f6..v1.0.0
 
 [#38]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/38
+[#39]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/39
+[#40]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/40
+[#41]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/41
+[#42]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/42
+[#43]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/43
+[#44]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/44
+[#45]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/45
+[#46]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/46
+[#47]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/47
+[#48]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/48
+[#49]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/49
 [#50]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/50
+[#51]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/51
