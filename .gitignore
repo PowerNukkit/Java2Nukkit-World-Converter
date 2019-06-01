@@ -4,3 +4,4 @@ build
 *.ipr
 .idea
 nukkit-*.jar
+out
