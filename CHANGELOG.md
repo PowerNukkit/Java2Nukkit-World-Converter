@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `WorldConverter.skipSkinHeads` if player heads with custom skins as regular player heads should be skipped.
 
 ### Changed
-- Updated Region-Manipulator to `1.0.1`
+- Updated [Region-Manipulator to `1.1.0`][Region 1.1.0] from `1.0.0`.
 - Deprecated `RegionPos`. Users should use the one provided by Region-Manipulator.
 - Deprecated `WorldConverter.regionFilter`. Users should use `WorldConverter.regions` instead.
 - Unmapped block states will now log a warning
@@ -28,7 +28,7 @@ them will be very bright.
 - [#38] The entire path is shown in Usage at --help
 - [#39] HeightMap is not converted properly
 - [#40] Biomes are not converted properly
-- Exceptions when converting optimized 1.8.8 to Nukkit. ([#41], [#42], [#43], [#44], [#45], [#46], [#47], [#48])
+- Exceptions when converting optimized 1.8.8 to Nukkit. ([#41], [#42], [#43], [#44], [#45], [#46], [#47], [#48], [#66], [#67])
 - [#49] Nukkit crash due to an illegal conversion of generatorOption settings
 - [#50] waterloggable block states migrated from optimized 1.8.8 world becomes stone.
 - [#51] noteblocks migrated from optimized 1.8.8 world becomes stone.
@@ -85,3 +85,7 @@ them will be very bright.
 [#62]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/62
 [#63]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/63
 [#64]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/64
+[#66]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/66
+[#67]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/67
+
+[Region 1.1.0]: https://gamemodsbr.github.io/Region-Manipulator/CHANGELOG.html#unreleased
