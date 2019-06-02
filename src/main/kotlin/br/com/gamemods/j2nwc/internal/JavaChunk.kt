@@ -109,7 +109,7 @@ internal data class JavaChunk(
             }
             when (tag) {
                 is NbtIntArray -> tag.value
-                is NbtByteArray -> tag.value.map { it.toInt() }.toIntArray()
+                is NbtByteArray -> tag.value.map { it.toInt() and 0xFF }.toIntArray()
                 else -> error("Unexpected type for Biomes tag: ${tag::class.java}")
             }
         }

@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `WorldConverter.skipSkinHeads` if player heads with custom skins as regular player heads should be skipped.
 
 ### Changed
-- Updated Region-Manipulator to `1.0.1`
+- Updated [Region-Manipulator to `1.1.0`][Region 1.1.0] from `1.0.0`.
 - Deprecated `RegionPos`. Users should use the one provided by Region-Manipulator.
 - Deprecated `WorldConverter.regionFilter`. Users should use `WorldConverter.regions` instead.
 - Unmapped block states will now log a warning
@@ -40,6 +40,7 @@ them will be very bright.
 - [#58] `prismarine_brick_slab` and `dark_prismarine_slab` are swapped.
 - [#61] [#62] `nether_brick_wall` and `end_stone_brick_wall` are swapped.
 - [#64] Empty chunks being recreated.
+- [#70] Unmapped biome with id -107 (and other negative values)
 
 ## [1.0.0] - 2019-05-25
 ### Added
@@ -87,3 +88,6 @@ them will be very bright.
 [#64]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/64
 [#66]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/66
 [#67]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/67
+[#70]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/70
+
+[Region 1.1.0]: https://gamemodsbr.github.io/Region-Manipulator/CHANGELOG.html#unreleased
