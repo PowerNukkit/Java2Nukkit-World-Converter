@@ -86,4 +86,4 @@ them will be very bright.
 [#63]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/63
 [#64]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/64
 [#66]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/66
-[#67]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/66
+[#67]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/67
