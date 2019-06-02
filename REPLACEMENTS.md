@@ -1,5 +1,5 @@
 # Replacements
-This file lists all blocks and items which cannot be migrated to Nukkit and was replaced by other blocks.
+This file lists all things that cannot be migrated to Nukkit and was replaced by other.
 
 See also [the list of missing features](MISSING_FEATURES.md).
 
@@ -91,7 +91,7 @@ See also [the list of missing features](MISSING_FEATURES.md).
 | bell (on floor)         | anvil             | Nukkit       |
 | bell (on wall and celling) | stone brick wall | Nukkit     |
 | prismarine_stairs       | cobblestone_stairs  | Nukkit     |
-| dark_prismarine_stairs  | cobblestone_stairs  | Nukkit     |
+| dark_prismarine_stairs  | stone_brick_stairs  | Nukkit     |
 | prismarine_brick_stairs | mossy_stone_brick_stairs | Nukkit|
 | stripped_spruce_log     | spruce_log        | Nukkit       |
 | stripped_birch_log      | birch_log         | Nukkit       |
@@ -125,7 +125,7 @@ See also [the list of missing features](MISSING_FEATURES.md).
 | conduit                 | water             | Nukkit       |
 | turtle_egg              | air               | Nukkit       |
 | end_stone_brick_slab    | smooth_sandstone_slab | Nukkit   |
-| smooth_red_sandstone_slab | acacia_slab     | Nukkit       |
+| smooth_red_sandstone_slab | red_sandstone_slab | Nukkit    |
 | polished_andesite_slab  | smooth_stone_slab | Nukkit       |
 | andesite_slab           | smooth_stone_slab | Nukkit       |
 | diorite_slab            | quartz_slab       | Nukkit       |
@@ -146,7 +146,7 @@ See also [the list of missing features](MISSING_FEATURES.md).
 | end_stone_brick_stairs  | sandstone_stairs  | Nukkit       |
 | mossy_coblestone_stairs | cobblestone_stairs| Nukkit       |
 | stone_stairs            | stone_brick_stairs| Nukkit       |
-| red_nether_brick_stairs | brick_stairs      | Nukkit       |
+| red_nether_brick_stairs | nether_brick_stairs | Nukkit     |
 | smooth_quartz_stairs    | quartz_stairs     | Nukkit       |
 | barrier                 | invisible_bedrock | Nukkit       |
 | dark_oak_trapdoor       | oak_trapdoor      | Nukkit       |
@@ -157,3 +157,22 @@ See also [the list of missing features](MISSING_FEATURES.md).
 | Name                    | Replacement    | Unsupported by  |
 | ----------------------- | -------------- | --------------- |
 | spectral_arrow          | arrow          | Bedrock Edition |
+
+
+## Biomes
+
+| Name                    | Replacement    | Unsupported by  |
+| the_end                 | nether         | Nukkit          |
+| end_midlands            | nether         | Nukkit          |
+| end_highlands           | nether         | Nukkit          |
+| end_barrens             | nether         | Nukkit          |
+| warm_ocean              | ocean          | Nukkit          |
+| lukewarm_ocean          | ocean          | Nukkit          |
+| cold_ocean              | ocean          | Nukkit          |
+| deep_warm_ocean         | deep_ocean     | Nukkit          |
+| deep_lukewarm_ocean     | deep_ocean     | Nukkit          |
+| deep_cold_ocean         | deep_ocean     | Nukkit          |
+| the_void                | plains         | Nukkit          |
+| snowy_mountains         | snowy_tundra   | Nukkit          |
+| bamboo_jungle           | jungle         | Nukkit          |
+| bamboo_jungle_hills     | jungle_hills   | Nukkit          |

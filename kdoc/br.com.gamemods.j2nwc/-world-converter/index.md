@@ -21,6 +21,7 @@ Please check [this page](https://gamemodsbr.github.io/Java2Nukkit-World-Converte
 | [from](from.md) | `val from: `[`File`](https://docs.oracle.com/javase/6/docs/api/java/io/File.html)<br>The Java world folder |
 | [regionFilter](region-filter.md) | `var ~~regionFilter~~: `[`MutableSet`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html)`<`[`RegionPos`](../-region-pos/index.md)`>`<br>A collection which determines which region files will be converted. When empty all regions are converted. |
 | [regions](regions.md) | `var regions: `[`MutableSet`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html)`<`[`RegionPosition`](../-region-position.md)`>`<br>A collection which determines which region files will be converted. When empty all regions are converted. |
+| [skipSkinHeads](skip-skin-heads.md) | `var skipSkinHeads: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)<br>Determines if player heads which contains custom skins should be skipped. |
 | [to](to.md) | `val to: `[`File`](https://docs.oracle.com/javase/6/docs/api/java/io/File.html)<br>The world folder that will be created for the Nukkit's world |
 
 ### Functions
