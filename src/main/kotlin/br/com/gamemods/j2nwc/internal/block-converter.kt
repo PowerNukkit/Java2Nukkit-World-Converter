@@ -301,22 +301,22 @@ internal fun JavaBlock.toNukkit(
         }
         176, 177 -> createTileEntity("Banner") { nukkitEntity ->
             val baseColor = when (type.blockName.removePrefix("minecraft:").removeSuffix("_banner").removeSuffix("_wall")) {
-                "white" -> 0
-                "orange" -> 1
-                "magenta" -> 2
-                "light_blue" -> 3
-                "yellow" -> 4
-                "lime" -> 5
-                "pink" -> 6
-                "gray" -> 7
-                "light_gray" -> 8
-                "cyan" -> 9
-                "purple" -> 10
-                "blue" -> 11
-                "brown" -> 12
-                "green" -> 13
-                "red" -> 14
-                "black" -> 15
+                "white" -> 15
+                "orange" -> 14
+                "magenta" -> 13
+                "light_blue" -> 12
+                "yellow" -> 11
+                "lime" -> 10
+                "pink" -> 9
+                "gray" -> 8
+                "light_gray" -> 7
+                "cyan" -> 6
+                "purple" -> 5
+                "blue" -> 4
+                "brown" -> 3
+                "green" -> 2
+                "red" -> 1
+                "black" -> 0
                 else -> 0
             }
             nukkitEntity["Base"] = baseColor
