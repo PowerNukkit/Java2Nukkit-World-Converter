@@ -320,6 +320,18 @@ internal fun JavaBlock.toNukkit(
                 else -> 0
             }
             nukkitEntity["Base"] = baseColor
+            tileEntity?.getNullableCompoundList("Patterns")?.also { patterns ->
+                val nukkitPatterns = NbtList<NbtCompound>()
+                patterns.forEach { pattern ->
+                    val nukkitPattern = NbtCompound()
+                    val patternCode = pattern.getNullableString("Pattern") ?: return@forEach
+                    val patternColor = pattern.getNullableInt("Color") ?: return@forEach
+                    nukkitPattern["Pattern"] = patternCode
+                    nukkitPattern["Color"] = 15 - patternColor
+                    nukkitPatterns += nukkitPattern
+                }
+                nukkitEntity["Patterns"] = nukkitPatterns
+            }
         }
         else -> null
     }

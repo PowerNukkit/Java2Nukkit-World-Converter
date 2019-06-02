@@ -40,6 +40,7 @@ them will be very bright.
 - [#58] `prismarine_brick_slab` and `dark_prismarine_slab` are swapped.
 - [#61], [#62] `nether_brick_wall` and `end_stone_brick_wall` are swapped.
 - [#64] Empty chunks being recreated.
+- [#68] Banners are not being completely converted
 - [#69], [#71] Incorrect block data manipulation by the item frame conversion causes nearby blocks to change.
 - [#70] Unmapped biome with id -107 (and other negative values)
 
@@ -89,6 +90,7 @@ them will be very bright.
 [#64]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/64
 [#66]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/66
 [#67]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/67
+[#68]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/68
 [#69]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/69
 [#70]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/70
 [#70]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/71
