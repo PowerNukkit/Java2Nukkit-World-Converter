@@ -97,6 +97,6 @@ them will be very bright.
 [#68]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/68
 [#69]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/69
 [#70]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/70
-[#70]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/71
+[#71]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/71
 
 [Region 1.1.0]: https://gamemodsbr.github.io/Region-Manipulator/CHANGELOG.html#110---2019-06-02
