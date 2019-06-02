@@ -28,7 +28,7 @@ them will be very bright.
 - [#38] The entire path is shown in Usage at --help
 - [#39] HeightMap is not converted properly
 - [#40] Biomes are not converted properly
-- Exceptions when converting optimized 1.8.8 to Nukkit. ([#41], [#42], [#43], [#44], [#45], [#46], [#47], [#48])
+- Exceptions when converting optimized 1.8.8 to Nukkit. ([#41], [#42], [#43], [#44], [#45], [#46], [#47], [#48], [#66])
 - [#49] Nukkit crash due to an illegal conversion of generatorOption settings
 - [#50] waterloggable block states migrated from optimized 1.8.8 world becomes stone.
 - [#51] noteblocks migrated from optimized 1.8.8 world becomes stone.
@@ -85,3 +85,4 @@ them will be very bright.
 [#62]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/62
 [#63]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/63
 [#64]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/64
+[#66]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/66

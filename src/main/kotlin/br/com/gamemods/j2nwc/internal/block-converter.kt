@@ -132,7 +132,7 @@ internal fun JavaBlock.toNukkit(
             tileEntity?.apply {
                 copyJsonToLegacyTo(nukkitEntity, "CustomName")
                 nukkitEntity["CookTime"] = getShort("BrewTime")
-                val fuel = getByte("Fuel")
+                val fuel = getNullableByte("Fuel") ?: 0
                 val fuelTotal = if (fuel > 0) 20 else 0
                 nukkitEntity["FuelTotal"] = fuelTotal.toShort()
                 nukkitEntity["FuelAmount"] = fuel.toShort()
