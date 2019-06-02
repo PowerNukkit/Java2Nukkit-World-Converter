@@ -142,7 +142,7 @@ repositories {
 }
 
 dependencies {
-    compile 'br.com.gamemods:java2nukkit-world-converter:1.0.0'    
+    compile 'br.com.gamemods:java2nukkit-world-converter:2.0.0'    
 }
 ```
 
@@ -166,7 +166,7 @@ dependencies {
     <dependency>
       <groupId>br.com.gamemods</groupId>
       <artifactId>java2nukkit-world-converter</artifactId>
-      <version>1.0.0</version>
+      <version>2.0.0</version>
     </dependency>
 </dependencies>
 ```
@@ -179,8 +179,6 @@ dependencies {
     <ibiblio name="spigotmc" root="https://hub.spigotmc.org/nexus/content/groups/public/" m2compatible="true" />
 </resolvers>
 <dependencies>
-    <dependency org='br.com.gamemods' name='java2nukkit-world-converter' rev='1.0.0'>
-      <artifact name='java2nukkit-world-converter' ext='jar' />
-    </dependency>
+    <dependency org='br.com.gamemods' name='java2nukkit-world-converter' rev='2.0.0'/>
 </dependencies>
 ```
