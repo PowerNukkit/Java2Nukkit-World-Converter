@@ -173,9 +173,9 @@ internal fun toNukkitEntity(
             val halfOffset = offset / 2
             val isSecond = offset % 2 == 1
             val stored = if (!isSecond) {
-                facing to (chunkSection.blockData[halfOffset].toInt() and 0x0F)
+                facing to ((chunkSection.blockData[halfOffset].toInt() and 0xF0) shr 4)
             } else {
-                ((chunkSection.blockData[halfOffset].toInt() and 0xF0) shr 4) to facing
+                (chunkSection.blockData[halfOffset].toInt() and 0x0F) to facing
             }
             val first = stored.first and 0x0F
             val second = (stored.second and 0x0F) shl 4
