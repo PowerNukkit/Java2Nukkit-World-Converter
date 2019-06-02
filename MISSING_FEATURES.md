@@ -61,3 +61,5 @@ so collecting it will give nothing.
 * **Open maps**: They are not supported by Nukkit so no map content will be migrated
 * **Biomes**: Biomes related to the end and oceans from aquatic update aren't supported and will be replaced by similar biomes.
 * **generatorOptions**: Is only supported by FLAT worlds without the structures and custom options sections. The blocks and biomes will be converted properly.
+* **Banners**: Nukkit does not send the patterns to the players, so they will see an empty colored banner. 
+This will be fixed once [this pull request](https://github.com/NukkitX/Nukkit/pull/735) gets accepted.
