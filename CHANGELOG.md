@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 Click the link above to see the future.
 
+### Fixes
+- [#72] Some redstone wire states gets converted to other block improperly
+
 ## [2.0.0] - 2019-06-02
 ### Added
 - `WorldConveter.regions` to filter regions using the Region-Manipulator's `RegionPos`.
@@ -98,5 +101,6 @@ them will be very bright.
 [#69]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/69
 [#70]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/70
 [#71]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/71
+[#72]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/72
 
 [Region 1.1.0]: https://gamemodsbr.github.io/Region-Manipulator/CHANGELOG.html#110---2019-06-02
