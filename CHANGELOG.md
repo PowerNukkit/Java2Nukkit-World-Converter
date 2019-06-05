@@ -9,6 +9,7 @@ Click the link above to see the future.
 
 ### Fixes
 - [#72] Some redstone wire states gets converted to other block improperly
+- [#73] Fixes the conversion for petrified oak slabs
 
 ## [2.0.0] - 2019-06-02
 ### Added
@@ -102,5 +103,6 @@ them will be very bright.
 [#70]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/70
 [#71]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/71
 [#72]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/72
+[#73]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/73
 
 [Region 1.1.0]: https://gamemodsbr.github.io/Region-Manipulator/CHANGELOG.html#110---2019-06-02
