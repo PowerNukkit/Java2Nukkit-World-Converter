@@ -210,6 +210,7 @@ internal fun JavaBlock.toNukkit(
                     }
                 }
                 "creeper_head", "creeper_wall_head" -> 4
+                "dragon_head", "dragon_wall_head" -> 5
                 else -> 0
             }
             nukkitEntity["Rot"] = rotation.toByte()
