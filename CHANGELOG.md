@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 Click the link above to see the future.
 
+## [2.0.1] - 2019-06-18
+### Fixes
+- [#72] Some redstone wire states gets converted to other block improperly
+- [#73] Fixes the conversion for petrified oak slabs
+- [#74] Fixes `large_fern` becoming `sunflower` in inventories
+- [#75] Fixes dragon heads becomes skeleton skulls
+
 ## [2.0.0] - 2019-06-02
 ### Added
 - `WorldConveter.regions` to filter regions using the Region-Manipulator's `RegionPos`.
@@ -61,7 +68,8 @@ them will be very bright.
 - Small API for usage as library
 - Option specify the region files that will be converted
 
-[Unreleased]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v2.0.1...HEAD
+[2.0.1]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v2.0.0..v2.0.1
 [2.0.0]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v1.0.0..v2.0.0
 [1.0.0]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/a8f41900b32740648752ff214581eb8da0f928f6..v1.0.0
 
@@ -97,6 +105,11 @@ them will be very bright.
 [#68]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/68
 [#69]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/69
 [#70]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/70
-[#70]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/71
+[#71]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/71
+
+[#72]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/72
+[#73]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/73
+[#74]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/74
+[#75]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/75
 
 [Region 1.1.0]: https://gamemodsbr.github.io/Region-Manipulator/CHANGELOG.html#110---2019-06-02
