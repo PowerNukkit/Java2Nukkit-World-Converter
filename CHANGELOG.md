@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 Click the link above to see the future.
 
+## [2.0.1] - 2019-06-18
 ### Fixes
 - [#72] Some redstone wire states gets converted to other block improperly
 - [#73] Fixes the conversion for petrified oak slabs
@@ -67,7 +68,8 @@ them will be very bright.
 - Small API for usage as library
 - Option specify the region files that will be converted
 
-[Unreleased]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v2.0.1...HEAD
+[2.0.1]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v2.0.0..v2.0.1
 [2.0.0]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v1.0.0..v2.0.0
 [1.0.0]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/a8f41900b32740648752ff214581eb8da0f928f6..v1.0.0
 
