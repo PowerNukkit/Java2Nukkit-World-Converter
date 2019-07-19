@@ -13,7 +13,12 @@ internal fun NbtCompound.copyJsonToLegacyTo(other: NbtCompound, tagName: String,
 
 internal fun String.fromJsonToLegacy(): String {
     val components = ComponentSerializer.parse(this)
-    val string = components.asSequence().map { component ->
+    val nulls = components.count { it == null }
+    if (nulls > 0) {
+        println("WARNING: The parsed Array<BaseComponent> contains $nulls null value(s)!")
+        println("WARNING: Original JSON: $this")
+    }
+    val string = components.asSequence().filterNotNull().map { component ->
         if (component.colorRaw == null) {
             component.color = ChatColor.RESET
         }
