@@ -95,7 +95,7 @@ class WorldConverter(val from: File, val to: File) {
         @Suppress("DEPRECATION")
         val regions = (regions + regionFilter.map { it.toRegionManipulator() }).toSet()
         File(from, "region").listFiles().asSequence()
-            .filter { it.name.toLowerCase().matches(Regex("""^r\.-?\d\.-?\d\.mca$""")) }
+            .filter { it.name.toLowerCase().matches(Regex("""^r\.-?\d+\.-?\d+\.mca$""")) }
             .filter { regions.isEmpty() || RegionPosition(it.name) in regions }
             .forEach { fromRegion ->
                 convertRegionFile(
