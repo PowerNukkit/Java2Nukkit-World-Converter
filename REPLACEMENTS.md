@@ -168,6 +168,7 @@ See also [the list of missing features](MISSING_FEATURES.md).
 ## Biomes
 
 | Name                    | Replacement    | Unsupported by  |
+| ----------------------- | -------------- | --------------- |
 | the_end                 | nether         | Nukkit          |
 | end_midlands            | nether         | Nukkit          |
 | end_highlands           | nether         | Nukkit          |
