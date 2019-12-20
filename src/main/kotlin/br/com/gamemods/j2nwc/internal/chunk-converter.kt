@@ -53,7 +53,7 @@ internal fun Chunk.toNukkit(
         javaChunk.status != "empty",
         1,
         javaChunk.position,
-        toNukkitBiomes(javaChunk.biomes),
+        javaChunk.toNukkitBiomes(),
         byteArrayOf(0, 0, 0, 0),
         IntArray(256) { 255 }
     )
@@ -135,8 +135,22 @@ internal fun JavaChunkSection.toNukkit(
     )
 }
 
-internal fun toNukkitBiomes(biomes: IntArray): ByteArray {
-    return biomes.map { id ->
+internal fun JavaChunk.toNukkitBiomes(): ByteArray {
+    val biomes = this.biomes ?: emptyList()
+    //TODO Get the biome from the highest block in a given XZ coordinate inside the chunk
+    //val heightMap = heightMap?.getLongArray("WORLD_SURFACE") ?: LongArray(256) { 64 }
+    val biomes256 = IntArray(256) { index ->
+        val z = index and 0xF
+        val x = (index shr 4) and 0xF
+        val y = 64
+        val javaBiome = biomes
+            .firstOrNull { x in it.x..it.lastX && z in it.z..it.lastZ && y in it.y..it.lastY }
+            ?: biomes.firstOrNull { x in it.x..it.lastX && z in it.z..it.lastZ }
+
+        javaBiome?.biome ?: 1
+    }
+
+    return biomes256.map { id ->
         val remap = javaBiomes2Bedrock[id]
         if (remap == null) {
             System.err.println("Unmapped biome with id $id")

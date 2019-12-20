@@ -62,6 +62,16 @@ internal data class JavaChunkSection(
     }
 }
 
+internal data class JavaBiomeArea(
+    val biome: Int,
+    val x: Int,
+    val y: Int,
+    val z: Int,
+    val lastX: Int,
+    val lastY: Int,
+    val lastZ: Int
+)
+
 internal data class JavaChunk(
     var lastModified: Date,
     var heightMap: NbtCompound?,
@@ -79,7 +89,7 @@ internal data class JavaChunk(
     var lastUpdate: Date,
     var status: String,
     var position: ChunkPos,
-    var biomes: IntArray
+    var biomes: List<JavaBiomeArea>?
 ) {
     constructor(chunk: Chunk): this(
         chunk.lastModified,
@@ -104,12 +114,40 @@ internal data class JavaChunk(
         chunk.level.getString("Status"),
         ChunkPos(chunk.level.getInt("xPos"), chunk.level.getInt("zPos")),
         chunk.level["Biomes"].let { tag ->
-            requireNotNull(tag) {
-                "The Biomes tag is missing."
-            }
             when (tag) {
-                is NbtIntArray -> tag.value
-                is NbtByteArray -> tag.value.map { it.toInt() and 0xFF }.toIntArray()
+                null -> null
+                is NbtIntArray -> {
+                    if (tag.value.size == 256) {
+                        tag.value.mapIndexed { index, biome ->
+                            val z = index and 0xF
+                            val x = (index shr 4) and 0xF
+                            JavaBiomeArea(biome and 0xFF, x, 0,z, x, 256, z)
+                        }
+                    } else {
+                        val biomes = tag.value.asSequence().chunked(64).chunked(4).toList()
+                        val areas = mutableListOf<JavaBiomeArea>()
+                        biomes.forEachIndexed { x, xBiomes ->
+                            xBiomes.forEachIndexed { z, zBiomes ->
+                                zBiomes.forEachIndexed { y, biome ->
+                                    areas += JavaBiomeArea(biome,
+                                        x * 4, y * 4, z * 4,
+                                        ((x+1) * 4) -1,
+                                        ((y+1) * 4) -1,
+                                        ((z+1) * 4) -1
+                                    )
+                                }
+                            }
+                        }
+                        areas
+                    }
+                }
+                is NbtByteArray -> {
+                    tag.value.mapIndexed { index, biome ->
+                        val z = index and 0xF
+                        val x = (index shr 4) and 0xF
+                        JavaBiomeArea(biome.toInt() and 0xFF, x, 0,z, x, 256, z)
+                    }
+                }
                 else -> error("Unexpected type for Biomes tag: ${tag::class.java}")
             }
         }
@@ -137,7 +175,7 @@ internal data class JavaChunk(
         if (lastUpdate != other.lastUpdate) return false
         if (status != other.status) return false
         if (position != other.position) return false
-        if (!biomes.contentEquals(other.biomes)) return false
+        if (biomes != other.biomes) return false
 
         return true
     }
@@ -159,7 +197,7 @@ internal data class JavaChunk(
         result = 31 * result + lastUpdate.hashCode()
         result = 31 * result + status.hashCode()
         result = 31 * result + position.hashCode()
-        result = 31 * result + biomes.contentHashCode()
+        result = 31 * result + biomes.hashCode()
         return result
     }
 }
