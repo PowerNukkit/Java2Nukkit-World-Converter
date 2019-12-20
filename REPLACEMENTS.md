@@ -26,7 +26,6 @@ See also [the list of missing features](MISSING_FEATURES.md).
 | Arrow of Slowness IV | Arrow of Slowness I | Bedrock Edition |
 | Arrow of Lucky         | Regular Arrow | Bedrock Edition |
 | Spectral Arrow         | Regular Arrow | Bedrock Edition |
-| honeycomb              | air           | J2N World Converter |
 | honey_bottle           | mushroom_stew | Nukkit          |
 
 ## Blocks
