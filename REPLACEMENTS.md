@@ -26,6 +26,8 @@ See also [the list of missing features](MISSING_FEATURES.md).
 | Arrow of Slowness IV | Arrow of Slowness I | Bedrock Edition |
 | Arrow of Lucky         | Regular Arrow | Bedrock Edition |
 | Spectral Arrow         | Regular Arrow | Bedrock Edition |
+| honeycomb              | air           | J2N World Converter |
+| honey_bottle           | mushroom_stew | Nukkit          |
 
 ## Blocks
 
@@ -151,6 +153,10 @@ See also [the list of missing features](MISSING_FEATURES.md).
 | barrier                 | invisible_bedrock | Nukkit       |
 | dark_oak_trapdoor       | oak_trapdoor      | Nukkit       |
 | spruce_trapdoor         | oak_trapdoor      | Nukkit       |
+| bee_nest                | air               | Nukkit       |
+| beehive                 | oak_planks        | Nukkit       |
+| honey_block             | slime_block       | Nukkit       |
+| honeycomb_block         | yellow_glazed_terracotta | Nukkit |
 
 ## Entities
 
@@ -162,6 +168,7 @@ See also [the list of missing features](MISSING_FEATURES.md).
 ## Biomes
 
 | Name                    | Replacement    | Unsupported by  |
+| ----------------------- | -------------- | --------------- |
 | the_end                 | nether         | Nukkit          |
 | end_midlands            | nether         | Nukkit          |
 | end_highlands           | nether         | Nukkit          |

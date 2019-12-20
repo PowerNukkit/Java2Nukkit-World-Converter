@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 Click the link above to see the future.
 
+### Added
+- [#84] Mappings to Minecraft Java Edition 1.15 items and blocks
+
+### Changed
+- [#84] The source world must be optimized by Minecraft 1.15.1 now
+
+### Fixes
+- [#78] Error parsing sign text: IllegalStateException: component must not be null
+- [#79] Region files with axis number (X or Z) higher then 9 being ignored
+
 ## [2.0.1] - 2019-06-18
 ### Fixes
 - [#72] Some redstone wire states gets converted to other block improperly
@@ -111,5 +121,10 @@ them will be very bright.
 [#73]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/73
 [#74]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/74
 [#75]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/75
+
+[#78]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/78
+[#79]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/79
+
+[#84]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/84
 
 [Region 1.1.0]: https://gamemodsbr.github.io/Region-Manipulator/CHANGELOG.html#110---2019-06-02

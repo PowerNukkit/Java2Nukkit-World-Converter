@@ -1,5 +1,5 @@
 # Minecraft Java to Nukkit World Converter
-This is a command line tool that will convert Minecraft 1.14.1 anvil worlds to Nukkit's anvil world format.
+This is a command line tool that will convert Minecraft 1.15.3 anvil worlds to Nukkit's anvil world format.
 
 Please check the [missing features file](MISSING_FEATURES.md) to be aware of everything that is not supported by 
 Bedrock Edition or Nukkit.
@@ -10,9 +10,9 @@ done due to the lack of support by Nukkit or Bedrock Edition.
 You may also want to see the [changelog](CHANGELOG.md) file to be aware of all changes in the tool that may impact you.
 
 ## Requeriments
-Before you convert you need to optimize your world using Minecraft 1.14.1.
+Before you convert you need to optimize your world using Minecraft 1.15.3.
 
-This tool only supports Minecraft Java Edition 1.14.1, other versions and unoptimized worlds in different versions 
+This tool only supports Minecraft Java Edition 1.15.3, other versions and unoptimized worlds in different versions 
 may cause incorrect conversions or crashes during the conversion.
 
 You will also need Java 1.8+ to executed the tool. It will work in all platforms supported by Java, 
@@ -142,7 +142,7 @@ repositories {
 }
 
 dependencies {
-    compile 'br.com.gamemods:java2nukkit-world-converter:2.0.0'    
+    compile 'br.com.gamemods:java2nukkit-world-converter:3.0.0'    
 }
 ```
 
@@ -166,7 +166,7 @@ dependencies {
     <dependency>
       <groupId>br.com.gamemods</groupId>
       <artifactId>java2nukkit-world-converter</artifactId>
-      <version>2.0.0</version>
+      <version>3.0.0</version>
     </dependency>
 </dependencies>
 ```
@@ -179,6 +179,6 @@ dependencies {
     <ibiblio name="spigotmc" root="https://hub.spigotmc.org/nexus/content/groups/public/" m2compatible="true" />
 </resolvers>
 <dependencies>
-    <dependency org='br.com.gamemods' name='java2nukkit-world-converter' rev='2.0.0'/>
+    <dependency org='br.com.gamemods' name='java2nukkit-world-converter' rev='3.0.0'/>
 </dependencies>
 ```
