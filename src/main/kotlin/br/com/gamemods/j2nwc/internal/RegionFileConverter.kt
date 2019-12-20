@@ -35,7 +35,11 @@ internal fun Region.toNukkit(
     worldConverter: WorldConverter
 ): Region {
     val postConversionHooks = mutableListOf<PostConversionHook>()
-    val nukkitRegion = Region(position, values.map { Chunk(it.lastModified, it.toNukkit(postConversionHooks, worldHooks, worldConverter).toNbt()) })
+    val nukkitRegion = Region(position, values.mapNotNull {
+        it.toNukkit(postConversionHooks, worldHooks, worldConverter)?.let { nukkitChunk ->
+            Chunk(it.lastModified, nukkitChunk.toNbt())
+        }
+    })
     postConversionHooks.forEach {
         it(this, nukkitRegion)
     }

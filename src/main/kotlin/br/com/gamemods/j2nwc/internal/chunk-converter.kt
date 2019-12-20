@@ -9,8 +9,17 @@ internal fun Chunk.toNukkit(
     regionPostConversionHooks: MutableList<PostConversionHook>,
     worldHooks: MutableList<PostWorldConversionHook>,
     worldConverter: WorldConverter
-): NukkitChunk {
+): NukkitChunk? {
     val javaChunk = JavaChunk(this)
+    if (javaChunk.sections.isEmpty()) {
+        if (javaChunk.status == "structure_starts") {
+            return null
+        } /*else {
+            println("Empty Chunk: ${javaChunk.position} ${javaChunk.status}")
+        }*/
+    } /*else if (javaChunk.status != "full") {
+        println("Chunk status: ${javaChunk.status}")
+    }*/
     val javaTileEntities = javaChunk.tileEntities.associate {
         BlockPos(it.getInt("x"), it.getInt("y"), it.getInt("z")) to it
     }
