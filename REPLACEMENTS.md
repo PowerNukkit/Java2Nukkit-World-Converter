@@ -17,9 +17,7 @@ See also [the list of missing features](MISSING_FEATURES.md).
 | jungle_sign            | oak_sign      | Nukkit 1.X      |
 | acacia_sign            | oak_sign      | Nukkit 1.X      |
 | dark_oak_sign          | oak_sign      | Nukkit 1.X      |
-| shield                 | air           | Nukkit 1.X      |
 | crossbow               | bow           | Nukkit 1.X      |
-| sweet_berries          | cookies       | Nukkit 1.X      |
 | Potions of Slowness IV | Potion of Slowness I | Bedrock Edition |
 | Uncraftable Potion     | Water Potion  | Bedrock Edition |
 | Potions of Lucky       | Water Potion  | Bedrock Edition |
@@ -50,7 +48,7 @@ See also [the list of missing features](MISSING_FEATURES.md).
 | chain_command_block     | crafting          | Nukkit 1.X   |
 | structure_block         | purpur_block      | Nukkit 1.X   |
 | seagrass                | water             | Nukkit 1.X   |
-| kelp                    | water             | Nukkit 1.X   |
+| kelp (block)            | water             | Nukkit 1.X   |
 | bubble_column           | water             | Nukkit 1.X   |
 | bamboo                  | sugarcane         | Nukkit 1.X   |
 | bamboo_sapling          | sugarcane         | Nukkit 1.X   |
