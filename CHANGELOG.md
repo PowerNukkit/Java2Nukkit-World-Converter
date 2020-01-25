@@ -12,11 +12,12 @@ Click the link above to see the future.
 - [#84] Mappings for Minecraft Java Edition 1.15 items and blocks
 
 ### Changed
+- `WorldConverter.convert()` now throws `IOException` in java **(breaking change)**
+- Updated [Region-Manipulator to `2.0.0`][Region 2.0.0] from `1.1.0` **(breaking change)**
 - [#84] The source world must be optimized by Minecraft 1.15.2 now
 - If the converter finds an unmapped block 
   it will now be converted as 248:0 (minecraft:info_update) instead of 1:15 (stone with invalid data)
 - sweet_berries and shield are no longer replaced, they are obtainable in Nukkit 1.X now
-- Updated [Region-Manipulator to `2.0.0`][Region 2.0.0] from `1.1.0`.
 - Honey bottle and all banner patterns are no longer replaced, they aren't obtainable in Nukkit 1.X but 
 the server won't break if you have these items in your inventory anymore. 
 

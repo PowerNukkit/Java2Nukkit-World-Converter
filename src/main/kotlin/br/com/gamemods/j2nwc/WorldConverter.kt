@@ -4,6 +4,7 @@ import br.com.gamemods.j2nwc.internal.PostWorldConversionHook
 import br.com.gamemods.j2nwc.internal.convertLevelFile
 import br.com.gamemods.j2nwc.internal.convertRegionFile
 import java.io.File
+import java.io.IOException
 
 /**
  * A region position extracted from the region file name.
@@ -81,7 +82,10 @@ class WorldConverter(val from: File, val to: File) {
 
     /**
      * Executes the conversion in the current thread. Will take a while to complete.
+     *
+     * @throws IOException If an error occurs while loading or writing the files
      */
+    @Throws(IOException::class)
     fun convert() {
         check(to.isDirectory || to.mkdirs()) {
             "Failed to create the folder $to"
