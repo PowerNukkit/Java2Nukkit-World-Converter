@@ -7,11 +7,6 @@ See also [the list of missing features](MISSING_FEATURES.md).
 
 | Name                   | Replacement   | Unsupported by  |
 | ---------------------- | ------------- | --------------- |
-| flower_banner_pattern  | air           | Nukkit 1.X      |
-| creeper_banner_pattern | air           | Nukkit 1.X      |
-| skull_banner_pattern   | air           | Nukkit 1.X      |
-| mojang_banner_pattern  | air           | Nukkit 1.X      |
-| globe_banner_pattern   | air           | Bedrock Edition |
 | spruce_sign            | oak_sign      | Nukkit 1.X      |
 | birch_sign             | oak_sign      | Nukkit 1.X      |
 | jungle_sign            | oak_sign      | Nukkit 1.X      |
@@ -24,7 +19,6 @@ See also [the list of missing features](MISSING_FEATURES.md).
 | Arrow of Slowness IV | Arrow of Slowness I | Bedrock Edition |
 | Arrow of Lucky         | Regular Arrow | Bedrock Edition |
 | Spectral Arrow         | Regular Arrow | Bedrock Edition |
-| honey_bottle           | mushroom_stew | Nukkit 1.X      |
 
 ## Blocks
 
