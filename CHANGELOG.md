@@ -12,6 +12,8 @@ Click the link above to see the future.
 
 ### Changed
 - [#84] The source world must be optimized by Minecraft 1.15.1 now
+- If the converter finds an unmapped block 
+  it will now be converted as 248:0 (minecraft:info_update) instead of 1:15 (stone with invalid data)
 
 ### Fixes
 - [#78] Error parsing sign text: IllegalStateException: component must not be null

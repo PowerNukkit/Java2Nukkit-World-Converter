@@ -356,7 +356,7 @@ internal fun JavaPalette.toNukkit(): BlockData {
     if (bedrockState == null) {
         System.err.println("Missing block state mapping for $stateId")
     }
-    val prop = bedrockState ?: java2bedrockStates[blockName] ?: "1,15"
+    val prop = bedrockState ?: java2bedrockStates[blockName] ?: "248,0"
     val nukkit = bedrock2nukkit.getProperty("B,$prop") ?: prop
     val ids = nukkit.split(',', limit = 2)
     val blockId = ids[0].toInt()
