@@ -7,14 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 Click the link above to see the future.
 
+## [3.0.0] - 2020-01-25
 ### Added
-- [#84] Mappings to Minecraft Java Edition 1.15 items and blocks
+- [#84] Mappings for Minecraft Java Edition 1.15 items and blocks
 
 ### Changed
-- [#84] The source world must be optimized by Minecraft 1.15.1 now
+- [#84] The source world must be optimized by Minecraft 1.15.2 now
 - If the converter finds an unmapped block 
   it will now be converted as 248:0 (minecraft:info_update) instead of 1:15 (stone with invalid data)
 - sweet_berries and shield are no longer replaced, they are obtainable in Nukkit 1.X now
+- Updated [Region-Manipulator to `2.0.0`][Region 2.0.0] from `1.1.0`.
 
 ### Fixes
 - [#78] Error parsing sign text: IllegalStateException: component must not be null
@@ -83,7 +85,8 @@ them will be very bright.
 - Small API for usage as library
 - Option specify the region files that will be converted
 
-[Unreleased]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v2.0.1...HEAD
+[Unreleased]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v2.0.1..v3.0.0
 [2.0.1]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v2.0.0..v2.0.1
 [2.0.0]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v1.0.0..v2.0.0
 [1.0.0]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/a8f41900b32740648752ff214581eb8da0f928f6..v1.0.0
@@ -132,4 +135,5 @@ them will be very bright.
 
 [#84]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/84
 
+[Region 2.0.0]: https://gamemodsbr.github.io/Region-Manipulator/CHANGELOG.html#200---2020-01-24
 [Region 1.1.0]: https://gamemodsbr.github.io/Region-Manipulator/CHANGELOG.html#110---2019-06-02
