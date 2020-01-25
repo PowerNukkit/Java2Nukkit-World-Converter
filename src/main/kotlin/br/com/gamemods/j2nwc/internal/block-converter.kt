@@ -52,6 +52,9 @@ internal fun JavaBlock.toNukkit(
         )
         54 -> createTileEntity("Chest") { nukkitEntity ->
             tileEntity?.copyJsonToLegacyTo(nukkitEntity, "CustomName")
+            //if (blockData.originalBedrock?.let { it.blockId == 458 && (it.data and 0x8) == 0x8 } == true) {
+            // Note: Tried to persist the barrel open state after a chest conversion but it is not possible, chests are open by BlockEventPacket
+            //}
             val pair = when (type.properties?.getString("type")) {
                 "left" -> when (type.properties?.getString("facing")) {
                     "east" -> blockPos.xPos to blockPos.zPos +1
@@ -340,7 +343,7 @@ internal fun JavaBlock.toNukkit(
     return NukkitBlock(blockPos, blockData, nukkitTileEntity)
 }
 
-internal data class BlockData(var blockId: Int, var data: Int) {
+internal data class BlockData(var blockId: Int, var data: Int, val originalBedrock: BlockData? = null, val originalJava: JavaPalette? = null) {
     val byteBlockId: Byte get() = (blockId and 0xFF).toByte()
 }
 internal fun JavaPalette.toNukkit(): BlockData {
@@ -357,13 +360,22 @@ internal fun JavaPalette.toNukkit(): BlockData {
         System.err.println("Missing block state mapping for $stateId")
     }
     val prop = bedrockState ?: java2bedrockStates[blockName] ?: "248,0"
-    val nukkit = bedrock2nukkit.getProperty("B,$prop") ?: prop
-    val ids = nukkit.split(',', limit = 2)
-    val blockId = ids[0].toInt()
-    val blockData = ids.getOrElse(1) { "0" }.toByte()
-    check(blockId in 0..255) {
-        "Block id unsupported by Nukkit: $blockId:$blockData"
+    val originalBedrock = propertyToBlockData(prop)
+    val nukkitProp = bedrock2nukkit.getProperty("B,$prop") ?: prop
+    val nukkit = propertyToBlockData(nukkitProp, originalBedrock, this)
+    check(nukkit.blockId in 0..255) {
+        "Block id unsupported by Nukkit 1.X: $nukkit"
+    }
+    check (nukkit.data in 0..15) {
+        "Block data unsupported by Nukkit 1.X: $nukkit"
     }
 
-    return BlockData(blockId, blockData.toInt())
+    return nukkit
+}
+
+private fun propertyToBlockData(prop: String, originalBedrock: BlockData? = null, originalJava: JavaPalette? = null): BlockData {
+    val ids = prop.split(',', limit = 2)
+    val blockId = ids[0].toInt()
+    val blockData = ids.getOrElse(1) { "0" }.toInt()
+    return BlockData(blockId, blockData, originalBedrock, originalJava)
 }
