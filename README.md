@@ -1,5 +1,5 @@
 # Minecraft Java to Nukkit World Converter
-This is a command line tool that will convert Minecraft 1.15.3 anvil worlds to Nukkit's anvil world format.
+This is a command line tool that will convert Minecraft 1.15.2 anvil worlds to Nukkit's anvil world format.
 
 Please check the [missing features file](MISSING_FEATURES.md) to be aware of everything that is not supported by 
 Bedrock Edition or Nukkit.
@@ -10,9 +10,9 @@ done due to the lack of support by Nukkit or Bedrock Edition.
 You may also want to see the [changelog](CHANGELOG.md) file to be aware of all changes in the tool that may impact you.
 
 ## Requeriments
-Before you convert you need to optimize your world using Minecraft 1.15.3.
+Before you convert you need to optimize your world using Minecraft 1.15.2.
 
-This tool only supports Minecraft Java Edition 1.15.3, other versions and unoptimized worlds in different versions 
+This tool only supports Minecraft Java Edition 1.15.2, other versions and unoptimized worlds in different versions 
 may cause incorrect conversions or crashes during the conversion.
 
 You will also need Java 1.8+ to executed the tool. It will work in all platforms supported by Java, 

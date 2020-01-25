@@ -12,10 +12,15 @@ Click the link above to see the future.
 
 ### Changed
 - [#84] The source world must be optimized by Minecraft 1.15.1 now
+- If the converter finds an unmapped block 
+  it will now be converted as 248:0 (minecraft:info_update) instead of 1:15 (stone with invalid data)
+- sweet_berries and shield are no longer replaced, they are obtainable in Nukkit 1.X now
 
 ### Fixes
 - [#78] Error parsing sign text: IllegalStateException: component must not be null
 - [#79] Region files with axis number (X or Z) higher then 9 being ignored
+- Internal mappings for barrel, grindstone, lectern, stonecutter, bell, campfire, bee_nest and beehive.
+  Does not affects the output because they aren't supported by Nukkit 1.X, so they were all replaced by other blocks.
 
 ## [2.0.1] - 2019-06-18
 ### Fixes
