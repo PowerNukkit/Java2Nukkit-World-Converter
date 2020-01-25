@@ -17,12 +17,10 @@ Click the link above to see the future.
 - sweet_berries and shield are no longer replaced, they are obtainable in Nukkit 1.X now
 
 ### Fixes
-- Internal mappings for barrel, grindstone, lectern, stonecutter, bell, campfire, bee_nest and beehive.
-  Does not affects the output because they aren't supported by Nukkit 1.X, so they were all replaced by other blocks.
-
-### Fixes
 - [#78] Error parsing sign text: IllegalStateException: component must not be null
 - [#79] Region files with axis number (X or Z) higher then 9 being ignored
+- Internal mappings for barrel, grindstone, lectern, stonecutter, bell, campfire, bee_nest and beehive.
+  Does not affects the output because they aren't supported by Nukkit 1.X, so they were all replaced by other blocks.
 
 ## [2.0.1] - 2019-06-18
 ### Fixes
