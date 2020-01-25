@@ -6,3 +6,6 @@
 
 Executes the conversion in the current thread. Will take a while to complete.
 
+### Exceptions
+
+`IOException` - If an error occurs while loading or writing the files
