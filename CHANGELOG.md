@@ -23,6 +23,7 @@ the server won't break if you have these items in your inventory anymore.
 ### Fixes
 - [#78] Error parsing sign text: IllegalStateException: component must not be null
 - [#79] Region files with axis number (X or Z) higher then 9 being ignored
+- [#87] Double chests facing north and east have the contents swapped
 - Internal mappings for barrel, grindstone, lectern, stonecutter, bell, campfire, bee_nest and beehive.
   Does not affects the output because they aren't supported by Nukkit 1.X, so they were all replaced by other blocks.
 
@@ -134,8 +135,9 @@ them will be very bright.
 
 [#78]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/78
 [#79]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/79
-
 [#84]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/84
+[#87]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/87
+
 
 [Region 2.0.0]: https://gamemodsbr.github.io/Region-Manipulator/CHANGELOG.html#200---2020-01-24
 [Region 1.1.0]: https://gamemodsbr.github.io/Region-Manipulator/CHANGELOG.html#110---2019-06-02

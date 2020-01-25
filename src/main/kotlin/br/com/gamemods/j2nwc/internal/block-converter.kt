@@ -55,6 +55,7 @@ internal fun JavaBlock.toNukkit(
             //if (blockData.originalBedrock?.let { it.blockId == 458 && (it.data and 0x8) == 0x8 } == true) {
             // Note: Tried to persist the barrel open state after a chest conversion but it is not possible, chests are open by BlockEventPacket
             //}
+            val needsSwapping = type.properties?.getString("facing").let { it == "south" || it == "west" }
             val pair = when (type.properties?.getString("type")) {
                 "left" -> when (type.properties?.getString("facing")) {
                     "east" -> blockPos.xPos to blockPos.zPos +1
@@ -75,47 +76,51 @@ internal fun JavaBlock.toNukkit(
                 nukkitEntity["pairx"] = x
                 nukkitEntity["pairz"] = z
 
-                val y = blockPos.yPos
-                val pairedChunkPos = ChunkPos(floor(x / 16.0).toInt(), floor(z / 16.0).toInt())
-                val currentChunkPos = ChunkPos(floor(blockPos.xPos / 16.0).toInt(), floor(blockPos.zPos / 16.0).toInt())
-                fun swapItems(nukkitRegion: Region) {
-                    nukkitRegion[pairedChunkPos]?.level?.getCompoundList("TileEntities")
-                        ?.find { it.getInt("x") == x && it.getInt("y") == y && it.getInt("z") == z }
-                        ?.also { pairedEntity ->
-                            if (pairedEntity.getNullableBooleanByte("--pair-processed--")) {
-                                pairedEntity.remove("--pair-processed--")
-                            } else {
-                                val thisItems = nukkitEntity.getList("Items")
-                                val otherItems = pairedEntity.getList("Items")
+                if (needsSwapping) {
+                    val y = blockPos.yPos
+                    val pairedChunkPos = ChunkPos(floor(x / 16.0).toInt(), floor(z / 16.0).toInt())
+                    val currentChunkPos =
+                        ChunkPos(floor(blockPos.xPos / 16.0).toInt(), floor(blockPos.zPos / 16.0).toInt())
 
-                                pairedEntity["Items"] = thisItems
-                                nukkitEntity["Items"] = otherItems
-                                nukkitEntity["--pair-processed--"] = true
+                    fun swapItems(nukkitRegion: Region) {
+                        nukkitRegion[pairedChunkPos]?.level?.getCompoundList("TileEntities")
+                            ?.find { it.getInt("x") == x && it.getInt("y") == y && it.getInt("z") == z }
+                            ?.also { pairedEntity ->
+                                if (pairedEntity.getNullableBooleanByte("--pair-processed--")) {
+                                    pairedEntity.remove("--pair-processed--")
+                                } else {
+                                    val thisItems = nukkitEntity.getList("Items")
+                                    val otherItems = pairedEntity.getList("Items")
+
+                                    pairedEntity["Items"] = thisItems
+                                    nukkitEntity["Items"] = otherItems
+                                    nukkitEntity["--pair-processed--"] = true
+                                }
                             }
-                        }
-                }
-
-                val currentRegX = floor(currentChunkPos.xPos / 32.0).toInt()
-                val currentRegZ = floor(currentChunkPos.zPos / 32.0).toInt()
-                val pairedRegX = floor(pairedChunkPos.xPos / 32.0).toInt()
-                val pairedRegZ = floor(pairedChunkPos.zPos / 32.0).toInt()
-                if (currentRegX == pairedRegX && currentRegZ == pairedRegZ) {
-                    regionPostConversionHooks += { _, nukkitRegion ->
-                        swapItems(nukkitRegion)
                     }
-                } else {
-                    worldHooks += { _, worldDir ->
-                        try {
-                            modifyRegion(worldDir, pairedRegX, pairedRegZ, ::swapItems)
-                        } catch (e: FileNotFoundException) {
-                            System.err.println(
-                                "Could not swap the double chest items between the chests $blockPos and ${BlockPos(
-                                    x,
-                                    y,
-                                    z
-                                )} because the file r.$pairedRegX.$pairedRegZ.mca does not exists!"
-                            )
-                            System.err.println(e.toString())
+
+                    val currentRegX = floor(currentChunkPos.xPos / 32.0).toInt()
+                    val currentRegZ = floor(currentChunkPos.zPos / 32.0).toInt()
+                    val pairedRegX = floor(pairedChunkPos.xPos / 32.0).toInt()
+                    val pairedRegZ = floor(pairedChunkPos.zPos / 32.0).toInt()
+                    if (currentRegX == pairedRegX && currentRegZ == pairedRegZ) {
+                        regionPostConversionHooks += { _, nukkitRegion ->
+                            swapItems(nukkitRegion)
+                        }
+                    } else {
+                        worldHooks += { _, worldDir ->
+                            try {
+                                modifyRegion(worldDir, pairedRegX, pairedRegZ, ::swapItems)
+                            } catch (e: FileNotFoundException) {
+                                System.err.println(
+                                    "Could not swap the double chest items between the chests $blockPos and ${BlockPos(
+                                        x,
+                                        y,
+                                        z
+                                    )} because the file r.$pairedRegX.$pairedRegZ.mca does not exists!"
+                                )
+                                System.err.println(e.toString())
+                            }
                         }
                     }
                 }
