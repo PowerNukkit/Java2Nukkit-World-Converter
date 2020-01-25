@@ -84,9 +84,12 @@ internal fun checkIds() {
                 }
 
         if (type == "I") {
-            if (nukkitItemId.toInt() !in nukkitItemNames) {
+
+            val itemId = nukkitItemId.toInt()
+            if (itemId !in setOf(434, 736, 737) && itemId !in nukkitItemNames) {
                 println("The item $type,$nukkitItemId,$nukkitItemData is unsupported by Nukkit!\nItem: $item")
             }
+
         } else {
             if (nukkitItemId.toInt() !in nukkitBlockNames) {
                 println("The item-block $type,$nukkitItemId,$nukkitItemData is unsupported by Nukkit!\nItem: $item")

@@ -17,6 +17,8 @@ Click the link above to see the future.
   it will now be converted as 248:0 (minecraft:info_update) instead of 1:15 (stone with invalid data)
 - sweet_berries and shield are no longer replaced, they are obtainable in Nukkit 1.X now
 - Updated [Region-Manipulator to `2.0.0`][Region 2.0.0] from `1.1.0`.
+- Honey bottle and all banner patterns are no longer replaced, they aren't obtainable in Nukkit 1.X but 
+the server won't break if you have these items in your inventory anymore. 
 
 ### Fixes
 - [#78] Error parsing sign text: IllegalStateException: component must not be null
