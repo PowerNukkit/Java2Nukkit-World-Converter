@@ -93,7 +93,7 @@ them will be very bright.
 [3.0.0]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v2.0.1..v3.0.0
 [2.0.1]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v2.0.0..v2.0.1
 [2.0.0]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v1.0.0..v2.0.0
-[1.0.0]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/a8f41900b32740648752ff214581eb8da0f928f6..v1.0.0
+[1.0.0]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/a8f41900b32740648752ff214581eb8da0f928f6...v1.0.0
 
 [#38]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/38
 [#39]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/39
