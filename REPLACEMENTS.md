@@ -148,6 +148,7 @@ See also [the list of missing features](MISSING_FEATURES.md).
 | beehive                 | oak_planks        | Nukkit 1.X   |
 | honey_block             | slime_block       | Nukkit 1.X   |
 | honeycomb_block         | yellow_glazed_terracotta | Nukkit 1.X |
+| stickypistonarmcollision | pistonarmcollision | Nukkit 1.X |
 
 ## Entities
 

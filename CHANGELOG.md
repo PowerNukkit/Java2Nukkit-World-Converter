@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 Click the link above to see the future.
 
+## [3.0.1] - 2020-01-26
+### Fixes
+- [#88] Piston heads were being converted incorrectly
+
 ## [3.0.0] - 2020-01-25
 ### Added
 - [#84] Mappings for Minecraft Java Edition 1.15 items and blocks
@@ -89,10 +93,11 @@ them will be very bright.
 - Small API for usage as library
 - Option specify the region files that will be converted
 
-[Unreleased]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v3.0.0...HEAD
-[3.0.0]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v2.0.1..v3.0.0
-[2.0.1]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v2.0.0..v2.0.1
-[2.0.0]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v1.0.0..v2.0.0
+[Unreleased]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v3.0.1...HEAD
+[3.0.1]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v3.0.0...v3.0.1
+[3.0.0]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v2.0.1...v3.0.0
+[2.0.1]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v2.0.0...v2.0.1
+[2.0.0]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/a8f41900b32740648752ff214581eb8da0f928f6...v1.0.0
 
 [#38]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/38
@@ -139,6 +144,7 @@ them will be very bright.
 [#84]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/84
 [#87]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/87
 
+[#88]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/88
 
 [Region 2.0.0]: https://gamemodsbr.github.io/Region-Manipulator/CHANGELOG.html#200---2020-01-24
 [Region 1.1.0]: https://gamemodsbr.github.io/Region-Manipulator/CHANGELOG.html#110---2019-06-02

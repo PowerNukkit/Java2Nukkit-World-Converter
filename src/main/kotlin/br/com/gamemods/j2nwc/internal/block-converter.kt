@@ -279,7 +279,28 @@ internal fun JavaBlock.toNukkit(
                 "minecraft:sticky_piston" -> true
                 else -> type.properties?.getString("type") == "sticky"
             }
+            val extended = type.properties?.getNullableString("extended") == "true"
             nukkitEntity["Sticky"] = sticky
+            nukkitEntity["facing"] = when (type.properties?.getNullableString("facing")) {
+                "up" -> 1
+                "north" -> 2
+                "south" -> 3
+                "west" -> 4
+                "east" -> 5
+                null, "down" -> 0
+                else -> 0
+            }
+            if (extended) {
+                nukkitEntity["Progress"] = 1F
+                nukkitEntity["LastProgress"] = 1F
+                nukkitEntity["State"] = 2
+                nukkitEntity["NewState"] = 2
+            } else {
+                nukkitEntity["Progress"] = 0F
+                nukkitEntity["LastProgress"] = 0F
+                nukkitEntity["State"] = 0
+                nukkitEntity["NewState"] = 0
+            }
         }
         149, 150 -> createTileEntity("Comparator")
         154 -> createTileEntity("Hopper") { nukkitEntity ->
