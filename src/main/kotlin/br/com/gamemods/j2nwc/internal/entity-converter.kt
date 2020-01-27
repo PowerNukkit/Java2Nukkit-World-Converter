@@ -9,9 +9,9 @@ import kotlin.math.floor
 
 internal fun toNukkitEntity(
     javaEntity: NbtCompound,
-    javaChunk: JavaChunk,
-    nukkitSections: Map<Int, NukkitChunkSection>,
-    nukkitTileEntities: MutableMap<BlockPos, NbtCompound>,
+    javaChunk: JavaChunk?,
+    nukkitSections: Map<Int, NukkitChunkSection>?,
+    nukkitTileEntities: MutableMap<BlockPos, NbtCompound>?,
     regionPostConversionHooks: MutableList<PostConversionHook>,
     worldHooks: MutableList<PostWorldConversionHook>,
     worldConverter: WorldConverter
@@ -41,7 +41,7 @@ internal fun toNukkitEntity(
     return when(javaEntity.getString("id").removePrefix("minecraft:")) {
         "item" -> {
             val nukkitEntity = convertBaseEntity() ?: return null
-            val nukkitItem = javaEntity.getNullableCompound("Item")?.toNukkitItem()
+            val nukkitItem = javaEntity.getNullableCompound("Item")?.toNukkitItem(worldConverter)
                 ?.takeIf { it.getShort("id").toInt() != 0 } ?: return null
             nukkitEntity["Item"] = nukkitItem
             nukkitEntity.copyFrom(javaEntity, "Health")
@@ -119,7 +119,7 @@ internal fun toNukkitEntity(
 
             val nukkitChunkPos = ChunkPos(floor(nukkitTileX / 16.0).toInt(), floor(nukkitTileZ / 16.0).toInt())
             val javaChunkPos = ChunkPos(floor(javaTileX / 16.0).toInt(), floor(javaTileZ / 16.0).toInt())
-            if (javaChunk.position == nukkitChunkPos) {
+            if (requireNotNull(javaChunk).position == nukkitChunkPos) {
                 nukkitEntity
             } else {
                 val nukkitRegX = floor(nukkitChunkPos.xPos / 32.0).toInt()
@@ -151,7 +151,7 @@ internal fun toNukkitEntity(
             val tileY = javaEntity.getInt("TileY")
             val tileZ = javaEntity.getInt("TileZ")
             val chunkSectionY = tileY / 16
-            val chunkSection = nukkitSections[chunkSectionY] ?: return null
+            val chunkSection = requireNotNull(nukkitSections)[chunkSectionY] ?: return null
             val internalX = tileX % 32
             val internalY = tileY % 32
             val internalZ = tileZ % 32
@@ -173,14 +173,14 @@ internal fun toNukkitEntity(
             val halfOffset = offset / 2
             val isSecond = offset % 2 == 1
             val stored = if (!isSecond) {
-                facing to ((chunkSection.blockData[halfOffset].toInt() and 0xF0) shr 4)
+                facing to ((chunkSection.blocksData[halfOffset].toInt() and 0xF0) shr 4)
             } else {
-                (chunkSection.blockData[halfOffset].toInt() and 0x0F) to facing
+                (chunkSection.blocksData[halfOffset].toInt() and 0x0F) to facing
             }
             val first = stored.first and 0x0F
             val second = (stored.second and 0x0F) shl 4
             val merged = first or second
-            chunkSection.blockData[halfOffset] = (merged and 0xFF).toByte()
+            chunkSection.blocksData[halfOffset] = (merged and 0xFF).toByte()
             val tileEntity = NbtCompound(
                 "id" to NbtString("ItemFrame"),
                 "x" to NbtInt(tileX),
@@ -190,10 +190,10 @@ internal fun toNukkitEntity(
             )
             tileEntity.copyFrom(javaEntity, "ItemDropChance")
             tileEntity.copyFrom(javaEntity, "ItemRotation")
-            javaEntity.getNullableCompound("Item")?.toNukkitItem()?.let {
+            javaEntity.getNullableCompound("Item")?.toNukkitItem(worldConverter)?.let {
                 tileEntity["Item"] = it
             }
-            nukkitTileEntities[BlockPos(tileX, tileY, tileZ)] = tileEntity
+            requireNotNull(nukkitTileEntities)[BlockPos(tileX, tileY, tileZ)] = tileEntity
             null
         }
         else -> null

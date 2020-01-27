@@ -1,5 +1,6 @@
 package br.com.gamemods.j2nwc.internal
 
+import br.com.gamemods.j2nwc.WorldConverter
 import java.util.*
 
 internal object IdComparator: Comparator<Map.Entry<String, String>> {
@@ -24,20 +25,21 @@ internal object TypeIdComparator: Comparator<Map.Entry<String, String>> {
     }
 }
 
-internal fun checkIds() {
-    val validBlockPattern = Regex("^\\d+,\\d+$")
+internal fun checkIds(targetType: WorldConverter.TargetType) {
+    val validBlockPattern = Regex("""^\d+,\d+$""")
     java2bedrockStates.values.find { !validBlockPattern.matches(it) }?.let {
         error("Found an invalid mapping at block-states.properties: $it")
     }
 
 
-    val validKeyPattern = Regex("^(B,\\d+,\\d+)|(I,\\d+,(\\d+|~))$")
+    val validKeyPattern = Regex("""^(B,\d+,\d+)|(I,\d+,(\d+|~))$""")
     java2bedrockItems.values.find { !validKeyPattern.matches(it) }?.let {
         error("Found an invalid mapping at items.properties: $it")
     }
 
-    val validItemValuePattern = Regex("^\\d+,(\\d+|~)$")
-    bedrock2nukkit.forEach { k, v ->
+    val validItemValuePattern = Regex("""^\d+,(\d+|~)$""")
+    val bedrock2target = targetType.bedrock2target
+    bedrock2target.forEach { k, v ->
         val key = k.toString()
         if (!validKeyPattern.matches(key)) {
             error("Found an invalid key at bedrock-2-nukkit.properties: $key")
@@ -54,26 +56,31 @@ internal fun checkIds() {
         }
     }
 
+    val blockNames = targetType.blockNames
+    val validDamage = 0..targetType.maxDataValue
     java2bedrockStates.asSequence().sortedWith(IdComparator).forEach { (state, stateMapping) ->
         val (mappedBlockId, mappedBlockData) = stateMapping.split(',', limit = 2).map { it.toInt() }
         val (nukkitBlockId, nukkitBlockData) =
-            (bedrock2nukkit["B,$mappedBlockId,$mappedBlockData"]?.toString() ?: stateMapping)
+            (bedrock2target["B,$mappedBlockId,$mappedBlockData"]?.toString() ?: stateMapping)
                 .split(',', limit = 2).map { it.toInt() }
 
-        if (nukkitBlockId !in nukkitBlockNames) {
-            error("The block $nukkitBlockId,$nukkitBlockData is unsupported by Nukkit!\nState: $state")
+        if (nukkitBlockId !in blockNames) {
+            error("The block $nukkitBlockId,$nukkitBlockData is unsupported by the target type $targetType!\nState: $state")
         }
 
-        if (nukkitBlockData !in 0..15) {
-            error("The block $nukkitBlockId,$nukkitBlockData has data out of range 0..15!\nState: $state")
+        if (nukkitBlockData !in validDamage) {
+            error("The block $nukkitBlockId,$nukkitBlockData has data out of range 0..${targetType.maxDataValue} " +
+                    "and is unsupported by the target type $targetType!\nState: $state")
         }
     }
 
+    val itemNames = targetType.itemNames
+    val suprpessWarningItemIds = targetType.suprpessWarningItemIds
     java2bedrockItems.asSequence().sortedWith(TypeIdComparator).forEach { (item, stateMapping) ->
         val (type, mappedItemId, mappedItemData) = stateMapping.split(',', limit = 3)
         val (nukkitItemId, nukkitItemData) =
-            (bedrock2nukkit["$type,$mappedItemId,$mappedItemData"]?.toString()
-                ?: bedrock2nukkit["$type,$mappedItemId,~"]?.toString()
+            (bedrock2target["$type,$mappedItemId,$mappedItemData"]?.toString()
+                ?: bedrock2target["$type,$mappedItemId,~"]?.toString()
                 ?: "$mappedItemId,$mappedItemData")
                 .split(',', limit = 2).mapIndexed { i, str->
                     when {
@@ -86,13 +93,13 @@ internal fun checkIds() {
         if (type == "I") {
 
             val itemId = nukkitItemId.toInt()
-            if (itemId !in setOf(434, 736, 737) && itemId !in nukkitItemNames) {
-                println("The item $type,$nukkitItemId,$nukkitItemData is unsupported by Nukkit!\nItem: $item")
+            if (itemId !in suprpessWarningItemIds && itemId !in itemNames) {
+                println("The item $type,$nukkitItemId,$nukkitItemData is unsupported by the target type $targetType!\nItem: $item")
             }
 
         } else {
-            if (nukkitItemId.toInt() !in nukkitBlockNames) {
-                println("The item-block $type,$nukkitItemId,$nukkitItemData is unsupported by Nukkit!\nItem: $item")
+            if (nukkitItemId.toInt() !in blockNames) {
+                println("The item-block $type,$nukkitItemId,$nukkitItemData is unsupported the target type $targetType!\nItem: $item")
             }
         }
     }

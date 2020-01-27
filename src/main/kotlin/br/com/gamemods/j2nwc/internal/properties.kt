@@ -2,7 +2,7 @@ package br.com.gamemods.j2nwc.internal
 
 import java.util.*
 
-private fun properties(name: String) = Properties().apply {
+internal fun properties(name: String) = Properties().apply {
     JavaPalette::class.java.getResourceAsStream(name).bufferedReader().use {
         load(it)
     }
@@ -11,7 +11,7 @@ private fun properties(name: String) = Properties().apply {
 private fun propertiesStringString(name: String) = properties(name)
     .mapKeys { it.key.toString().toLowerCase() }.mapValues { it.value.toString() }
 
-private fun propertiesStringInt(name: String) = properties(name)
+internal fun propertiesStringInt(name: String) = properties(name)
     .mapKeys { it.key.toString().toLowerCase() }.mapValues { it.value.toString().toInt() }
 
 internal val java2bedrockEntities = propertiesStringInt("/entity-ids.properties")
@@ -30,24 +30,7 @@ internal val java2bedrockStates = propertiesStringString("/block-states.properti
     }
 }.toMap()
 
-internal val bedrock2nukkit = properties("/bedrock-2-nukkit.properties")
-
 internal val java2bedrockItems = propertiesStringString("/items.properties")
-
-internal val nukkitBlockIds = propertiesStringInt("/nukkit-block-ids.properties")
-
-internal val nukkitItemIds = propertiesStringInt("/nukkit-item-ids.properties")
-
-internal val nukkitBlockNames = nukkitBlockIds.entries.asSequence()
-    .map { (k,v) -> k to v }.groupBy { (_,v) -> v }
-    .mapValues { it.value.map { p-> p.first } }
-
-internal val nukkitItemNames = nukkitItemIds.entries.asSequence()
-    .map { (k,v) -> k to v }.groupBy { (_,v) -> v }
-    .mapValues { it.value.map { p-> p.first } }
-    .let {
-        mapOf(0 to "air") + it
-    }
 
 internal val javaStatusEffectNames = properties("/status-effect-java-ids.properties")
     .mapKeys { it.key.toString().toInt() }.mapValues { it.value.toString().toLowerCase() }
@@ -76,34 +59,6 @@ internal val javaTags = properties("/tags.properties")
         mutable
     }
 
-internal val javaTags2Bedrock = javaTags.mapValues { entry ->
-    entry.value.asSequence().flatMap { javaBlock ->
-        val (bedrockId, bedrockData) = java2bedrockStates[javaBlock]?.split(',', limit = 2) ?: listOf("0","0").also {
-            //println("The tag ${entry.key} points to a missing block $javaBlock")
-        }
-        val (nukkitId, _) = (
-                bedrock2nukkit.getProperty("B,$bedrockId,$bedrockData") ?: "$bedrockId,$bedrockData"
-                ).split(',', limit = 2)
-        if (nukkitId != "0") {
-            nukkitBlockNames[nukkitId.toInt()]?.asSequence() ?: sequenceOf(nukkitId, javaBlock)
-        } else {
-            sequenceOf(null)
-        }
-    }.filterNotNull().toList()
-}
-
-internal val javaBlockProps2Bedrock = javaTags2Bedrock + java2bedrockStates.asSequence().filter { ';' !in it.key }.flatMap { (javaBlock, mapping) ->
-    val (bedrockId, bedrockData) = mapping.split(',', limit = 2)
-    val (nukkitId, _) = (
-            bedrock2nukkit.getProperty("B,$bedrockId,$bedrockData") ?: "$bedrockId,$bedrockData"
-            ).split(',', limit = 2)
-    if (nukkitId != "0") {
-        sequenceOf(javaBlock to (nukkitBlockNames[nukkitId.toInt()] ?: listOf(nukkitId, javaBlock)))
-    } else {
-        sequenceOf(null)
-    }
-}.filterNotNull()
-
 internal val tippedArrows = propertiesStringInt("/tipped-arrows.properties")
 
 internal data class PaintingData(val id: String, val width: Int, val height: Int)
@@ -125,3 +80,7 @@ internal val javaBiomes2Bedrock = properties("/biomes.properties").asSequence()
 internal val javaBiomesString2Bedrock = properties("/biomes.properties").asSequence()
     .map { it.key.toString().substringAfter('-') to it.value.toString().toInt().toByte() }
     .toMap()
+
+internal val javaInheritedWaterlogging = JavaPalette::class.java.getResourceAsStream("/java-inherited-waterlogging.txt").bufferedReader().use {
+    it.readLines()
+}.toSet()

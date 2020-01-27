@@ -62,7 +62,7 @@ internal fun Chunk.toNukkit(
 
 internal data class BlockPos(val xPos: Int, val yPos: Int, val zPos: Int)
 internal data class JavaBlock(val blockPos: BlockPos, val type: JavaPalette, var tileEntity: NbtCompound?)
-internal data class NukkitBlock(val blockPos: BlockPos, var blockData: BlockData, var tileEntity: NbtCompound?)
+internal data class NukkitBlock(val blockPos: BlockPos, var blockData: BlockData, var tileEntity: NbtCompound?, var waterlogged: Boolean)
 internal fun JavaChunkSection.toNukkit(
     javaTileEntities: Map<BlockPos, NbtCompound>,
     nukkitTileEntities: MutableMap<BlockPos, NbtCompound>,
@@ -71,10 +71,11 @@ internal fun JavaChunkSection.toNukkit(
     worldConverter: WorldConverter
 ): NukkitChunkSection? {
     val blockStates = blockStates ?: return NukkitChunkSection(
+        targetType = worldConverter.targetType,
         yPos = yPos,
         blockLight = ByteArray(2048),
         blocks = ByteArray(4096),
-        blockData = ByteArray(2048),
+        blocksData = ByteArray(2048),
         skyLight = skyLight ?: ByteArray(2048)
     )
 
@@ -113,24 +114,62 @@ internal fun JavaChunkSection.toNukkit(
         JavaBlock(blockPos, palette[paletteIndexes[it]], javaTileEntities[blockPos])
     }
 
-    val nukkitBlocks = blockPalettes.map { it.toNukkit(regionPostConversionHooks, worldHooks, worldConverter).also { block ->
+    var waterlogged: BooleanArray? = null
+    val nukkitBlocks = blockPalettes.mapIndexed { i, java -> java.toNukkit(regionPostConversionHooks, worldHooks, worldConverter).also { block ->
+        if (block.waterlogged) {
+            var waterloggedBlocks = waterlogged
+            if (waterloggedBlocks == null) {
+                waterloggedBlocks = BooleanArray(blockPalettes.size)
+                waterlogged = waterloggedBlocks
+            }
+            waterloggedBlocks[i] = true
+        }
         block.tileEntity?.let { nukkitTileEntity ->
             nukkitTileEntities[block.blockPos] = nukkitTileEntity
         }
     } }
 
-    return NukkitChunkSection(
-        yPos = yPos,
-        blockLight = ByteArray(2048),
-        blocks = ByteArray(4096) { nukkitBlocks[it].blockData.byteBlockId },
-        blockData = ByteArray(2048) {
+    val highBlockId = nukkitBlocks.parallelStream().anyMatch { it.blockData.blockId > 255 }
+    val highBlockData = nukkitBlocks.parallelStream().anyMatch { it.blockData.data > 15 }
+
+    fun assemblyDataArray(firstPart: Boolean): ByteArray {
+        return ByteArray(2048) {
             val double = it * 2
-            val stored = nukkitBlocks[double].blockData.data to nukkitBlocks[double + 1].blockData.data
+            val stored: Pair<Int, Int>
+            if (firstPart) {
+                stored = nukkitBlocks[double].blockData.dataFirstPart to nukkitBlocks[double + 1].blockData.dataFirstPart
+            } else {
+                stored = nukkitBlocks[double].blockData.dataSecondPart to nukkitBlocks[double + 1].blockData.dataSecondPart
+            }
             val first = stored.first and 0x0F
             val second = (stored.second and 0x0F) shl 4
             val merged = first or second
             (merged and 0xFF).toByte()
+        }
+    }
+
+    return NukkitChunkSection(
+        targetType = worldConverter.targetType,
+        version = when {
+            waterlogged != null -> 7
+            highBlockId || highBlockData -> 1
+            else -> 0
         },
+        yPos = yPos,
+        blockLight = ByteArray(2048),
+        blocks = ByteArray(4096) { nukkitBlocks[it].blockData.byteBlockId },
+        blocksData = assemblyDataArray(true),
+        blocksExtra = if (highBlockId) {
+            ByteArray(4096) { nukkitBlocks[it].blockData.byteBlockIdExtra }
+        } else {
+            null
+        },
+        blocksDataExtra = if (highBlockData) {
+            assemblyDataArray(false)
+        } else {
+            null
+        },
+        waterlogged = waterlogged,
         skyLight = skyLight ?: ByteArray(2048)
     )
 }

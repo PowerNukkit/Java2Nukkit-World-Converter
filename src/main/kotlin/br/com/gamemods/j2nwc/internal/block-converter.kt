@@ -8,6 +8,7 @@ import net.md_5.bungee.api.ChatColor
 import java.io.FileNotFoundException
 import java.util.*
 import kotlin.math.floor
+import kotlin.math.max
 
 private fun JavaBlock.commonBlockEntityData(id: String) = arrayOf(
     "id" to NbtString(id),
@@ -26,7 +27,9 @@ internal fun JavaBlock.toNukkit(
     worldHooks: MutableList<PostWorldConversionHook>,
     worldConverter: WorldConverter
 ): NukkitBlock {
-    val blockData = this.type.toNukkit()
+    val blockData = this.type.toNukkit(worldConverter)
+    val waterlogged = type.properties?.getNullableString("waterlogged") == "true"
+            || type.blockName in javaInheritedWaterlogging
 
     val nukkitTileEntity = when (blockData.blockId) {
         26 -> createTileEntity("Bed",
@@ -50,6 +53,16 @@ internal fun JavaBlock.toNukkit(
                 else -> 14
             })
         )
+        458 -> createTileEntity("Barrel") { nukkitEntity ->
+            tileEntity?.copyJsonToLegacyTo(nukkitEntity, "CustomName")
+            tileEntity?.toNukkitInventory(worldConverter, nukkitEntity)
+        }
+        23 -> createTileEntity("Dispenser") { nukkitEntity ->
+            tileEntity?.toNukkitInventory(worldConverter, nukkitEntity)
+        }
+        125 -> createTileEntity("Dropper") { nukkitEntity ->
+            tileEntity?.toNukkitInventory(worldConverter, nukkitEntity)
+        }
         54 -> createTileEntity("Chest") { nukkitEntity ->
             tileEntity?.copyJsonToLegacyTo(nukkitEntity, "CustomName")
             //if (blockData.originalBedrock?.let { it.blockId == 458 && (it.data and 0x8) == 0x8 } == true) {
@@ -71,7 +84,7 @@ internal fun JavaBlock.toNukkit(
                 }
                 else -> null
             }
-            tileEntity?.toNukkitInventory(nukkitEntity)
+            tileEntity?.toNukkitInventory(worldConverter, nukkitEntity)
             pair?.also { (x, z) ->
                 nukkitEntity["pairx"] = x
                 nukkitEntity["pairz"] = z
@@ -127,7 +140,11 @@ internal fun JavaBlock.toNukkit(
             }
         }
         130 -> createTileEntity("EnderChest")
-        61, 62 -> createTileEntity("Furnace") { nukkitEntity ->
+        61, 62, 451, 469, 453, 454 -> createTileEntity(when (blockData.blockId) {
+            61, 62 -> "Furnace"
+            451, 469 -> "BlastFurnace"
+            else -> "Smoker"
+        }) { nukkitEntity ->
             tileEntity?.apply {
                 copyJsonToLegacyTo(nukkitEntity, "CustomName")
                 copyTo(nukkitEntity, "BurnTime")
@@ -135,7 +152,7 @@ internal fun JavaBlock.toNukkit(
                 getNullableShort("CookTimeTotal")?.also {
                     nukkitEntity["BurnDuration"] = it
                 }
-                toNukkitInventory(nukkitEntity)
+                toNukkitInventory(worldConverter, nukkitEntity)
             }
         }
         117 -> createTileEntity("BrewingStand") { nukkitEntity ->
@@ -146,7 +163,7 @@ internal fun JavaBlock.toNukkit(
                 val fuelTotal = if (fuel > 0) 20 else 0
                 nukkitEntity["FuelTotal"] = fuelTotal.toShort()
                 nukkitEntity["FuelAmount"] = fuel.toShort()
-                toNukkitInventory(nukkitEntity) {
+                toNukkitInventory(worldConverter, nukkitEntity) {
                     when {
                         it == 3 -> 0
                         it < 3 -> it + 1
@@ -160,7 +177,7 @@ internal fun JavaBlock.toNukkit(
             nukkitEntity["note"] = type.properties?.getString("note")?.toByte() ?: 0
             nukkitEntity["powered"] = type.properties?.getString("powered")?.toBoolean() ?: false
         }
-        63,436,441,443,445,447,68,437,442,444,446,448,323,472,473,474,475,476 ->
+        63,436,441,443,445,447,68,437,442,444,446,448 ->
             createTileEntity("Sign") { nukkitEntity ->
                 val lines = StringBuilder()
                 val color = when (tileEntity?.getNullableString("Color")) {
@@ -212,7 +229,11 @@ internal fun JavaBlock.toNukkit(
                 "zombie_head", "zombie_wall_head" -> 2
                 "player_head", "player_wall_head" -> {
                     if (tileEntity?.containsKey("Owner") == true && worldConverter.skipSkinHeads) {
-                        return NukkitBlock(blockPos, BlockData(0, 0), null)
+                        return if (waterlogged) {
+                            NukkitBlock(blockPos, BlockData(8, 0, blockData, type), null, false)
+                        } else {
+                            NukkitBlock(blockPos, BlockData(0, 0, blockData, type), null, false)
+                        }
                     } else {
                         3
                     }
@@ -248,12 +269,22 @@ internal fun JavaBlock.toNukkit(
                 "potted_oxeye_daisy" -> BlockData(38, 8)
                 "potted_cornflower" -> BlockData(38, 9)
                 "potted_lily_of_the_valley" -> BlockData(38, 10)
-                "potted_wither_rose" -> BlockData(38, 2)
                 "potted_brown_mushroom" -> BlockData(39, 0)
                 "potted_red_mushroom" -> BlockData(40, 0)
                 "potted_dead_bush" -> BlockData(32, 0)
                 "potted_cactus" -> BlockData(81, 0)
-                "potted_bamboo" -> BlockData(38, 0)
+                "potted_bamboo" ->
+                    if (worldConverter.targetType.maxBlockId > 418) {
+                        BlockData(418, 0)
+                    } else {
+                        BlockData(38, 0)
+                    }
+                "potted_wither_rose" ->
+                    if (worldConverter.targetType.maxBlockId > 471) {
+                        BlockData(471, 0)
+                    } else {
+                        BlockData(38, 2)
+                    }
                 else -> BlockData(0, 0)
             }
             potted.blockId.takeIf { it != 0 }?.let {
@@ -302,16 +333,20 @@ internal fun JavaBlock.toNukkit(
                 nukkitEntity["NewState"] = 0
             }
         }
-        149, 150 -> createTileEntity("Comparator")
+        149, 150 -> createTileEntity("Comparator") { nukkitEntity ->
+            tileEntity?.apply {
+                copyTo(nukkitEntity, "OutputSignal")
+            }
+        }
         154 -> createTileEntity("Hopper") { nukkitEntity ->
             tileEntity?.apply {
                 copyTo(nukkitEntity, "TransferCooldown")
-                toNukkitInventory(nukkitEntity)
+                toNukkitInventory(worldConverter, nukkitEntity)
             }
         }
         84 -> createTileEntity("Jukebox") { nukkitEntity ->
             tileEntity?.getNullableCompound("RecordItem")?.let {
-                nukkitEntity["RecordItem"] = it.toNukkitItem()
+                nukkitEntity["RecordItem"] = it.toNukkitItem(worldConverter)
             }
         }
         205, 218 -> createTileEntity("ShulkerBox") { nukkitEntity ->
@@ -326,7 +361,7 @@ internal fun JavaBlock.toNukkit(
             nukkitEntity["facing"] = facing.toByte()
             tileEntity?.apply {
                 copyJsonToLegacyTo(nukkitEntity, "CustomName")
-                toNukkitInventory(nukkitEntity)
+                toNukkitInventory(worldConverter, nukkitEntity)
             }
         }
         176, 177 -> createTileEntity("Banner") { nukkitEntity ->
@@ -363,16 +398,63 @@ internal fun JavaBlock.toNukkit(
                 nukkitEntity["Patterns"] = nukkitPatterns
             }
         }
+        449 -> createTileEntity("Lectern") { nukkitEntity ->
+            tileEntity?.let { javaEntity ->
+                javaEntity.getNullableInt("Page")?.let { nukkitEntity["page"] = it }
+                javaEntity.getNullableCompound("Book")?.let { nukkitEntity["book"] = it.toNukkitItem(worldConverter) }
+            }
+        }
+        474, 473 -> createTileEntity("Beehive") { nukkitEntity ->
+            val occupants = NbtList<NbtCompound>()
+            tileEntity?.getNullableCompoundList("Bees")?.forEach { occupant ->
+                val minTicks = occupant.getNullableInt("MinOccupationTicks") ?: 0
+                val ticks = occupant.getNullableInt("TicksInHive") ?: 0
+                val ticksLeft = max(0, minTicks - ticks)
+                val entityData = occupant.getNullableCompound("EntityData") ?: return@forEach
+                val entity = toNukkitEntity(entityData, null, null, null, regionPostConversionHooks, worldHooks, worldConverter) ?: return@forEach
+                val nukkitOccupant = NbtCompound()
+                nukkitOccupant["ActorIdentifier"] = "Bee"
+                nukkitOccupant["TicksLeftToStay"] = ticksLeft
+                nukkitOccupant["SaveData"] = entity
+                //TODO HasNectar
+                nukkitOccupant["Muted"] = false
+                occupants += nukkitOccupant
+            }
+            if (!occupants.isEmpty()) {
+                nukkitEntity["Occupants"] = occupants
+            }
+        }
+        412 -> createTileEntity("Conduit") // TODO Target and Active
+        464 -> createTileEntity("Campfire") { nukkitEntity ->
+            tileEntity?.also { javaEntity ->
+                javaEntity.getNullableCompoundList("Items")?.asSequence()
+                    ?.sortedBy { it.getInt("Slot") }
+                    ?.map { it.toNukkitItem(worldConverter) }
+                    ?.forEachIndexed { slot, item ->
+                        nukkitEntity["Item${slot + 1}"] = item
+                    }
+                val cookTime = javaEntity.getNullableIntArray("CookingTimes") ?: intArrayOf(0, 0, 0, 0)
+                val cookTimeTotal = javaEntity.getNullableIntArray("CookingTotalTimes") ?: intArrayOf(600, 600, 600, 600)
+                for (i in 0..3) {
+                    val remainingCookTime = max(0, cookTimeTotal[i] - cookTime[i])
+                    nukkitEntity["ItemTime${i + 1}"] = remainingCookTime
+                }
+            }
+        }
+        461 -> createTileEntity("Bell")
         else -> null
     }
 
-    return NukkitBlock(blockPos, blockData, nukkitTileEntity)
+    return NukkitBlock(blockPos, blockData, nukkitTileEntity, waterlogged)
 }
 
 internal data class BlockData(var blockId: Int, var data: Int, val originalBedrock: BlockData? = null, val originalJava: JavaPalette? = null) {
     val byteBlockId: Byte get() = (blockId and 0xFF).toByte()
+    val byteBlockIdExtra: Byte get() = ((blockId shr 8) and 0xFF).toByte()
+    val dataFirstPart: Int get() = data and 0x0F
+    val dataSecondPart: Int get() = (data shr 4) and 0x0F
 }
-internal fun JavaPalette.toNukkit(): BlockData {
+internal fun JavaPalette.toNukkit(worldConverter: WorldConverter): BlockData {
     val propertiesId = properties
         ?.mapValuesTo(TreeMap()) { (it.value as NbtString).value }
         ?.map { "${it.key}-${it.value}" }
@@ -387,13 +469,13 @@ internal fun JavaPalette.toNukkit(): BlockData {
     }
     val prop = bedrockState ?: java2bedrockStates[blockName] ?: "248,0"
     val originalBedrock = propertyToBlockData(prop)
-    val nukkitProp = bedrock2nukkit.getProperty("B,$prop") ?: prop
+    val nukkitProp = worldConverter.targetType.bedrock2target.getProperty("B,$prop") ?: prop
     val nukkit = propertyToBlockData(nukkitProp, originalBedrock, this)
-    check(nukkit.blockId in 0..255) {
-        "Block id unsupported by Nukkit 1.X: $nukkit"
+    check(nukkit.blockId in 0..worldConverter.targetType.maxBlockId) {
+        "Block id unsupported by the target ${worldConverter.targetType}: $nukkit. The maximum ID is ${worldConverter.targetType.maxBlockId}"
     }
-    check (nukkit.data in 0..15) {
-        "Block data unsupported by Nukkit 1.X: $nukkit"
+    check (nukkit.data in 0..worldConverter.targetType.maxDataValue) {
+        "Block data unsupported by the target ${worldConverter.targetType}: $nukkit. The maximum data is ${worldConverter.targetType.maxDataValue}"
     }
 
     return nukkit

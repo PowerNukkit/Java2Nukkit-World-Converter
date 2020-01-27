@@ -1,21 +1,26 @@
 package br.com.gamemods.j2nwc.internal
 
+import br.com.gamemods.j2nwc.WorldConverter
 import br.com.gamemods.nbtmanipulator.NbtCompound
 import br.com.gamemods.nbtmanipulator.NbtList
 import br.com.gamemods.nbtmanipulator.NbtString
 import java.util.concurrent.ThreadLocalRandom
 
-internal fun NbtCompound.toNukkitInventory(nukkitInventory: NbtCompound, slotRemapper: (Int)->Int = { it }) {
+internal fun NbtCompound.toNukkitInventory(
+    worldConverter: WorldConverter,
+    nukkitInventory: NbtCompound,
+    slotRemapper: (Int) -> Int = { it }
+) {
     val javaItems = getNullableCompoundList("Items") ?: return
     val nukkitItems = javaItems.map { javaItem ->
-        javaItem.toNukkitItem().also { nukkitItem ->
+        javaItem.toNukkitItem(worldConverter).also { nukkitItem ->
             nukkitItem["Slot"] = slotRemapper(javaItem.getByte("Slot").toInt()).toByte()
         }
     }
     nukkitInventory["Items"] = NbtList(nukkitItems)
 }
 
-internal fun NbtCompound.toNukkitItem(): NbtCompound {
+internal fun NbtCompound.toNukkitItem(worldConverter: WorldConverter): NbtCompound {
     val nukkitItem = NbtCompound()
     nukkitItem.copyFrom(this, "Count")
     val javaId = getString("id")
@@ -25,8 +30,9 @@ internal fun NbtCompound.toNukkitItem(): NbtCompound {
     val bedrockMapping = java2bedrockItems[internalId] ?: "B,0,0"
     val (type, bedrockId, rawBedrockData) = bedrockMapping.split(',', limit = 3)
     val bedrockData = rawBedrockData.takeUnless { it == "~" }?.toInt() ?: damage
-    val nukkitMapping = bedrock2nukkit.getProperty("$type,$bedrockId,$bedrockData")
-        ?: bedrock2nukkit.getProperty("$type,$bedrockId,$rawBedrockData")
+    val bedrock2target = worldConverter.targetType.bedrock2target
+    val nukkitMapping = bedrock2target.getProperty("$type,$bedrockId,$bedrockData")
+        ?: bedrock2target.getProperty("$type,$bedrockId,$rawBedrockData")
         ?: "$bedrockId,$bedrockData"
     val (rawNukkitId, rawNukkitData) = nukkitMapping.split(',', limit = 2)
     val nukkitData = rawNukkitData.takeUnless { it == "~" }?.toInt() ?: damage
@@ -78,14 +84,14 @@ internal fun NbtCompound.toNukkitItem(): NbtCompound {
 
     nbt.getNullableStringList("CanDestroy")?.also { canDestroy ->
         val nukkitCanDestroy = NbtList(canDestroy.flatMap {tag ->
-            javaBlockProps2Bedrock[tag.value]?.map { name -> NbtString(name) } ?: listOf(tag)
+            worldConverter.targetType.javaBlockProps2Target[tag.value]?.map { name -> NbtString(name) } ?: listOf(tag)
         })
         nukkitNbt["CanDestroy"] = nukkitCanDestroy
     }
 
     nbt.getNullableStringList("CanPlaceOn")?.also { canPlaceOn ->
         val nukkitCanPlaceOn = NbtList(canPlaceOn.flatMap { tag ->
-            javaBlockProps2Bedrock[tag.value]?.map { name -> NbtString(name) } ?: listOf(tag)
+            worldConverter.targetType.javaBlockProps2Target[tag.value]?.map { name -> NbtString(name) } ?: listOf(tag)
         })
         nukkitNbt["CanPlaceOn"] = nukkitCanPlaceOn
     }

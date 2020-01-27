@@ -10,6 +10,9 @@ Click the link above to see the future.
 ### Fixes
 - [#89] The -r parameter doesn't accept regions with position higher then 9
 
+### Added
+- [#85] Support for converting to the PowerNukkit save format adding `--target powernukkit` to the arguments
+
 ## [3.0.1] - 2020-01-26
 ### Fixes
 - [#88] Piston heads were being converted incorrectly
@@ -149,6 +152,7 @@ them will be very bright.
 
 [#88]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/88
 
+[#85]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/85
 [#89]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/issues/89
 
 [Region 2.0.0]: https://gamemodsbr.github.io/Region-Manipulator/CHANGELOG.html#200---2020-01-24

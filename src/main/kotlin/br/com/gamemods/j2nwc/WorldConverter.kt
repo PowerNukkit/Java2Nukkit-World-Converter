@@ -1,8 +1,6 @@
 package br.com.gamemods.j2nwc
 
-import br.com.gamemods.j2nwc.internal.PostWorldConversionHook
-import br.com.gamemods.j2nwc.internal.convertLevelFile
-import br.com.gamemods.j2nwc.internal.convertRegionFile
+import br.com.gamemods.j2nwc.internal.*
 import java.io.File
 import java.io.IOException
 
@@ -81,6 +79,11 @@ class WorldConverter(val from: File, val to: File) {
     var skipSkinHeads = true
 
     /**
+     * The level format which will be used by the converted world.
+     */
+    var targetType = TargetType.NUKKIT
+
+    /**
      * Executes the conversion in the current thread. Will take a while to complete.
      *
      * @throws IOException If an error occurs while loading or writing the files
@@ -98,7 +101,7 @@ class WorldConverter(val from: File, val to: File) {
         val worldHooks = mutableListOf<PostWorldConversionHook>()
         @Suppress("DEPRECATION")
         val regions = (regions + regionFilter.map { it.toRegionManipulator() }).toSet()
-        File(from, "region").listFiles().asSequence()
+        checkNotNull(File(from, "region").listFiles(), { "$from is not a directory" }).asSequence()
             .filter { it.name.toLowerCase().matches(Regex("""^r\.-?\d+\.-?\d+\.mca$""")) }
             .filter { regions.isEmpty() || RegionPosition(it.name) in regions }
             .forEach { fromRegion ->
@@ -111,6 +114,110 @@ class WorldConverter(val from: File, val to: File) {
             }
         worldHooks.forEach {
             it(from, to)
+        }
+    }
+
+    /**
+     * The targeted save format that will be written in the output.
+     */
+    enum class TargetType(
+        val maxBlockId: Int,
+        val maxDataValue: Int,
+        conversionMappings: String,
+        blockIdsFile: String,
+        itemIdsFile: String,
+        val suprpessWarningItemIds: Set<Int> = emptySet()
+    ) {
+        /**
+         * Supports Nukkit 1.X. Has Block ID limited to 255, blocks with higher ID will be removed or remapped to a similar block.
+         *
+         * PowerNukkit 1.X accepts this format normally.
+         *
+         * Nukkit 2.X and PowerNukkit 2.X accepts this format but will converto to LevelDB on load.
+         */
+        NUKKIT(255, 15, "/bedrock-2-nukkit.properties", "/nukkit-block-ids.properties", "/nukkit-item-ids.properties",
+            setOf(434, 736, 737)),
+
+        /**
+         * Supports PowerNukkit 1.X. Doesn't have the Block ID limitation and almost all blocks will match the original world.
+         *
+         * Nukkit 1.X will reset chunks which contains waterlogged blocks and blocks with ID > 255 and log them as corrupt chunks.
+         *
+         * The behaviour of Nukkit 2.X with this format is unknown.
+         *
+         * PowerNukkit 2.X accepts this format but will convert to LevelDB on load.
+         */
+        POWER_NUKKIT(512, 63, "/bedrock-2-powernukkit.properties", "/powernukkit-block-ids.properties", "/powernukkit-item-ids.properties",
+            setOf(434)),
+
+        /**
+         * Supports Nukkit 2.X. Doesn't have Block ID limitation but many blocks will be removed or remapped to a
+         * similar block because it's not implemented by NukkitX yet.
+         *
+         * Nukkit 1.X and PowerNukkit 1.X won't load from this save format.
+         *
+         * PowerNukkit 2.X accepts this format normally.
+         */
+        //TODO #86 NUKKIT_V2,
+
+        /**
+         * Supports PowerNukkit 2.x. Doesn't have the Block ID limitation and almost all blocks will match the original world.
+         *
+         * Nukkit 1.X and PowerNukkit 1.X won't load from this save format.
+         *
+         * Nukkit 2.X accepts this format but unsupported blocks might be interpreted as custom or removed, the exact behaviour is unknown.
+         */
+        //TODO #86 POWER_NUKKIT_V2
+        ;
+        internal val bedrock2target by lazy { properties(conversionMappings) }
+        internal val blockIds by lazy { propertiesStringInt(blockIdsFile) }
+        internal val itemIds by lazy { propertiesStringInt(itemIdsFile) }
+
+        internal val blockNames by lazy {
+            blockIds.entries.asSequence()
+                .map { (k, v) -> k to v }.groupBy { (_, v) -> v }
+                .mapValues { it.value.map { p -> p.first } }
+        }
+
+        internal val itemNames by lazy {
+            itemIds.entries.asSequence()
+                .map { (k, v) -> k to v }.groupBy { (_, v) -> v }
+                .mapValues { it.value.map { p -> p.first } }
+                .let {
+                    mapOf(0 to "air") + it
+                }
+        }
+
+        internal val javaTags2Target by lazy {
+            javaTags.mapValues { entry ->
+                entry.value.asSequence().flatMap { javaBlock ->
+                    val (bedrockId, bedrockData) = java2bedrockStates[javaBlock]?.split(',', limit = 2) ?: listOf("0","0").also {
+                        //println("The tag ${entry.key} points to a missing block $javaBlock")
+                    }
+                    val (nukkitId, _) = (
+                            bedrock2target.getProperty("B,$bedrockId,$bedrockData") ?: "$bedrockId,$bedrockData"
+                            ).split(',', limit = 2)
+                    if (nukkitId != "0") {
+                        blockNames[nukkitId.toInt()]?.asSequence() ?: sequenceOf(nukkitId, javaBlock)
+                    } else {
+                        sequenceOf(null)
+                    }
+                }.filterNotNull().toList()
+            }
+        }
+
+        internal val javaBlockProps2Target by lazy {
+            javaTags2Target + java2bedrockStates.asSequence().filter { ';' !in it.key }.flatMap { (javaBlock, mapping) ->
+                val (bedrockId, bedrockData) = mapping.split(',', limit = 2)
+                val (nukkitId, _) = (
+                        bedrock2target.getProperty("B,$bedrockId,$bedrockData") ?: "$bedrockId,$bedrockData"
+                        ).split(',', limit = 2)
+                if (nukkitId != "0") {
+                    sequenceOf(javaBlock to (blockNames[nukkitId.toInt()] ?: listOf(nukkitId, javaBlock)))
+                } else {
+                    sequenceOf(null)
+                }
+            }.filterNotNull()
         }
     }
 }
