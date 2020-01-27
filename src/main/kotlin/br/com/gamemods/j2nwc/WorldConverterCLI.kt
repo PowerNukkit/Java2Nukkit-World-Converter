@@ -56,7 +56,7 @@ object WorldConverterCLI {
             emptyList()
         } else {
             val regions = regionsArg!!
-            if (!regions.matches(Regex("^(-?\\d,-?\\d)(;-?\\d,-?\\d)*$"))) {
+            if (!regions.matches(Regex("""^(-?\d+,-?\d+)(;-?\d+,-?\d+)*$"""))) {
                 System.err.println("The regions parameter must follow this syntax:\n-r 0,0;-1,0;-1,-1")
                 cli.printHelp()
                 exitProcess(6)
