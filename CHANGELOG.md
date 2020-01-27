@@ -8,14 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Click the link above to see the future.
 
 ### Fixes
+- [#88] Piston heads were being converted incorrectly
 - [#89] The -r parameter doesn't accept regions with position higher then 9
 
 ### Added
 - [#85] Support for converting to the PowerNukkit save format adding `--target powernukkit` to the arguments
-
-## [3.0.1] - 2020-01-26
-### Fixes
-- [#88] Piston heads were being converted incorrectly
 
 ## [3.0.0] - 2020-01-25
 ### Added
@@ -99,8 +96,7 @@ them will be very bright.
 - Small API for usage as library
 - Option specify the region files that will be converted
 
-[Unreleased]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v3.0.1...HEAD
-[3.0.1]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v3.0.0...v3.0.1
+[Unreleased]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v3.0.0...HEAD
 [3.0.0]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v2.0.1...v3.0.0
 [2.0.1]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/GameModsBR/Java2Nukkit-World-Converter/compare/v1.0.0...v2.0.0
